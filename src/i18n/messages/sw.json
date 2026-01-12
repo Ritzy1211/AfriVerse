@@ -1,0 +1,90 @@
+{
+  "common": {
+    "siteName": "AfriVerse",
+    "tagline": "Sauti Yako, Hadithi Zako, Afrika Yako",
+    "home": "Nyumbani",
+    "about": "Kuhusu",
+    "contact": "Wasiliana",
+    "search": "Tafuta",
+    "subscribe": "Jiandikishe",
+    "readMore": "Soma Zaidi",
+    "viewAll": "Tazama Zote",
+    "loading": "Inapakia...",
+    "error": "Hitilafu imetokea",
+    "tryAgain": "Jaribu Tena",
+    "backToHome": "Rudi Nyumbani",
+    "shareOn": "Shiriki kwenye",
+    "postedOn": "Imechapishwa",
+    "by": "Na",
+    "minRead": "dakika za kusoma",
+    "comments": "Maoni",
+    "leaveComment": "Acha Maoni",
+    "submit": "Wasilisha",
+    "cancel": "Ghairi",
+    "reply": "Jibu",
+    "like": "Penda",
+    "share": "Shiriki",
+    "language": "Lugha"
+  },
+  "nav": {
+    "politics": "Siasa",
+    "business": "Biashara",
+    "technology": "Teknolojia",
+    "tech": "Teknolojia",
+    "entertainment": "Burudani",
+    "culture": "Utamaduni",
+    "sports": "Michezo",
+    "lifestyle": "Mtindo wa Maisha",
+    "opinion": "Maoni",
+    "authors": "Waandishi",
+    "advertise": "Tangaza",
+    "careers": "Kazi"
+  },
+  "home": {
+    "trending": "Kinachoendelea Sasa",
+    "topStories": "Habari Kuu",
+    "latestStories": "Habari Mpya",
+    "featured": "Iliyoangaziwa",
+    "mostRead": "Zilizosomwa Zaidi",
+    "editorsPicks": "Chaguo la Mhariri"
+  },
+  "article": {
+    "relatedArticles": "Makala Zinazohusiana",
+    "authorBio": "Kuhusu Mwandishi",
+    "viewAllPosts": "Tazama machapisho yote",
+    "shareArticle": "Shiriki makala hii",
+    "commentPlaceholder": "Andika maoni yako hapa...",
+    "commentSubmitted": "Maoni yamewasilishwa! Yataonekana baada ya ukaguzi.",
+    "noComments": "Hakuna maoni bado. Kuwa wa kwanza kushiriki mawazo yako!"
+  },
+  "newsletter": {
+    "title": "Baki na Habari",
+    "subtitle": "Pata habari na hadithi za hivi karibuni za Afrika kwenye barua pepe yako",
+    "placeholder": "Ingiza barua pepe yako",
+    "subscribe": "Jiandikishe",
+    "success": "Asante kwa kujiandikisha!",
+    "error": "Usajili umeshindikana. Tafadhali jaribu tena."
+  },
+  "search": {
+    "title": "Tafuta",
+    "placeholder": "Tafuta makala...",
+    "noResults": "Hakuna matokeo yaliyopatikana",
+    "results": "matokeo yamepatikana"
+  },
+  "footer": {
+    "about": "Kuhusu AfriVerse",
+    "aboutText": "AfriVerse ni chanzo chako kikuu cha habari, hadithi, na uchanganuzi kutoka bara la Afrika. Tunakupatia sauti na mitazamo halisi ya Kiafrika.",
+    "quickLinks": "Viungo vya Haraka",
+    "categories": "Makundi",
+    "connect": "Ungana Nasi",
+    "privacy": "Sera ya Faragha",
+    "terms": "Masharti ya Huduma",
+    "copyright": "© 2026 AfriVerse. Haki zote zimehifadhiwa."
+  },
+  "errors": {
+    "pageNotFound": "Ukurasa Haujapatikana",
+    "pageNotFoundDesc": "Ukurasa unaoutafuta haupo au umehamishwa.",
+    "serverError": "Hitilafu ya Seva",
+    "serverErrorDesc": "Kitu kimekwenda vibaya. Tafadhali jaribu tena baadaye."
+  }
+}

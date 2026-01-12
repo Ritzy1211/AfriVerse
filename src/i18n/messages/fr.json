@@ -1,0 +1,90 @@
+{
+  "common": {
+    "siteName": "AfriVerse",
+    "tagline": "Votre Voix, Vos Histoires, Votre Afrique",
+    "home": "Accueil",
+    "about": "À Propos",
+    "contact": "Contact",
+    "search": "Rechercher",
+    "subscribe": "S'abonner",
+    "readMore": "Lire la Suite",
+    "viewAll": "Voir Tout",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "tryAgain": "Réessayer",
+    "backToHome": "Retour à l'Accueil",
+    "shareOn": "Partager sur",
+    "postedOn": "Publié le",
+    "by": "Par",
+    "minRead": "min de lecture",
+    "comments": "Commentaires",
+    "leaveComment": "Laisser un Commentaire",
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "reply": "Répondre",
+    "like": "J'aime",
+    "share": "Partager",
+    "language": "Langue"
+  },
+  "nav": {
+    "politics": "Politique",
+    "business": "Économie",
+    "technology": "Technologie",
+    "tech": "Tech",
+    "entertainment": "Divertissement",
+    "culture": "Culture",
+    "sports": "Sports",
+    "lifestyle": "Mode de Vie",
+    "opinion": "Opinion",
+    "authors": "Auteurs",
+    "advertise": "Publicité",
+    "careers": "Carrières"
+  },
+  "home": {
+    "trending": "Tendances",
+    "topStories": "À la Une",
+    "latestStories": "Dernières Actualités",
+    "featured": "En Vedette",
+    "mostRead": "Les Plus Lus",
+    "editorsPicks": "Sélection de la Rédaction"
+  },
+  "article": {
+    "relatedArticles": "Articles Connexes",
+    "authorBio": "À Propos de l'Auteur",
+    "viewAllPosts": "Voir tous les articles",
+    "shareArticle": "Partager cet article",
+    "commentPlaceholder": "Écrivez votre commentaire ici...",
+    "commentSubmitted": "Commentaire soumis ! Il apparaîtra après modération.",
+    "noComments": "Aucun commentaire pour l'instant. Soyez le premier à partager vos pensées !"
+  },
+  "newsletter": {
+    "title": "Restez Informé",
+    "subtitle": "Recevez les dernières nouvelles et histoires africaines dans votre boîte mail",
+    "placeholder": "Entrez votre email",
+    "subscribe": "S'abonner",
+    "success": "Merci de votre abonnement !",
+    "error": "L'abonnement a échoué. Veuillez réessayer."
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher des articles...",
+    "noResults": "Aucun résultat trouvé",
+    "results": "résultats trouvés"
+  },
+  "footer": {
+    "about": "À Propos de AfriVerse",
+    "aboutText": "AfriVerse est votre source principale d'actualités, d'histoires et d'analyses sur le continent africain. Nous vous apportons des voix et perspectives africaines authentiques.",
+    "quickLinks": "Liens Rapides",
+    "categories": "Catégories",
+    "connect": "Connectez-vous avec Nous",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "copyright": "© 2026 AfriVerse. Tous droits réservés."
+  },
+  "errors": {
+    "pageNotFound": "Page Non Trouvée",
+    "pageNotFoundDesc": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "serverError": "Erreur Serveur",
+    "serverErrorDesc": "Quelque chose s'est mal passé. Veuillez réessayer plus tard."
+  }
+}

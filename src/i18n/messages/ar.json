@@ -1,0 +1,90 @@
+{
+  "common": {
+    "siteName": "توك أفريكا",
+    "tagline": "صوتك، قصصك، أفريقيتك",
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "search": "بحث",
+    "subscribe": "اشترك",
+    "readMore": "اقرأ المزيد",
+    "viewAll": "عرض الكل",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "tryAgain": "حاول مرة أخرى",
+    "backToHome": "العودة للرئيسية",
+    "shareOn": "شارك على",
+    "postedOn": "نُشر في",
+    "by": "بواسطة",
+    "minRead": "دقيقة قراءة",
+    "comments": "التعليقات",
+    "leaveComment": "اترك تعليقاً",
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "reply": "رد",
+    "like": "إعجاب",
+    "share": "مشاركة",
+    "language": "اللغة"
+  },
+  "nav": {
+    "politics": "سياسة",
+    "business": "اقتصاد",
+    "technology": "تكنولوجيا",
+    "tech": "تقنية",
+    "entertainment": "ترفيه",
+    "culture": "ثقافة",
+    "sports": "رياضة",
+    "lifestyle": "نمط الحياة",
+    "opinion": "رأي",
+    "authors": "الكتّاب",
+    "advertise": "أعلن معنا",
+    "careers": "وظائف"
+  },
+  "home": {
+    "trending": "الأكثر رواجاً",
+    "topStories": "أهم الأخبار",
+    "latestStories": "آخر الأخبار",
+    "featured": "مميز",
+    "mostRead": "الأكثر قراءة",
+    "editorsPicks": "اختيارات المحرر"
+  },
+  "article": {
+    "relatedArticles": "مقالات ذات صلة",
+    "authorBio": "عن الكاتب",
+    "viewAllPosts": "عرض جميع المقالات",
+    "shareArticle": "شارك هذا المقال",
+    "commentPlaceholder": "اكتب تعليقك هنا...",
+    "commentSubmitted": "تم إرسال التعليق! سيظهر بعد المراجعة.",
+    "noComments": "لا توجد تعليقات حتى الآن. كن أول من يشارك أفكاره!"
+  },
+  "newsletter": {
+    "title": "ابق على اطلاع",
+    "subtitle": "احصل على أحدث الأخبار والقصص الأفريقية في بريدك الإلكتروني",
+    "placeholder": "أدخل بريدك الإلكتروني",
+    "subscribe": "اشترك",
+    "success": "شكراً لاشتراكك!",
+    "error": "فشل الاشتراك. يرجى المحاولة مرة أخرى."
+  },
+  "search": {
+    "title": "بحث",
+    "placeholder": "ابحث عن مقالات...",
+    "noResults": "لم يتم العثور على نتائج",
+    "results": "نتائج تم العثور عليها"
+  },
+  "footer": {
+    "about": "عن توك أفريكا",
+    "aboutText": "توك أفريكا هو مصدرك الرئيسي للأخبار والقصص والتحليلات من جميع أنحاء القارة الأفريقية. نقدم لك أصوات ووجهات نظر أفريقية أصيلة.",
+    "quickLinks": "روابط سريعة",
+    "categories": "التصنيفات",
+    "connect": "تواصل معنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "copyright": "© 2026 توك أفريكا. جميع الحقوق محفوظة."
+  },
+  "errors": {
+    "pageNotFound": "الصفحة غير موجودة",
+    "pageNotFoundDesc": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "serverError": "خطأ في الخادم",
+    "serverErrorDesc": "حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقاً."
+  }
+}

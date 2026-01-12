@@ -1,0 +1,90 @@
+{
+  "common": {
+    "siteName": "AfriVerse",
+    "tagline": "Muryar Ka, Labaran Ka, Afirka Ka",
+    "home": "Gida",
+    "about": "Game da Mu",
+    "contact": "Tuntube Mu",
+    "search": "Bincika",
+    "subscribe": "Yi Rajista",
+    "readMore": "Karanta Kari",
+    "viewAll": "Duba Duka",
+    "loading": "Ana lodawa...",
+    "error": "Kuskure ya faru",
+    "tryAgain": "Sake Gwadawa",
+    "backToHome": "Komawa Gida",
+    "shareOn": "Raba akan",
+    "postedOn": "An buga",
+    "by": "Daga",
+    "minRead": "minti na karantawa",
+    "comments": "Sharhi",
+    "leaveComment": "Bar Sharhi",
+    "submit": "Aika",
+    "cancel": "Soke",
+    "reply": "Amsa",
+    "like": "So",
+    "share": "Raba",
+    "language": "Harshe"
+  },
+  "nav": {
+    "politics": "Siyasa",
+    "business": "Kasuwanci",
+    "technology": "Fasaha",
+    "tech": "Fasaha",
+    "entertainment": "Nishaɗi",
+    "culture": "Al'ada",
+    "sports": "Wasanni",
+    "lifestyle": "Salon Rayuwa",
+    "opinion": "Ra'ayi",
+    "authors": "Marubuta",
+    "advertise": "Tallata",
+    "careers": "Ayyuka"
+  },
+  "home": {
+    "trending": "Abin da Ke Yawo",
+    "topStories": "Manyan Labarai",
+    "latestStories": "Sabbin Labarai",
+    "featured": "Fitattun",
+    "mostRead": "Mafi Karatu",
+    "editorsPicks": "Zaɓin Edita"
+  },
+  "article": {
+    "relatedArticles": "Labarai Masu Alaƙa",
+    "authorBio": "Game da Marubuci",
+    "viewAllPosts": "Duba duk wallafe-wallafe",
+    "shareArticle": "Raba wannan labarin",
+    "commentPlaceholder": "Rubuta sharhin ka a nan...",
+    "commentSubmitted": "An aika sharhi! Zai bayyana bayan bita.",
+    "noComments": "Babu sharhi tukuna. Kasance na farko don raba tunanin ka!"
+  },
+  "newsletter": {
+    "title": "Kasance da Labari",
+    "subtitle": "Sami sabbin labarai da labarun Afirka a imel ɗin ka",
+    "placeholder": "Shigar da imel ɗin ka",
+    "subscribe": "Yi Rajista",
+    "success": "Na gode don yin rajista!",
+    "error": "Rajista ta gaza. Da fatan za a sake gwadawa."
+  },
+  "search": {
+    "title": "Bincika",
+    "placeholder": "Bincika labarai...",
+    "noResults": "Ba a sami sakamako ba",
+    "results": "sakamakon da aka samu"
+  },
+  "footer": {
+    "about": "Game da AfriVerse",
+    "aboutText": "AfriVerse shine tushen labarai, labarai, da nazari daga ko'ina cikin nahiyar Afirka. Muna kawo muku muryoyin Afirka na gaskiya da ra'ayoyi.",
+    "quickLinks": "Hanyoyin Sauri",
+    "categories": "Rukunoni",
+    "connect": "Haɗa da Mu",
+    "privacy": "Manufar Sirri",
+    "terms": "Sharuɗɗan Sabis",
+    "copyright": "© 2026 AfriVerse. Duk haƙƙoƙi an kiyaye."
+  },
+  "errors": {
+    "pageNotFound": "Ba a Sami Shafin Ba",
+    "pageNotFoundDesc": "Shafin da kake nema ba ya nan ko an motsa shi.",
+    "serverError": "Kuskuren Uwar Garke",
+    "serverErrorDesc": "Wani abu ya yi kuskure. Da fatan za a sake gwadawa daga baya."
+  }
+}

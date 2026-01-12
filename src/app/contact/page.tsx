@@ -1,0 +1,312 @@
+'use client';
+
+import { useState } from 'react';
+import { Mail, Phone, MapPin, Send, MessageSquare, Briefcase, Newspaper } from 'lucide-react';
+import type { Metadata } from 'next';
+
+const contactReasons = [
+  { id: 'general', label: 'General Inquiry', icon: MessageSquare },
+  { id: 'advertising', label: 'Advertising', icon: Briefcase },
+  { id: 'editorial', label: 'Editorial/Tips', icon: Newspaper },
+  { id: 'support', label: 'Technical Support', icon: Mail },
+];
+
+const offices = [
+  {
+    city: 'Lagos',
+    address: '15 Adeola Odeku Street, Victoria Island, Lagos',
+    phone: '+234 810 956 1020',
+    email: 'lagos@afriverse.ng',
+  },
+  {
+    city: 'Abuja',
+    address: '25 Aminu Kano Crescent, Wuse 2, Abuja',
+    phone: '+234 912 271 9293',
+    email: 'abuja@afriverse.ng',
+  },
+];
+
+export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    reason: 'general',
+    subject: '',
+    message: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In production, this would send to an API
+    console.log('Form submitted:', formData);
+    setSubmitted(true);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-brand-primary to-brand-primary/90 text-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-headline font-bold mb-6">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-gray-300">
+              Have a question, tip, or want to partner with us? We'd love to hear from you.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form & Info */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Contact Form */}
+            <div className="lg:col-span-2">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft p-8">
+                <h2 className="text-2xl font-headline font-bold text-gray-900 dark:text-white mb-6">
+                  Send Us a Message
+                </h2>
+
+                {submitted ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Send className="w-8 h-8 text-green-600 dark:text-green-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      Message Sent!
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      Thank you for reaching out. We'll get back to you within 24 hours.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData({
+                          name: '',
+                          email: '',
+                          reason: 'general',
+                          subject: '',
+                          message: '',
+                        });
+                      }}
+                      className="text-brand-accent hover:underline"
+                    >
+                      Send another message
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Contact Reason */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        What's this about?
+                      </label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {contactReasons.map((reason) => (
+                          <button
+                            key={reason.id}
+                            type="button"
+                            onClick={() => setFormData((prev) => ({ ...prev, reason: reason.id }))}
+                            className={`flex flex-col items-center p-4 rounded-lg border-2 transition-colors ${
+                              formData.reason === reason.id
+                                ? 'border-brand-accent bg-brand-accent/10'
+                                : 'border-gray-200 dark:border-gray-700 hover:border-brand-accent/50'
+                            }`}
+                          >
+                            <reason.icon
+                              className={`w-6 h-6 mb-2 ${
+                                formData.reason === reason.id
+                                  ? 'text-brand-accent'
+                                  : 'text-gray-400'
+                              }`}
+                            />
+                            <span
+                              className={`text-sm ${
+                                formData.reason === reason.id
+                                  ? 'text-brand-accent font-medium'
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`}
+                            >
+                              {reason.label}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Name & Email */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        >
+                          Your Name
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          required
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        >
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent"
+                          placeholder="john@example.com"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Subject */}
+                    <div>
+                      <label
+                        htmlFor="subject"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      >
+                        Subject
+                      </label>
+                      <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        required
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent"
+                        placeholder="How can we help?"
+                      />
+                    </div>
+
+                    {/* Message */}
+                    <div>
+                      <label
+                        htmlFor="message"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      >
+                        Message
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        required
+                        rows={5}
+                        value={formData.message}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent resize-none"
+                        placeholder="Tell us more..."
+                      />
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                      type="submit"
+                      className="w-full md:w-auto px-8 py-3 bg-brand-accent text-white rounded-lg font-medium hover:bg-brand-accent/90 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Send className="w-5 h-5" />
+                      Send Message
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+
+            {/* Contact Info */}
+            <div className="space-y-6">
+              {/* Quick Contact */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                  Quick Contact
+                </h3>
+                <div className="space-y-4">
+                  <a
+                    href="mailto:hello@afriverse.ng"
+                    className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
+                  >
+                    <Mail className="w-5 h-5" />
+                    hello@afriverse.ng
+                  </a>
+                  <a
+                    href="tel:+2348012345678"
+                    className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
+                  >
+                    <Phone className="w-5 h-5" />
+                    +234 801 234 5678
+                  </a>
+                </div>
+              </div>
+
+              {/* Office Locations */}
+              {offices.map((office) => (
+                <div
+                  key={office.city}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-soft p-6"
+                >
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                    {office.city} Office
+                  </h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-start gap-3 text-gray-600 dark:text-gray-400">
+                      <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      {office.address}
+                    </div>
+                    <a
+                      href={`tel:${office.phone.replace(/\s/g, '')}`}
+                      className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
+                    >
+                      <Phone className="w-5 h-5" />
+                      {office.phone}
+                    </a>
+                    <a
+                      href={`mailto:${office.email}`}
+                      className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
+                    >
+                      <Mail className="w-5 h-5" />
+                      {office.email}
+                    </a>
+                  </div>
+                </div>
+              ))}
+
+              {/* Response Time */}
+              <div className="bg-gradient-to-br from-brand-accent to-brand-secondary rounded-lg p-6 text-white">
+                <h3 className="font-bold mb-2">Response Time</h3>
+                <p className="text-sm opacity-90">
+                  We typically respond within 24 hours during business days. For urgent matters, please call us directly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

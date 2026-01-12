@@ -1,0 +1,174 @@
+// This is your Prisma schema file for MongoDB
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Newsletter Subscribers
+model Subscriber {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  email          String           @unique
+  name           String?
+  status         SubscriberStatus @default(ACTIVE)
+  source         String?          @default("website")
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+  preferences    Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+  PENDING
+}
+
+// Comments System
+model Comment {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  content      String
+  articleSlug  String
+  articleTitle String?
+  authorName   String
+  authorEmail  String
+  authorAvatar String?
+  status       CommentStatus @default(PENDING)
+  likes        Int           @default(0)
+  parentId     String?       @db.ObjectId
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([articleSlug])
+  @@index([status])
+  @@index([authorEmail])
+  @@index([parentId])
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  SPAM
+  DELETED
+}
+
+// Contact Form Submissions
+model ContactSubmission {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([email])
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// ==========================================
+// AUTHENTICATION MODELS (NextAuth.js)
+// ==========================================
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(AUTHOR)
+  bio           String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  AUTHOR
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==========================================
+// ANALYTICS & TRACKING
+// ==========================================
+
+model AnalyticsEvent {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  eventType   String
+  articleSlug String?
+  sessionId   String?
+  userAgent   String?
+  referrer    String?
+  country     String?
+  city        String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([articleSlug])
+  @@index([createdAt])
+}

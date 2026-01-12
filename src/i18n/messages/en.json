@@ -1,0 +1,90 @@
+{
+  "common": {
+    "siteName": "AfriVerse",
+    "tagline": "Your Voice, Your Stories, Your Africa",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "search": "Search",
+    "subscribe": "Subscribe",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home",
+    "shareOn": "Share on",
+    "postedOn": "Posted on",
+    "by": "By",
+    "minRead": "min read",
+    "comments": "Comments",
+    "leaveComment": "Leave a Comment",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "reply": "Reply",
+    "like": "Like",
+    "share": "Share",
+    "language": "Language"
+  },
+  "nav": {
+    "politics": "Politics",
+    "business": "Business",
+    "technology": "Technology",
+    "tech": "Tech",
+    "entertainment": "Entertainment",
+    "culture": "Culture",
+    "sports": "Sports",
+    "lifestyle": "Lifestyle",
+    "opinion": "Opinion",
+    "authors": "Authors",
+    "advertise": "Advertise",
+    "careers": "Careers"
+  },
+  "home": {
+    "trending": "Trending Now",
+    "topStories": "Top Stories",
+    "latestStories": "Latest Stories",
+    "featured": "Featured",
+    "mostRead": "Most Read",
+    "editorsPicks": "Editor's Picks"
+  },
+  "article": {
+    "relatedArticles": "Related Articles",
+    "authorBio": "About the Author",
+    "viewAllPosts": "View all posts",
+    "shareArticle": "Share this article",
+    "commentPlaceholder": "Write your comment here...",
+    "commentSubmitted": "Comment submitted! It will appear after moderation.",
+    "noComments": "No comments yet. Be the first to share your thoughts!"
+  },
+  "newsletter": {
+    "title": "Stay Informed",
+    "subtitle": "Get the latest African news and stories delivered to your inbox",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "Subscription failed. Please try again."
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search articles...",
+    "noResults": "No results found",
+    "results": "results found"
+  },
+  "footer": {
+    "about": "About AfriVerse",
+    "aboutText": "AfriVerse is your premier source for news, stories, and insights from across the African continent. We bring you authentic African voices and perspectives.",
+    "quickLinks": "Quick Links",
+    "categories": "Categories",
+    "connect": "Connect With Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2026 AfriVerse. All rights reserved."
+  },
+  "errors": {
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDesc": "The page you're looking for doesn't exist or has been moved.",
+    "serverError": "Server Error",
+    "serverErrorDesc": "Something went wrong. Please try again later."
+  }
+}

@@ -1,0 +1,742 @@
+// This is your Prisma schema file for MongoDB
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Newsletter Subscribers
+model Subscriber {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  email          String           @unique
+  name           String?
+  status         SubscriberStatus @default(ACTIVE)
+  source         String?          @default("website")
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+  preferences    Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([status])
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+  PENDING
+}
+
+// Comments System
+model Comment {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  content      String
+  articleSlug  String
+  articleTitle String?
+  authorName   String
+  authorEmail  String
+  authorAvatar String?
+  status       CommentStatus @default(PENDING)
+  likes        Int           @default(0)
+  parentId     String?       @db.ObjectId
+  parent       Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies      Comment[]     @relation("CommentReplies")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([articleSlug])
+  @@index([status])
+  @@index([authorEmail])
+  @@index([parentId])
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  SPAM
+  DELETED
+}
+
+// Contact Form Submissions
+model ContactSubmission {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([email])
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// ==========================================
+// AUTHENTICATION MODELS (NextAuth.js)
+// ==========================================
+
+model User {
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  name                String?
+  email               String              @unique
+  emailVerified       DateTime?
+  image               String?
+  password            String?
+  role                UserRole            @default(AUTHOR)
+  bio                 String?
+  phone               String?
+  location            String?
+  website             String?
+  jobTitle            String?
+  company             String?
+  twitter             String?
+  facebook            String?
+  instagram           String?
+  linkedin            String?
+  accounts            Account[]
+  sessions            Session[]
+  posts               Post[]
+  notifications       Notification[]      // Admin notifications
+  verifiedStoryteller VerifiedStoryteller? // Link to storyteller profile if verified
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@index([role])
+}
+
+enum UserRole {
+  SUPER_ADMIN    // Full access - final approval authority
+  ADMIN          // Site management, can approve content
+  EDITOR         // Can review and request changes
+  SENIOR_WRITER  // Can publish without review (trusted)
+  AUTHOR         // Contributor - requires approval
+  CONTRIBUTOR    // Guest contributor - requires strict review
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==========================================
+// ANALYTICS & TRACKING
+// ==========================================
+
+model AnalyticsEvent {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  eventType   String
+  articleSlug String?
+  sessionId   String?
+  userAgent   String?
+  referrer    String?
+  country     String?
+  city        String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([articleSlug])
+  @@index([createdAt])
+}
+
+// ==========================================
+// POSTS / ARTICLES
+// ==========================================
+
+model Post {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  slug            String       @unique
+  excerpt         String?
+  content         String       // HTML content from rich text editor
+  featuredImage   String?
+  category        String
+  tags            String[]
+  status          PostStatus   @default(DRAFT)
+  featured        Boolean      @default(false)
+  authorId        String       @db.ObjectId
+  author          User         @relation(fields: [authorId], references: [id])
+  views           Int          @default(0)
+  readingTime     Int?         // in minutes
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  // Impact Score™ relation
+  impactScore     ImpactScore?
+
+  @@index([category])
+  @@index([status])
+  @@index([authorId])
+  @@index([publishedAt])
+  @@index([featured])
+}
+
+enum PostStatus {
+  DRAFT
+  PENDING_REVIEW    // Submitted by contributor for review
+  IN_REVIEW         // Being reviewed by editor
+  CHANGES_REQUESTED // Sent back for revisions
+  APPROVED          // Approved, ready to publish
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+  REJECTED          // Not approved for publication
+}
+
+// ==========================================
+// MEDIA LIBRARY
+// ==========================================
+
+model Media {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  url         String
+  publicId    String   // Cloudinary public ID
+  type        String   // image, video, document
+  format      String   // jpg, png, pdf, etc.
+  bytes       Int      @default(0) // file size in bytes
+  width       Int?
+  height      Int?
+  altText     String?
+  caption     String?
+  uploadedBy  String   // user email
+  folder      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([uploadedBy])
+  @@index([folder])
+}
+
+// ==========================================
+// TRENDING TOPICS
+// ==========================================
+
+model TrendingTopic {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  url       String
+  category  String
+  upiScore  Int         @default(50) // Urban Pulse Index score 0-100
+  trend     TrendStatus @default(STABLE)
+  isActive  Boolean     @default(true)
+  order     Int         @default(0) // For manual ordering
+  expiresAt DateTime?   // Optional expiration date
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([isActive])
+  @@index([order])
+}
+
+enum TrendStatus {
+  UP
+  DOWN
+  STABLE
+}
+
+// ==========================================
+// SITE SETTINGS
+// ==========================================
+
+model SiteSetting {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  category  String   // general, appearance, monetization, security
+  key       String
+  value     String   // JSON stringified value
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([category, key])
+  @@index([category])
+}
+
+// ==========================================
+// EDITORIAL WORKFLOW
+// ==========================================
+
+// Editorial Review - Tracks the review process for each post
+model EditorialReview {
+  id              String              @id @default(auto()) @map("_id") @db.ObjectId
+  postId          String              @db.ObjectId
+  reviewerId      String?             @db.ObjectId // Editor/Admin reviewing
+  status          EditorialStatus     @default(PENDING)
+  priority        EditorialPriority   @default(NORMAL)
+  deadline        DateTime?           // Review deadline
+  assignedAt      DateTime?
+  reviewedAt      DateTime?
+  publishedAt     DateTime?
+  notes           String?             // Internal notes
+  feedbackHistory EditorialFeedback[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([postId])
+  @@index([reviewerId])
+  @@index([status])
+  @@index([priority])
+}
+
+enum EditorialStatus {
+  PENDING           // Awaiting assignment
+  ASSIGNED          // Assigned to editor
+  IN_REVIEW         // Being reviewed
+  CHANGES_REQUESTED // Sent back for revisions
+  REVISION_SUBMITTED // Author resubmitted
+  APPROVED          // Ready for publishing
+  PUBLISHED         // Live
+  REJECTED          // Not approved
+  ON_HOLD           // Paused
+}
+
+enum EditorialPriority {
+  URGENT     // Breaking news - immediate review
+  HIGH       // Important - same day
+  NORMAL     // Standard - within 48 hours
+  LOW        // Can wait - within a week
+}
+
+// Editorial Feedback - Comments between editors and authors
+model EditorialFeedback {
+  id               String           @id @default(auto()) @map("_id") @db.ObjectId
+  editorialReviewId String          @db.ObjectId
+  editorialReview  EditorialReview  @relation(fields: [editorialReviewId], references: [id], onDelete: Cascade)
+  authorId         String           @db.ObjectId
+  authorName       String
+  authorRole       String
+  type             FeedbackType     @default(COMMENT)
+  content          String
+  isInternal       Boolean          @default(false) // Internal editor notes vs author-visible
+  attachments      String[]         // File URLs
+  createdAt        DateTime         @default(now())
+
+  @@index([editorialReviewId])
+  @@index([authorId])
+}
+
+enum FeedbackType {
+  COMMENT           // General comment
+  REVISION_REQUEST  // Specific change request
+  APPROVAL          // Approval note
+  REJECTION         // Rejection reason
+  QUESTION          // Clarification needed
+  RESPONSE          // Author response
+}
+
+// Editorial Assignment - Track who can review what categories
+model EditorialAssignment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  category   String   // Category they can edit
+  canApprove Boolean  @default(false) // Can give final approval
+  canPublish Boolean  @default(false) // Can publish directly
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, category])
+  @@index([userId])
+  @@index([category])
+}
+
+// Publishing Rules - Category-specific rules
+model PublishingRule {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  category            String   @unique
+  requiresReview      Boolean  @default(true)
+  minWordCount        Int      @default(300)
+  maxWordCount        Int?
+  requiresFeaturedImage Boolean @default(true)
+  requiresExcerpt     Boolean  @default(true)
+  requiresMetaDescription Boolean @default(true)
+  requiredTags        Int      @default(2) // Minimum tags
+  autoPublishTrusted  Boolean  @default(false) // Senior writers can auto-publish
+  notifyOnSubmission  String[] // Email addresses to notify
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// Editorial Activity Log - Audit trail
+model EditorialActivityLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  userId    String   @db.ObjectId
+  userName  String
+  userRole  String
+  action    String   // SUBMITTED, ASSIGNED, REVIEWED, APPROVED, REJECTED, PUBLISHED, etc.
+  details   String?  // Additional context
+  metadata  Json?    // Any extra data
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// Login Attempts - Security tracking
+model LoginAttempt {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  email     String
+  ipAddress String
+  userAgent String?
+  location  String?
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([ipAddress])
+  @@index([success])
+  @@index([createdAt])
+}
+
+// ==========================================
+// AFRIVERSE UNIQUE FEATURES
+// ==========================================
+
+// Impact Score™ - Measures real-world impact of articles
+model ImpactScore {
+  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
+  postId              String        @unique @db.ObjectId
+  post                Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  // Impact Metrics (0-100 each)
+  policyInfluence     Int           @default(0) // Did it influence policy?
+  socialReach         Int           @default(0) // Social media reach
+  mediaExposure       Int           @default(0) // Did it get media coverage?
+  economicImpact      Int           @default(0) // Economic/business impact
+  communityEngagement Int           @default(0) // Community response level
+  
+  // Computed overall score (average of metrics)
+  overallScore        Int           @default(0)
+  level               ImpactLevel   @default(EMERGING)
+  
+  // Verification
+  verifiedOutcomes    String[]      // List of verified real-world outcomes
+  evidenceLinks       String[]      // Links to evidence of impact
+  verifiedBy          String?       // Editor who verified
+  verifiedAt          DateTime?
+  
+  // Community input
+  communityVotes      Int           @default(0)
+  reports             ImpactReport[]
+  
+  lastUpdated         DateTime      @default(now())
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([overallScore])
+  @@index([level])
+}
+
+enum ImpactLevel {
+  EMERGING       // 0-29: Story just published, impact TBD
+  NOTABLE        // 30-49: Starting to gain traction
+  SIGNIFICANT    // 50-69: Notable real-world effects
+  MAJOR          // 70-89: Significant verified impact
+  TRANSFORMATIVE // 90-100: Changed policy/society measurably
+}
+
+// Community reports on article impact
+model ImpactReport {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  impactScoreId String       @db.ObjectId
+  impactScore   ImpactScore  @relation(fields: [impactScoreId], references: [id], onDelete: Cascade)
+  reporterName  String?
+  reporterEmail String?
+  reporterId    String?      @db.ObjectId // If logged in user
+  impactType    String       // e.g., "policy", "community", "economic"
+  description   String       // What impact did you observe?
+  evidenceUrl   String?      // Link to evidence
+  location      String?      // Where did impact occur?
+  status        String       @default("PENDING") // PENDING, VERIFIED, REJECTED
+  verifiedBy    String?      @db.ObjectId
+  verifiedAt    DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([impactScoreId])
+  @@index([status])
+}
+
+// AfriPulse Index™ - Real-time African Sentiment Tracker
+model AfriPulseIndex {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  country         String          // Country code (NG, KE, ZA, GH, etc.)
+  countryName     String          // Full country name
+  flagEmoji       String?         // 🇳🇬, 🇰🇪, etc.
+  
+  // Sentiment Scores (0-100, 50 = neutral)
+  economyScore    Int             @default(50) // Economic optimism
+  politicsScore   Int             @default(50) // Political confidence
+  socialScore     Int             @default(50) // Social sentiment
+  techScore       Int             @default(50) // Tech/innovation excitement
+  
+  // Trends
+  economyTrend    PulseTrend      @default(STABLE)
+  politicsTrend   PulseTrend      @default(STABLE)
+  socialTrend     PulseTrend      @default(STABLE)
+  techTrend       PulseTrend      @default(STABLE)
+  
+  // Overall
+  overallScore    Int             @default(50)
+  overallTrend    PulseTrend      @default(STABLE)
+  
+  // Highlights
+  topStory        String?         // Current top story affecting sentiment
+  topStoryUrl     String?
+  keyIndicators   String[]        // Key points driving sentiment
+  
+  // Data quality
+  dataPoints      Int             @default(0) // Number of data sources
+  lastUpdated     DateTime        @default(now())
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([country])
+  @@index([overallScore])
+}
+
+enum PulseTrend {
+  RISING      // Sentiment improving
+  FALLING     // Sentiment declining
+  STABLE      // No significant change
+  VOLATILE    // Rapid changes
+}
+
+// AfriPulse Topic Sentiment - Sentiment for specific topics
+model AfriPulseTopic {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  topic         String      @unique // e.g., "Naira Exchange Rate", "AFCON 2026", "AI in Africa"
+  category      String      // Economy, Politics, Sports, Tech, Culture
+  
+  sentimentScore Int        @default(50) // 0-100
+  trend         PulseTrend  @default(STABLE)
+  
+  // Engagement
+  mentions      Int         @default(0) // How often discussed
+  engagement    Int         @default(0) // Total engagement
+  
+  // Context
+  summary       String?     // Brief summary of current sentiment
+  relatedArticles String[]  // Article slugs related to this topic
+  
+  isActive      Boolean     @default(true)
+  expiresAt     DateTime?   // Topics can expire (e.g., events)
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([category])
+  @@index([sentimentScore])
+  @@index([isActive])
+}
+
+// Verified Storyteller Network - Authentic African voices
+model VerifiedStoryteller {
+  id              String              @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String              @unique @db.ObjectId
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Verification Status
+  status          StorytellerStatus   @default(PENDING)
+  verifiedAt      DateTime?
+  verifiedBy      String?             // Admin who verified
+  
+  // Profile
+  displayName     String
+  bio             String
+  expertise       String[]            // Areas of expertise
+  languages       String[]            // Languages they report in
+  
+  // Location
+  country         String              // Primary country
+  region          String?             // Region/state
+  city            String?
+  isLocalReporter Boolean             @default(false) // Reports from their community
+  isDiaspora      Boolean             @default(false) // African in diaspora
+  
+  // Credentials
+  credentials     String[]            // Journalism qualifications, affiliations
+  portfolioLinks  String[]            // Previous work
+  socialProof     Json?               // Verified social accounts
+  
+  // Reputation
+  trustScore      Int                 @default(50) // 0-100 based on accuracy
+  articlesCount   Int                 @default(0)
+  verifiedImpacts Int                 @default(0) // Articles with verified impact
+  communityRating Float               @default(0) // Reader ratings
+  totalRatings    Int                 @default(0)
+  
+  // Badge Level
+  badgeLevel      StorytellerBadge    @default(BRONZE)
+  
+  // Contact (private)
+  contactEmail    String?
+  contactPhone    String?
+  
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([status])
+  @@index([country])
+  @@index([badgeLevel])
+  @@index([trustScore])
+}
+
+enum StorytellerStatus {
+  PENDING       // Applied, awaiting review
+  VERIFIED      // Verified storyteller
+  FEATURED      // Featured/highlighted storyteller
+  SUSPENDED     // Temporarily suspended
+  REVOKED       // Verification revoked
+}
+
+enum StorytellerBadge {
+  BRONZE        // New verified storyteller
+  SILVER        // 10+ articles, good trust score
+  GOLD          // 50+ articles, high trust score, verified impacts
+  PLATINUM      // Top storytellers, exceptional track record
+  AMBASSADOR    // AfriVerse ambassadors, community leaders
+}
+
+// Storyteller Applications
+model StorytellerApplication {
+  id              String              @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?             @db.ObjectId
+  
+  // Applicant Info
+  name            String
+  email           String
+  phone           String?
+  
+  // Profile
+  country         String
+  city            String?
+  languages       String[]
+  expertise       String[]
+  bio             String
+  
+  // Credentials
+  credentials     String?
+  portfolioLinks  String[]
+  linkedIn        String?
+  twitter         String?
+  
+  // Application
+  whyJoin         String              // Why do you want to join?
+  sampleWork      String?             // Link to sample work
+  references      String[]            // Professional references
+  
+  // Review
+  status          ApplicationStatus   @default(PENDING)
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  reviewNotes     String?
+  
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([country])
+}
+
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  MORE_INFO_NEEDED
+}
+
+// ==========================================
+// NOTIFICATIONS
+// ==========================================
+
+// Admin/User Notifications
+model Notification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String           @db.ObjectId
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType @default(GENERAL)
+  title     String
+  message   String
+  link      String?          // Link to relevant page
+  read      Boolean          @default(false)
+  readAt    DateTime?
+  expiresAt DateTime?        // Optional expiration
+  metadata  Json?            // Additional data
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([read])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  GENERAL           // General notification
+  AFRIPULSE_REMINDER // Weekly AfriPulse update reminder
+  EDITORIAL         // Editorial workflow notification
+  COMMENT           // New comment notification
+  POST_STATUS       // Post status change notification
+  IMPACT_REPORT     // New impact report submitted
+  STORYTELLER       // Storyteller application update
+  SYSTEM            // System notification
+}

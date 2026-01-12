@@ -1,0 +1,18 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="180" height="180" rx="40" fill="#1A1A2E"/>
+  
+  <!-- Africa-inspired pattern accents -->
+  <circle cx="30" cy="30" r="10" fill="#00D9FF" opacity="0.6"/>
+  <circle cx="150" cy="30" r="8" fill="#E91E63" opacity="0.5"/>
+  <circle cx="30" cy="150" r="6" fill="#E91E63" opacity="0.4"/>
+  <circle cx="150" cy="150" r="8" fill="#00D9FF" opacity="0.5"/>
+  
+  <!-- Stylized "A" for AfriVerse - larger and bolder -->
+  <path d="M90 30L45 150H60L72 120H108L120 150H135L90 30Z" fill="#F39C12"/>
+  <path d="M78 105L90 70L102 105H78Z" fill="#1A1A2E"/>
+  
+  <!-- Pulse/heartbeat line representing AfriPulse Index -->
+  <path d="M20 160L40 160L55 145L70 165L85 160" stroke="#00D9FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M95 160L110 160L125 145L140 165L160 160" stroke="#E91E63" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
