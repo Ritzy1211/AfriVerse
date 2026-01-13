@@ -13,6 +13,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
     "db:studio": "prisma studio",
+    "sanity:migrate": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} scripts/migrate-to-sanity.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {
@@ -20,7 +21,12 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
+    "@portabletext/react": "^6.0.2",
     "@prisma/client": "^5.22.0",
+    "@sanity/client": "^7.14.0",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^3.99.0",
     "@sendgrid/mail": "^8.1.6",
     "@sentry/nextjs": "^10.32.1",
     "@tiptap/extension-color": "^3.14.0",
@@ -44,12 +50,15 @@
     "next-auth": "^5.0.0-beta.30",
     "next-cloudinary": "^6.17.5",
     "next-intl": "^4.7.0",
+    "next-sanity": "^9.12.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reading-time": "^1.5.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "resend": "^6.6.0",
+    "sanity": "^3.99.0",
+    "styled-components": "^6.3.5",
     "tailwind-merge": "2.2.0"
   },
   "devDependencies": {

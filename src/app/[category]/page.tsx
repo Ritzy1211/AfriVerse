@@ -6,6 +6,9 @@ import Pagination from '@/components/Pagination';
 import type { Metadata } from 'next';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
 
+// Revalidate category pages every 60 seconds
+export const revalidate = 60;
+
 const ARTICLES_PER_PAGE = 9;
 
 interface CategoryPageProps {

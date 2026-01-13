@@ -21,6 +21,10 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'res.cloudinary.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
     dangerouslyAllowSVG: true,

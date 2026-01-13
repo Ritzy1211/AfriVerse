@@ -284,7 +284,7 @@ async function seedAfriPulseTopics() {
 async function seedSampleStoryteller() {
   // First, create a sample writer user
   const existingWriter = await prisma.user.findUnique({
-    where: { email: 'amara.writer@afriverse.ng' },
+    where: { email: 'amara.writer@afriverse.africa' },
   });
 
   let writerUser;
@@ -293,7 +293,7 @@ async function seedSampleStoryteller() {
     const hashedPassword = await bcrypt.hash('Writer2025!', 12);
     writerUser = await prisma.user.create({
       data: {
-        email: 'amara.writer@afriverse.ng',
+        email: 'amara.writer@afriverse.africa',
         name: 'Amara Okonkwo',
         password: hashedPassword,
         role: 'SENIOR_WRITER',
@@ -342,7 +342,7 @@ async function seedSampleStoryteller() {
         communityRating: 4.8,
         totalRatings: 234,
         badgeLevel: 'PLATINUM',
-        contactEmail: 'amara.writer@afriverse.ng',
+        contactEmail: 'amara.writer@afriverse.africa',
       },
     });
     console.log('  ✓ Created verified storyteller profile');
@@ -352,7 +352,7 @@ async function seedSampleStoryteller() {
 
   // Create another sample writer
   const existingWriter2 = await prisma.user.findUnique({
-    where: { email: 'kwame.reporter@afriverse.ng' },
+    where: { email: 'kwame.reporter@afriverse.africa' },
   });
 
   let writerUser2;
@@ -361,7 +361,7 @@ async function seedSampleStoryteller() {
     const hashedPassword = await bcrypt.hash('Writer2025!', 12);
     writerUser2 = await prisma.user.create({
       data: {
-        email: 'kwame.reporter@afriverse.ng',
+        email: 'kwame.reporter@afriverse.africa',
         name: 'Kwame Asante',
         password: hashedPassword,
         role: 'AUTHOR',
@@ -405,7 +405,7 @@ async function seedSampleStoryteller() {
         communityRating: 4.5,
         totalRatings: 89,
         badgeLevel: 'SILVER',
-        contactEmail: 'kwame.reporter@afriverse.ng',
+        contactEmail: 'kwame.reporter@afriverse.africa',
       },
     });
     console.log('  ✓ Created second verified storyteller profile');

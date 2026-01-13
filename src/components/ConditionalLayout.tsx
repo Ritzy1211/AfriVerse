@@ -19,9 +19,10 @@ export default function ConditionalLayout({
   // Routes that should NOT have the public header/footer
   const isAdminRoute = pathname?.startsWith('/admin');
   const isApiRoute = pathname?.startsWith('/api');
+  const isStudioRoute = pathname?.startsWith('/studio');
   
-  // If it's an admin or API route, render children directly
-  if (isAdminRoute || isApiRoute) {
+  // If it's an admin, API, or studio route, render children directly
+  if (isAdminRoute || isApiRoute || isStudioRoute) {
     return <>{children}</>;
   }
   

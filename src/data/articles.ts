@@ -6,6 +6,8 @@ import html from 'remark-html';
 import { Article, Author } from '@/types';
 import { categories } from './categories';
 import { prisma } from '@/lib/prisma';
+import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 
 // Content directory path
 const contentDirectory = path.join(process.cwd(), 'content/articles');
@@ -197,8 +199,8 @@ async function getArticlesFromMarkdown(): Promise<Article[]> {
   return articles;
 }
 
-// Get all articles (combined from database and markdown files)
-export async function getAllArticles(): Promise<Article[]> {
+// Internal function to fetch all articles
+async function _getAllArticles(): Promise<Article[]> {
   // Fetch from both sources in parallel
   const [dbArticles, mdArticles] = await Promise.all([
     getArticlesFromDatabase(),
@@ -227,6 +229,13 @@ export async function getAllArticles(): Promise<Article[]> {
     new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 }
+
+// Cached version - revalidates every 60 seconds
+export const getAllArticles = unstable_cache(
+  _getAllArticles,
+  ['all-articles'],
+  { revalidate: 60, tags: ['articles'] }
+);
 
 // Get a single article by slug (checks database first, then markdown files)
 export async function getArticleBySlug(slug: string, categorySlug?: string): Promise<Article | null> {

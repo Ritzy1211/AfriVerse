@@ -102,7 +102,7 @@ export default function PrivacyPage() {
               <li><strong>Data Portability:</strong> Receive your data in a portable format</li>
             </ul>
             <p>
-              To exercise these rights, contact us at <a href="mailto:privacy@afriverse.ng">privacy@afriverse.ng</a>
+              To exercise these rights, contact us at <a href="mailto:privacy@afriverse.africa">privacy@afriverse.africa</a>
             </p>
 
             <h2>7. Third-Party Links</h2>
@@ -133,14 +133,14 @@ export default function PrivacyPage() {
             <h2>12. Contact Us</h2>
             <p>For privacy-related questions or concerns:</p>
             <ul>
-              <li><strong>Email:</strong> <a href="mailto:privacy@afriverse.ng">privacy@afriverse.ng</a></li>
+              <li><strong>Email:</strong> <a href="mailto:privacy@afriverse.africa">privacy@afriverse.africa</a></li>
               <li><strong>Address:</strong> 15 Adeola Odeku Street, Victoria Island, Lagos, Nigeria</li>
             </ul>
 
             <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mt-8">
               <h3 className="mt-0">Summary</h3>
               <p className="mb-0">
-                We collect minimal data needed to provide you with a great reading experience. We don't sell your data. You can control your preferences and request deletion of your data at any time. For questions, email <a href="mailto:privacy@afriverse.ng">privacy@afriverse.ng</a>.
+                We collect minimal data needed to provide you with a great reading experience. We don't sell your data. You can control your preferences and request deletion of your data at any time. For questions, email <a href="mailto:privacy@afriverse.africa">privacy@afriverse.africa</a>.
               </p>
             </div>
           </div>

@@ -8,6 +8,11 @@ import Link from 'next/link';
 import { TranslatedSectionHeader, TranslatedTopStoriesHeader } from '@/components/TranslatedContent';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
 import AfriPulseIndex from '@/components/AfriPulseIndex';
+import { Suspense } from 'react';
+import { ArticleCardSkeleton } from '@/components/Skeleton';
+
+// Revalidate homepage every 60 seconds
+export const revalidate = 60;
 
 export default async function Home() {
   const allArticles = await getAllArticles();

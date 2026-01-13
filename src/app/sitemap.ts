@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllArticles } from '@/data/articles';
 import { categories } from '@/data/categories';
 
-const BASE_URL = 'https://afriverse.ng';
+const BASE_URL = 'https://afriverse.africa';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getAllArticles();

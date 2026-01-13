@@ -426,7 +426,7 @@ export default function PostsPage() {
                         <Edit className="w-4 h-4 text-gray-500" />
                       </Link>
                       <button
-                        onClick={() => navigator.clipboard.writeText(`https://afriverse.ng/${post.category.toLowerCase()}/${post.slug}`)}
+                        onClick={() => navigator.clipboard.writeText(`https://afriverse.africa/${post.category.toLowerCase()}/${post.slug}`)}
                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                         title="Copy Link"
                       >

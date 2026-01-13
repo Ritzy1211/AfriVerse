@@ -13,34 +13,33 @@ const fallbackTopics: TrendingTopic[] = [
 ];
 
 export default function TrendingTicker() {
-  const [topics, setTopics] = useState<TrendingTopic[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Start with fallback data immediately for faster render
+  const [topics, setTopics] = useState<TrendingTopic[]>(fallbackTopics);
   const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchTrendingTopics() {
       try {
-        const response = await fetch('/api/trending');
+        const response = await fetch('/api/trending', {
+          next: { revalidate: 60 } // Cache for 60 seconds
+        });
         if (response.ok) {
           const data = await response.json();
-          // Use fallback if no topics returned from database
-          setTopics(data.length > 0 ? data : fallbackTopics);
-        } else {
-          setTopics(fallbackTopics);
+          if (data.length > 0) {
+            setTopics(data);
+          }
         }
       } catch (error) {
+        // Keep fallback data on error
         console.error('Error fetching trending topics:', error);
-        setTopics(fallbackTopics);
-      } finally {
-        setIsLoading(false);
       }
     }
 
     fetchTrendingTopics();
   }, []);
 
-  // Don't render until we have topics
-  if (isLoading || topics.length === 0) {
+  // Always render with available topics (fallback or fetched)
+  if (topics.length === 0) {
     return null;
   }
 

@@ -16,13 +16,13 @@ const offices = [
     city: 'Lagos',
     address: '15 Adeola Odeku Street, Victoria Island, Lagos',
     phone: '+234 810 956 1020',
-    email: 'lagos@afriverse.ng',
+    email: 'lagos@afriverse.africa',
   },
   {
     city: 'Abuja',
     address: '25 Aminu Kano Crescent, Wuse 2, Abuja',
     phone: '+234 912 271 9293',
-    email: 'abuja@afriverse.ng',
+    email: 'abuja@afriverse.africa',
   },
 ];
 
@@ -35,12 +35,35 @@ export default function ContactPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, this would send to an API
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (
@@ -226,13 +249,33 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {/* Error Message */}
+                    {error && (
+                      <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400">
+                        {error}
+                      </div>
+                    )}
+
                     {/* Submit */}
                     <button
                       type="submit"
-                      className="w-full md:w-auto px-8 py-3 bg-brand-accent text-white rounded-lg font-medium hover:bg-brand-accent/90 transition-colors flex items-center justify-center gap-2"
+                      disabled={loading}
+                      className="w-full md:w-auto px-8 py-3 bg-brand-accent text-white rounded-lg font-medium hover:bg-brand-accent/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Send className="w-5 h-5" />
-                      Send Message
+                      {loading ? (
+                        <>
+                          <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-5 h-5" />
+                          Send Message
+                        </>
+                      )}
                     </button>
                   </form>
                 )}
@@ -248,11 +291,11 @@ export default function ContactPage() {
                 </h3>
                 <div className="space-y-4">
                   <a
-                    href="mailto:hello@afriverse.ng"
+                    href="mailto:tips@afriverse.africa"
                     className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
                   >
                     <Mail className="w-5 h-5" />
-                    hello@afriverse.ng
+                    tips@afriverse.africa
                   </a>
                   <a
                     href="tel:+2348012345678"

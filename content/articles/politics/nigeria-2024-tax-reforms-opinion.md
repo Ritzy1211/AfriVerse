@@ -122,4 +122,4 @@ After analyzing the proposals, I conclude:
 
 *Dr. Funke Adeyemi is a Professor of Economics at Lagos Business School and a former advisor to the Central Bank of Nigeria. Opinions expressed are her own.*
 
-*AfriVerse Opinion welcomes diverse perspectives. Submit op-eds to opinion@AfriVerse.ng*
+*AfriVerse Opinion welcomes diverse perspectives. Submit op-eds to opinion@afriverse.africa*

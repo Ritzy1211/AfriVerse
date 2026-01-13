@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   const relatedArticles = await getRelatedArticles(article);
-  const shareUrl = `https://afriverse.ng/${article.category.slug}/${article.slug}`;
+  const shareUrl = `https://afriverse.africa/${article.category.slug}/${article.slug}`;
 
   return (
     <>

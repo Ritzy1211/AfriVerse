@@ -1,6 +1,6 @@
 import { getAllArticles } from '@/data/articles';
 
-const BASE_URL = 'https://afriverse.ng';
+const BASE_URL = 'https://afriverse.africa';
 
 export async function GET() {
   const articles = await getAllArticles();
@@ -33,8 +33,8 @@ export async function GET() {
       <link>${BASE_URL}</link>
     </image>
     <copyright>© ${new Date().getFullYear()} AfriVerse. All rights reserved.</copyright>
-    <managingEditor>hello@afriverse.ng (AfriVerse)</managingEditor>
-    <webMaster>tech@afriverse.ng (AfriVerse)</webMaster>
+    <managingEditor>tips@afriverse.africa (AfriVerse)</managingEditor>
+    <webMaster>tips@afriverse.africa (AfriVerse)</webMaster>
     <ttl>60</ttl>
     ${rssItems}
   </channel>

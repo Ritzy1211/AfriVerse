@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// Cache the response for 5 minutes
+export const revalidate = 300;
+
 // GET /api/afripulse - Public endpoint to get AfriPulse data
 export async function GET(request: NextRequest) {
   try {

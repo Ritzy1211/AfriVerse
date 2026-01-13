@@ -415,7 +415,7 @@ export default function EditPostPage() {
               Slug (URL)
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">afriverse.ng/{category.toLowerCase() || 'category'}/</span>
+              <span className="text-sm text-gray-500">afriverse.africa/{category.toLowerCase() || 'category'}/</span>
               <input
                 type="text"
                 value={slug}

@@ -150,4 +150,4 @@ Both phones support Nigerian 5G bands, but:
 
 ---
 
-*AfriVerse Tech reviews the latest gadgets available in Nigeria. Request a review at tech@AfriVerse.ng*
+*AfriVerse Tech reviews the latest gadgets available in Nigeria. Request a review at tech@afriverse.africa*

@@ -108,7 +108,7 @@ export default function TermsPage() {
 
             <h3>4.3 DMCA Notice</h3>
             <p>
-              If you believe content on our site infringes your copyright, please send a DMCA notice to <a href="mailto:legal@afriverse.ng">legal@afriverse.ng</a> with:
+              If you believe content on our site infringes your copyright, please send a DMCA notice to <a href="mailto:legal@afriverse.africa">legal@afriverse.africa</a> with:
             </p>
             <ul>
               <li>Description of the copyrighted work</li>
@@ -184,14 +184,14 @@ export default function TermsPage() {
             <h2>14. Contact Us</h2>
             <p>For questions about these Terms:</p>
             <ul>
-              <li><strong>Email:</strong> <a href="mailto:legal@afriverse.ng">legal@afriverse.ng</a></li>
+              <li><strong>Email:</strong> <a href="mailto:legal@afriverse.africa">legal@afriverse.africa</a></li>
               <li><strong>Address:</strong> 15 Adeola Odeku Street, Victoria Island, Lagos, Nigeria</li>
             </ul>
 
             <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mt-8">
               <h3 className="mt-0">Summary</h3>
               <p className="mb-0">
-                Respect our content and community. Don't copy or redistribute our articles without permission. Be civil in comments. We provide content "as is" without guarantees. For questions, email <a href="mailto:legal@afriverse.ng">legal@afriverse.ng</a>.
+                Respect our content and community. Don't copy or redistribute our articles without permission. Be civil in comments. We provide content "as is" without guarantees. For questions, email <a href="mailto:legal@afriverse.africa">legal@afriverse.africa</a>.
               </p>
             </div>
           </div>

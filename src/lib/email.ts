@@ -6,7 +6,7 @@ if (apiKey) {
   sgMail.setApiKey(apiKey);
 }
 
-const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'newsletter@afriverse.ng';
+const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'tips@afriverse.africa';
 const fromName = process.env.SENDGRID_FROM_NAME || 'AfriVerse';
 
 export interface SendEmailOptions {
@@ -114,7 +114,7 @@ export async function sendBulkNewsletter(
 // Welcome email template
 export function getWelcomeEmailHtml(name?: string): string {
   const displayName = name || 'there';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.ng';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.africa';
   
   return `
 <!DOCTYPE html>
@@ -215,7 +215,7 @@ export function getWelcomeEmailHtml(name?: string): string {
 
 // Notification email for new comment
 export function getNewCommentNotificationHtml(articleTitle: string, commenterName: string, commentContent: string): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.ng';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.africa';
   
   return `
 <!DOCTYPE html>

@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_NG',
-    url: 'https://afriverse.ng',
+    url: 'https://afriverse.africa',
     siteName: 'AfriVerse',
     title: 'AfriVerse - Where Stories Connect',
     description: 'Your trusted source for news, culture, tech, and everything that matters across Africa.',
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     google: 'your-google-verification-code',
   },
   alternates: {
-    canonical: 'https://afriverse.ng',
+    canonical: 'https://afriverse.africa',
   },
 };
 

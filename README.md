@@ -1,6 +1,6 @@
 # AfriVerse
 
-**Where Stories Connect** - A modern, multi-category blog platform built with Next.js 14, inspired by Billboard and Entrepreneur.
+**Where Stories Connect** - A modern, multi-category blog platform built with Next.js 14, inspired by Billboard, Entrepreneur and forbes.
 
 ## 🚀 Features
 
@@ -37,7 +37,7 @@
 ## 📁 Project Structure
 
 ```
-urban-grid/
+Urban muse network/
 ├── src/
 │   ├── app/                      # Next.js App Router
 │   │   ├── [category]/          # Dynamic category pages
@@ -144,7 +144,7 @@ npm start
 
 ### Environment Variables (Create `.env.local`)
 ```env
-NEXT_PUBLIC_SITE_URL=https://afriverse.ng
+NEXT_PUBLIC_SITE_URL=https://afriverse.africa
 NEXT_PUBLIC_GA_ID=your-google-analytics-id
 ```
 

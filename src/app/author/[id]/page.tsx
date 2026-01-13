@@ -119,7 +119,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                     </a>
                   )}
                   <a
-                    href={`mailto:${author.name.toLowerCase().replace(' ', '.')}@afriverse.ng`}
+                    href={`mailto:${author.name.toLowerCase().replace(' ', '.')}@afriverse.africa`}
                     className="p-3 bg-white/10 rounded-full hover:bg-secondary transition-colors"
                   >
                     <Mail className="w-5 h-5" />
