@@ -493,8 +493,8 @@ export default function MediaKitPage() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Phone</p>
-                      <a href="tel:+2348012345678" className="font-medium hover:text-amber-400">
-                        +234 801 234 5678
+                      <a href="tel:+2349122719293" className="font-medium hover:text-amber-400">
+                        +234 91 227 19293
                       </a>
                     </div>
                   </div>
@@ -504,7 +504,7 @@ export default function MediaKitPage() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Office</p>
-                      <p className="font-medium">Lagos, Nigeria</p>
+                      <p className="font-medium">Abuja, Nigeria</p>
                     </div>
                   </div>
                 </div>

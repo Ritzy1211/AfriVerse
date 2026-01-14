@@ -223,6 +223,7 @@ export default function AfriPulseIndex({
   const [selectedCountry, setSelectedCountry] = useState<CountryPulse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<string>('');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -266,9 +267,14 @@ export default function AfriPulseIndex({
 
   useEffect(() => {
     fetchData();
+    // Set the timestamp only on client side to avoid hydration mismatch
+    setLastUpdated(new Date().toLocaleString());
     
     // Refresh data every 5 minutes
-    const interval = setInterval(fetchData, 5 * 60 * 1000);
+    const interval = setInterval(() => {
+      fetchData();
+      setLastUpdated(new Date().toLocaleString());
+    }, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchData]);
 
@@ -574,7 +580,7 @@ export default function AfriPulseIndex({
 
       {/* Footer */}
       <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-        <span>Updated: {new Date().toLocaleString()}</span>
+        <span>Updated: {lastUpdated || 'Loading...'}</span>
         <Link href="/afripulse/methodology" className="hover:text-amber-600 dark:hover:text-amber-400">
           Learn about our methodology →
         </Link>
