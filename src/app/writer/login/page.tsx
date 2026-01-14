@@ -166,7 +166,7 @@ export default function WriterLoginPage() {
           {/* Help Link */}
           <p className="text-center text-sm text-slate-500 mt-6">
             Having trouble signing in?{' '}
-            <a href="mailto:support@afriverse.com" className="text-primary hover:underline">
+            <a href="mailto:support@afriverse.africa" className="text-primary hover:underline">
               Contact support
             </a>
           </p>
