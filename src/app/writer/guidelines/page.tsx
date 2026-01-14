@@ -299,8 +299,8 @@ export default function GuidelinesPage() {
           <h3 className="font-medium text-slate-900 mb-2">Need Help?</h3>
           <p className="text-sm text-slate-600">
             Contact the editorial team at{' '}
-            <a href="mailto:editorial@afriverse.com" className="text-primary hover:underline">
-              editorial@afriverse.com
+            <a href="mailto:editorial@afriverse.africa" className="text-primary hover:underline">
+              editorial@afriverse.africa
             </a>
           </p>
         </section>

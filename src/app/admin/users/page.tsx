@@ -632,7 +632,7 @@ export default function UsersPage() {
                   type="email"
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  placeholder="john@afriverse.com"
+                  placeholder="john@afriverse.africa"
                   className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>

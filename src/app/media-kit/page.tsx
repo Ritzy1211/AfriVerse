@@ -482,8 +482,8 @@ export default function MediaKitPage() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Email</p>
-                      <a href="mailto:advertise@afriverse.com" className="font-medium hover:text-amber-400">
-                        advertise@afriverse.com
+                      <a href="mailto:advertise@afriverse.africa" className="font-medium hover:text-amber-400">
+                        advertise@afriverse.africa
                       </a>
                     </div>
                   </div>
