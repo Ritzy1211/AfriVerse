@@ -1,7 +1,6 @@
-export const metadata = {
-  title: 'AfriVerse Studio',
-  description: 'Content Management Studio for AfriVerse',
-};
+'use client';
+
+import { SessionProvider } from 'next-auth/react';
 
 export default function StudioLayout({
   children,
@@ -9,13 +8,15 @@ export default function StudioLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div 
-      style={{ 
-        height: '100vh', 
-        width: '100vw',
-      }}
-    >
-      {children}
-    </div>
+    <SessionProvider>
+      <div 
+        style={{ 
+          height: '100vh', 
+          width: '100vw',
+        }}
+      >
+        {children}
+      </div>
+    </SessionProvider>
   );
 }

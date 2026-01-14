@@ -15,6 +15,10 @@ import {
   Calendar,
   Eye,
   MessageSquare,
+  BarChart3,
+  Award,
+  Target,
+  Sparkles,
 } from 'lucide-react';
 
 interface Stats {
@@ -24,6 +28,29 @@ interface Stats {
   needsRevision: number;
   approved: number;
   published: number;
+  rejected: number;
+}
+
+interface Performance {
+  totalViews: number;
+  avgViews: number;
+  approvalRate: number;
+  thisMonthPublished: number;
+  memberSince: string;
+}
+
+interface TopArticle {
+  id: string;
+  title: string;
+  slug: string;
+  views: number;
+  publishedAt: string;
+  category: string;
+}
+
+interface CategoryCount {
+  category: string;
+  count: number;
 }
 
 interface RecentArticle {
@@ -31,6 +58,7 @@ interface RecentArticle {
   title: string;
   status: string;
   updatedAt: string;
+  views: number;
 }
 
 interface EditorialNote {
@@ -50,7 +78,17 @@ export default function WriterDashboard() {
     needsRevision: 0,
     approved: 0,
     published: 0,
+    rejected: 0,
   });
+  const [performance, setPerformance] = useState<Performance>({
+    totalViews: 0,
+    avgViews: 0,
+    approvalRate: 100,
+    thisMonthPublished: 0,
+    memberSince: '',
+  });
+  const [topArticles, setTopArticles] = useState<TopArticle[]>([]);
+  const [articlesByCategory, setArticlesByCategory] = useState<CategoryCount[]>([]);
   const [recentArticles, setRecentArticles] = useState<RecentArticle[]>([]);
   const [editorialNotes, setEditorialNotes] = useState<EditorialNote[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,6 +103,9 @@ export default function WriterDashboard() {
       if (res.ok) {
         const data = await res.json();
         setStats(data.stats);
+        setPerformance(data.performance || {});
+        setTopArticles(data.topArticles || []);
+        setArticlesByCategory(data.articlesByCategory || []);
         setRecentArticles(data.recentArticles || []);
         setEditorialNotes(data.editorialNotes || []);
       }
@@ -85,6 +126,12 @@ export default function WriterDashboard() {
       PUBLISHED: { label: 'Published', color: 'text-emerald-600', bg: 'bg-emerald-50' },
     };
     return configs[status] || { label: status, color: 'text-slate-600', bg: 'bg-slate-100' };
+  };
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
   };
 
   const firstName = session?.user?.name?.split(' ')[0] || 'Writer';
@@ -189,6 +236,45 @@ export default function WriterDashboard() {
           </div>
           <p className="text-2xl font-bold text-slate-900">{loading ? '—' : stats.published}</p>
           <p className="text-sm text-slate-500">Published</p>
+        </div>
+      </div>
+
+      {/* Performance Stats */}
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 text-white">
+        <div className="flex items-center gap-2 mb-6">
+          <BarChart3 className="w-5 h-5 text-secondary" />
+          <h2 className="font-semibold">Your Performance</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Eye className="w-4 h-4 text-cyan-400" />
+              <span className="text-slate-400 text-sm">Total Views</span>
+            </div>
+            <p className="text-2xl font-bold">{loading ? '—' : formatNumber(performance.totalViews)}</p>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Target className="w-4 h-4 text-green-400" />
+              <span className="text-slate-400 text-sm">Approval Rate</span>
+            </div>
+            <p className="text-2xl font-bold">{loading ? '—' : `${performance.approvalRate}%`}</p>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="text-slate-400 text-sm">Avg. Views/Article</span>
+            </div>
+            <p className="text-2xl font-bold">{loading ? '—' : formatNumber(performance.avgViews)}</p>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Calendar className="w-4 h-4 text-purple-400" />
+              <span className="text-slate-400 text-sm">This Month</span>
+            </div>
+            <p className="text-2xl font-bold">{loading ? '—' : performance.thisMonthPublished}</p>
+            <span className="text-xs text-slate-400">articles published</span>
+          </div>
         </div>
       </div>
 
@@ -310,6 +396,48 @@ export default function WriterDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Top Performing Articles */}
+      {topArticles.length > 0 && (
+        <div className="bg-white rounded-xl border border-slate-200">
+          <div className="flex items-center justify-between p-6 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-amber-500" />
+              <h2 className="font-semibold text-slate-900">Top Performing Articles</h2>
+            </div>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {topArticles.map((article, index) => (
+              <div key={article.id} className="flex items-center gap-4 p-4">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                  index === 0 ? 'bg-amber-100 text-amber-700' :
+                  index === 1 ? 'bg-slate-200 text-slate-700' :
+                  index === 2 ? 'bg-orange-100 text-orange-700' :
+                  'bg-slate-100 text-slate-500'
+                }`}>
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 truncate">{article.title}</p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-xs text-slate-400 capitalize">{article.category}</span>
+                    <span className="text-xs text-slate-400">
+                      {article.publishedAt && new Date(article.publishedAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="flex items-center gap-1 text-sm font-semibold text-slate-900">
+                    <Eye className="w-4 h-4 text-slate-400" />
+                    {formatNumber(article.views)}
+                  </div>
+                  <span className="text-xs text-slate-400">views</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Writing Tips */}
       <div className="bg-gradient-to-br from-blue-50 to-slate-50 border border-blue-100 rounded-xl p-6">

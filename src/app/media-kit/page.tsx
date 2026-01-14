@@ -13,11 +13,12 @@ import {
   BarChart3,
   Target,
   Award,
-  CheckCircle,
-  ArrowRight,
-  FileText
+  FileText,
+  ArrowRight
 } from 'lucide-react';
 import type { Metadata } from 'next';
+import AdvertisingCheckout from '@/components/AdvertisingCheckout';
+import AfricaWatermark from '@/components/AfricaWatermark';
 
 export const metadata: Metadata = {
   title: 'Media Kit | AfriVerse - Advertising Partnership',
@@ -120,6 +121,7 @@ const adFormats = [
 // Sponsored Content Packages
 const contentPackages = [
   {
+    id: 'sponsored-article',
     name: 'Sponsored Article',
     price: '$499',
     includes: [
@@ -131,6 +133,7 @@ const contentPackages = [
     ],
   },
   {
+    id: 'content-series',
     name: 'Content Series',
     price: '$1,999',
     includes: [
@@ -143,6 +146,7 @@ const contentPackages = [
     ],
   },
   {
+    id: 'brand-takeover',
     name: 'Brand Takeover',
     price: '$4,999',
     includes: [
@@ -158,9 +162,22 @@ const contentPackages = [
 
 export default function MediaKitPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900 relative">
+      {/* Africa Watermark - Global */}
+      <div className="fixed top-1/2 right-0 -translate-y-1/2 translate-x-1/4 pointer-events-none z-0 opacity-[0.02]">
+        <AfricaWatermark position="right" size="xl" opacity={1} className="text-gray-900 dark:text-white" />
+      </div>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20 overflow-hidden">
+        {/* Africa Watermark in Hero */}
+        <AfricaWatermark 
+          position="right" 
+          size="xl" 
+          opacity={0.08} 
+          className="text-amber-500"
+        />
+        
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -398,44 +415,7 @@ export default function MediaKitPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {contentPackages.map((pkg, index) => (
-              <div 
-                key={pkg.name}
-                className={`bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm ${
-                  index === 1 ? 'ring-2 ring-amber-500 relative' : ''
-                }`}
-              >
-                {index === 1 && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full">
-                    MOST POPULAR
-                  </span>
-                )}
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{pkg.name}</h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900 dark:text-white">{pkg.price}</span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  {pkg.includes.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/contact"
-                  className={`block text-center py-3 rounded-lg font-medium transition-colors ${
-                    index === 1
-                      ? 'bg-amber-500 text-white hover:bg-amber-600'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  Get Started
-                </Link>
-              </div>
-            ))}
-          </div>
+          <AdvertisingCheckout packages={contentPackages} />
         </div>
       </section>
 

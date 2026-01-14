@@ -66,3 +66,33 @@ html {
     transform: translateX(-50%);
   }
 }
+
+/* Africa watermark draw animation */
+@keyframes drawAfrica {
+  0% {
+    stroke-dashoffset: 400;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-draw-africa {
+  animation: drawAfrica 3s ease-in-out forwards;
+}
+
+/* Africa pulse animation */
+@keyframes africaPulse {
+  0%, 100% {
+    opacity: 0.03;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.06;
+    transform: scale(1.02);
+  }
+}
+
+.animate-africa-pulse {
+  animation: africaPulse 8s ease-in-out infinite;
+}

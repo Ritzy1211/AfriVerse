@@ -47,13 +47,15 @@ const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, minRole: 'CONTRIBUTOR' },
   { name: 'My Posts', href: '/admin/posts', icon: PenTool, minRole: 'CONTRIBUTOR', maxRole: 'SENIOR_WRITER' },
   { name: 'Editorial Desk', href: '/admin/desk', icon: ClipboardCheck, minRole: 'EDITOR' },
+  { name: 'Review Queue', href: '/admin/review', icon: ClipboardCheck, minRole: 'EDITOR' },
   { name: 'All Posts', href: '/admin/posts', icon: FileText, minRole: 'EDITOR' },
   { 
     name: 'Editorial', 
     icon: ClipboardCheck,
     minRole: 'EDITOR',
     children: [
-      { name: 'Review Queue', href: '/admin/editorial' },
+      { name: 'Review Queue', href: '/admin/review' },
+      { name: 'Activity Log', href: '/admin/activity' },
       { name: 'Roles & Permissions', href: '/admin/editorial/roles', minRole: 'ADMIN' },
     ]
   },
@@ -64,6 +66,7 @@ const navigation = [
   { name: 'Storytellers', href: '/admin/storytellers', icon: BadgeCheck, minRole: 'ADMIN' },
   { name: 'Users & Authors', href: '/admin/users', icon: Users, minRole: 'ADMIN' },
   { name: 'Comments', href: '/admin/comments', icon: MessageSquare, minRole: 'EDITOR' },
+  { name: 'Activity Log', href: '/admin/activity', icon: Activity, minRole: 'ADMIN' },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3, minRole: 'ADMIN' },
   { 
     name: 'Settings', 

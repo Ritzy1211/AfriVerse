@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { logActivity, ACTIVITY_ACTIONS } from '@/lib/activity-logger';
+import { sendEmail } from '@/lib/email';
 
 // POST - Submit an article for editorial review
 // This is the ONLY way a writer can move their article out of DRAFT
@@ -98,17 +100,48 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Log the activity
-    await prisma.editorialActivityLog.create({
-      data: {
-        postId: draftId,
-        userId: session.user.id,
-        userName: session.user.name || 'Unknown',
-        userRole: session.user.role || 'AUTHOR',
-        action: 'SUBMITTED',
-        details: `Article submitted for editorial review`,
-      },
+    // Log the activity using the centralized activity logger
+    await logActivity({
+      postId: draftId,
+      userId: session.user.id,
+      userName: session.user.name || 'Unknown',
+      userRole: session.user.role || 'AUTHOR',
+      action: ACTIVITY_ACTIONS.SUBMITTED_FOR_REVIEW,
+      details: `Article "${draft.title}" submitted for editorial review`,
     });
+
+    // Notify editors about new submission
+    const editors = await prisma.user.findMany({
+      where: { role: { in: ['SUPER_ADMIN', 'ADMIN', 'EDITOR'] } },
+      select: { email: true, name: true },
+      take: 5,
+    });
+
+    for (const editor of editors) {
+      try {
+        await sendEmail({
+          to: editor.email,
+          subject: `📝 New Article Submission: ${draft.title}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #F59E0B;">New Article Awaiting Review</h2>
+              <p><strong>Title:</strong> ${draft.title}</p>
+              <p><strong>Author:</strong> ${session.user.name || session.user.email}</p>
+              <p><strong>Category:</strong> ${draft.category}</p>
+              <p><strong>Word Count:</strong> ${wordCount} words</p>
+              <div style="margin-top: 20px;">
+                <a href="${process.env.NEXTAUTH_URL}/admin/review" 
+                   style="background-color: #F59E0B; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px;">
+                  Review Queue
+                </a>
+              </div>
+            </div>
+          `,
+        });
+      } catch (e) {
+        console.error(`Failed to notify editor ${editor.email}:`, e);
+      }
+    }
 
     return NextResponse.json({
       message: 'Article submitted for editorial review',

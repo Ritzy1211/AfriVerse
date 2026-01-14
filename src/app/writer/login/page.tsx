@@ -104,6 +104,11 @@ export default function WriterLoginPage() {
                   className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
               </div>
+              <div className="mt-1.5 text-right">
+                <a href="/writer/forgot-password" className="text-sm text-primary hover:underline">
+                  Forgot password?
+                </a>
+              </div>
             </div>
 
             <button

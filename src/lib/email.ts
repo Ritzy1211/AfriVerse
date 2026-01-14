@@ -249,3 +249,187 @@ export function getNewCommentNotificationHtml(articleTitle: string, commenterNam
 </html>
   `;
 }
+
+// Writer onboarding email template
+export function getWriterOnboardingEmailHtml(name: string, email: string, password: string, role: string): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.africa';
+  const roleLabels: Record<string, string> = {
+    CONTRIBUTOR: 'Contributor',
+    AUTHOR: 'Staff Writer',
+    SENIOR_WRITER: 'Senior Writer',
+    EDITOR: 'Section Editor',
+    ADMIN: 'Managing Editor',
+    SUPER_ADMIN: 'Editor-in-Chief',
+  };
+  const roleLabel = roleLabels[role] || role;
+  
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to the AfriVerse Newsroom!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <!-- Header -->
+    <tr>
+      <td style="background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%); padding: 40px 30px; text-align: center;">
+        <h1 style="margin: 0; color: #F39C12; font-size: 32px; font-weight: bold;">AfriVerse</h1>
+        <p style="margin: 10px 0 0 0; color: #00D9FF; font-size: 14px;">Newsroom Portal</p>
+      </td>
+    </tr>
+    
+    <!-- Content -->
+    <tr>
+      <td style="padding: 40px 30px;">
+        <h2 style="margin: 0 0 20px 0; color: #1A1A2E; font-size: 24px;">Welcome to the Team, ${name}! 🎉</h2>
+        
+        <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
+          You've been invited to join the <strong>AfriVerse</strong> editorial team as a <strong>${roleLabel}</strong>. 
+          We're excited to have you on board to help tell Africa's stories!
+        </p>
+        
+        <!-- Login Credentials Box -->
+        <div style="background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%); border-radius: 12px; padding: 25px; margin: 25px 0;">
+          <h3 style="margin: 0 0 15px 0; color: #F39C12; font-size: 16px; font-weight: bold;">🔐 Your Login Credentials</h3>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <td style="color: #9ca3af; font-size: 14px; padding: 5px 0;">Email:</td>
+              <td style="color: #ffffff; font-size: 14px; padding: 5px 0; font-weight: bold;">${email}</td>
+            </tr>
+            <tr>
+              <td style="color: #9ca3af; font-size: 14px; padding: 5px 0;">Password:</td>
+              <td style="color: #ffffff; font-size: 14px; padding: 5px 0; font-weight: bold;">${password}</td>
+            </tr>
+          </table>
+          <p style="margin: 15px 0 0 0; color: #F39C12; font-size: 12px;">
+            ⚠️ Please change your password after your first login!
+          </p>
+        </div>
+        
+        <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
+          As a ${roleLabel}, you'll have access to:
+        </p>
+        
+        <ul style="margin: 0 0 30px 0; padding-left: 20px; color: #4a5568; font-size: 16px; line-height: 1.8;">
+          <li><strong>Newsroom Dashboard</strong> - Track your articles and stats</li>
+          <li><strong>Article Composer</strong> - Write with our rich text editor</li>
+          <li><strong>Media Library</strong> - Upload images for your stories</li>
+          <li><strong>Editorial Notes</strong> - Receive feedback from editors</li>
+        </ul>
+        
+        <!-- CTA Button -->
+        <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+          <tr>
+            <td style="background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%); border-radius: 8px;">
+              <a href="${siteUrl}/writer/login" style="display: inline-block; padding: 16px 32px; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: bold;">
+                Login to Newsroom →
+              </a>
+            </td>
+          </tr>
+        </table>
+        
+        <p style="margin: 30px 0 0 0; color: #9ca3af; font-size: 14px; text-align: center;">
+          Having trouble? Reply to this email and we'll help you get started.
+        </p>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td style="background-color: #1A1A2E; padding: 30px; text-align: center;">
+        <p style="margin: 0 0 10px 0; color: #9ca3af; font-size: 14px;">
+          Welcome to the AfriVerse family!
+        </p>
+        <p style="margin: 0; color: #6b7280; font-size: 12px;">
+          © ${new Date().getFullYear()} AfriVerse. All rights reserved.<br>
+          <a href="${siteUrl}/writer/guidelines" style="color: #00D9FF;">Writer Guidelines</a> | 
+          <a href="${siteUrl}/privacy" style="color: #6b7280;">Privacy Policy</a>
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}
+
+// Password reset email template
+export function getPasswordResetEmailHtml(name: string, resetLink: string): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.africa';
+  
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Your Password - AfriVerse</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <!-- Header -->
+    <tr>
+      <td style="background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%); padding: 40px 30px; text-align: center;">
+        <h1 style="margin: 0; color: #F39C12; font-size: 32px; font-weight: bold;">AfriVerse</h1>
+        <p style="margin: 10px 0 0 0; color: #00D9FF; font-size: 14px;">Newsroom Portal</p>
+      </td>
+    </tr>
+    
+    <!-- Content -->
+    <tr>
+      <td style="padding: 40px 30px;">
+        <h2 style="margin: 0 0 20px 0; color: #1A1A2E; font-size: 24px;">Reset Your Password 🔐</h2>
+        
+        <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
+          Hi ${name || 'there'},
+        </p>
+        
+        <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
+          We received a request to reset your password. Click the button below to create a new password. 
+          This link will expire in <strong>1 hour</strong>.
+        </p>
+        
+        <!-- CTA Button -->
+        <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 30px auto;">
+          <tr>
+            <td style="background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%); border-radius: 8px;">
+              <a href="${resetLink}" style="display: inline-block; padding: 16px 32px; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: bold;">
+                Reset Password →
+              </a>
+            </td>
+          </tr>
+        </table>
+        
+        <p style="margin: 20px 0 0 0; color: #9ca3af; font-size: 14px;">
+          If the button doesn't work, copy and paste this link into your browser:
+        </p>
+        <p style="margin: 10px 0 0 0; color: #00D9FF; font-size: 12px; word-break: break-all;">
+          ${resetLink}
+        </p>
+        
+        <div style="background-color: #FEF3C7; border-left: 4px solid #F39C12; padding: 15px; margin: 30px 0; border-radius: 0 8px 8px 0;">
+          <p style="margin: 0; color: #92400E; font-size: 14px;">
+            <strong>Didn't request this?</strong><br>
+            If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+          </p>
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td style="background-color: #1A1A2E; padding: 30px; text-align: center;">
+        <p style="margin: 0; color: #6b7280; font-size: 12px;">
+          © ${new Date().getFullYear()} AfriVerse. All rights reserved.<br>
+          <a href="${siteUrl}/privacy" style="color: #6b7280;">Privacy Policy</a>
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}

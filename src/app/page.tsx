@@ -10,6 +10,7 @@ import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
 import AfriPulseIndex from '@/components/AfriPulseIndex';
 import { Suspense } from 'react';
 import { ArticleCardSkeleton } from '@/components/Skeleton';
+import AfricaWatermark from '@/components/AfricaWatermark';
 
 // Revalidate homepage every 60 seconds
 export const revalidate = 60;
@@ -22,7 +23,17 @@ export default async function Home() {
   const sideArticles = allArticles.slice(5, 10);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* Africa Watermark - Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <AfricaWatermark 
+          position="right" 
+          size="xl" 
+          opacity={0.03} 
+          className="text-amber-500 animate-africa-pulse"
+        />
+      </div>
+
       {/* Billboard Ad - Top of page */}
       <BillboardAd />
 

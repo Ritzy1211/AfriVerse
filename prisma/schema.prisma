@@ -17,13 +17,16 @@ model Subscriber {
   name           String?
   status         SubscriberStatus @default(ACTIVE)
   source         String?          @default("website")
+  isPremium      Boolean          @default(false)
   subscribedAt   DateTime         @default(now())
   unsubscribedAt DateTime?
   preferences    Json?
+  subscriptions  Subscription[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 
   @@index([status])
+  @@index([isPremium])
 }
 
 enum SubscriberStatus {
@@ -164,6 +167,17 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Password Reset Tokens
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
 }
 
 // ==========================================
@@ -739,4 +753,125 @@ enum NotificationType {
   IMPACT_REPORT     // New impact report submitted
   STORYTELLER       // Storyteller application update
   SYSTEM            // System notification
+}
+
+// ==========================================
+// PAYMENTS & SUBSCRIPTIONS (Paystack)
+// ==========================================
+
+// Track all payment transactions
+model Payment {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  email             String
+  amount            Int           // Amount in kobo (smallest currency unit)
+  currency          String        @default("NGN")
+  reference         String        @unique // Paystack reference
+  paystackReference String?       // Paystack transaction reference
+  status            PaymentStatus @default(PENDING)
+  channel           String?       // card, bank, ussd, etc.
+  paidAt            DateTime?
+  metadata          Json?         // Additional payment metadata
+  
+  // Relations
+  subscriptionId    String?       @db.ObjectId
+  subscription      Subscription? @relation(fields: [subscriptionId], references: [id])
+  
+  advertisingOrderId String?      @db.ObjectId
+  advertisingOrder   AdvertisingOrder? @relation(fields: [advertisingOrderId], references: [id])
+  
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  ABANDONED
+  REFUNDED
+}
+
+// Newsletter Premium Subscriptions
+model Subscription {
+  id                  String             @id @default(auto()) @map("_id") @db.ObjectId
+  email               String
+  subscriberId        String?            @db.ObjectId
+  subscriber          Subscriber?        @relation(fields: [subscriberId], references: [id])
+  plan                SubscriptionPlan   @default(MONTHLY)
+  status              SubscriptionStatus @default(ACTIVE)
+  amount              Int                // Amount in kobo
+  currency            String             @default("NGN")
+  paystackCustomerCode String?           // Paystack customer code
+  paystackSubscriptionCode String?       // Paystack subscription code
+  
+  currentPeriodStart  DateTime           @default(now())
+  currentPeriodEnd    DateTime
+  cancelledAt         DateTime?
+  
+  payments            Payment[]
+  
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([currentPeriodEnd])
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PAST_DUE
+}
+
+// Advertising Package Orders
+model AdvertisingOrder {
+  id              String                 @id @default(auto()) @map("_id") @db.ObjectId
+  email           String
+  companyName     String
+  contactName     String
+  phone           String?
+  packageType     AdvertisingPackage
+  amount          Int                    // Amount in kobo
+  currency        String                 @default("NGN")
+  status          AdvertisingOrderStatus @default(PENDING)
+  
+  // Package details
+  startDate       DateTime?
+  endDate         DateTime?
+  notes           String?
+  
+  payments        Payment[]
+  
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([packageType])
+}
+
+enum AdvertisingPackage {
+  SPONSORED_ARTICLE     // $499
+  CONTENT_SERIES        // $1,999
+  BRAND_TAKEOVER        // $4,999
+}
+
+enum AdvertisingOrderStatus {
+  PENDING
+  PAID
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  REFUNDED
 }

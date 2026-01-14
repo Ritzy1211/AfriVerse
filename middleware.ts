@@ -20,6 +20,7 @@ export function middleware(req: NextRequest) {
   // Define route types
   const isAdminRoute = pathname.startsWith('/admin');
   const isWriterRoute = pathname.startsWith('/writer');
+  const isStudioRoute = pathname.startsWith('/studio');
   const isAdminLoginPage = pathname === '/admin/login';
   const isWriterLoginPage = pathname === '/writer/login';
   const isApiAuthRoute = pathname.startsWith('/api/auth');
@@ -28,6 +29,24 @@ export function middleware(req: NextRequest) {
 
   // Skip auth check for API auth routes
   if (isApiAuthRoute) {
+    return NextResponse.next();
+  }
+
+  // ============================================
+  // SANITY STUDIO ROUTES (/studio/*)
+  // Enterprise-grade protection like Billboard/TechCrunch
+  // Only Admin and Editor roles can access Sanity Studio
+  // ============================================
+  
+  if (isStudioRoute) {
+    if (!isLoggedIn) {
+      // Redirect to admin login with callback to studio
+      const loginUrl = new URL('/admin/login', req.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      loginUrl.searchParams.set('reason', 'studio_access');
+      return NextResponse.redirect(loginUrl);
+    }
+    // User is logged in - let them through (role check happens in the studio page)
     return NextResponse.next();
   }
 
@@ -83,6 +102,8 @@ export const config = {
     '/admin/:path*',
     // Writer portal routes
     '/writer/:path*',
+    // Sanity Studio (protected)
+    '/studio/:path*',
     // Protected API routes
     '/api/admin/:path*',
     '/api/writer/:path*',

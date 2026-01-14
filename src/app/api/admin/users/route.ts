@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { sendEmail, getWriterOnboardingEmailHtml } from '@/lib/email';
 
 // GET - List all users (admin only)
 export async function GET() {
@@ -92,6 +93,20 @@ export async function POST(request: NextRequest) {
         createdAt: true,
       },
     });
+
+    // Send welcome email with login credentials
+    try {
+      const welcomeHtml = getWriterOnboardingEmailHtml(name, email, password, role || 'AUTHOR');
+      await sendEmail({
+        to: email,
+        subject: `Welcome to AfriVerse Newsroom - Your Account is Ready!`,
+        html: welcomeHtml,
+      });
+      console.log(`Welcome email sent to ${email}`);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail the user creation if email fails
+    }
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {

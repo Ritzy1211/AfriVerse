@@ -6,14 +6,23 @@ import { categories } from '@/data/categories';
 import { Facebook, Twitter, Instagram, Youtube, Rss } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { useTranslation } from '@/components/providers/TranslationProvider';
+import AfricaWatermark from './AfricaWatermark';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-brand-primary dark:bg-gray-900 text-white mt-20">
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-brand-primary dark:bg-gray-900 text-white mt-20 relative overflow-hidden">
+      {/* Africa Watermark */}
+      <AfricaWatermark 
+        position="left" 
+        size="xl" 
+        opacity={0.05} 
+        className="text-white"
+      />
+      
+      <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">

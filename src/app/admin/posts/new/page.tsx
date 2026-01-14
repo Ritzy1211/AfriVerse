@@ -381,6 +381,7 @@ export default function NewPostPage() {
             </h3>
             {featuredImage ? (
               <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={featuredImage}
                   alt="Featured"
@@ -420,6 +421,7 @@ export default function NewPostPage() {
             </div>
             <div className="p-8">
               {featuredImage && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={featuredImage} alt="" className="w-full h-64 object-cover rounded-xl mb-6" />
               )}
               <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
