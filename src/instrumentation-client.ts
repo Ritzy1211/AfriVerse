@@ -47,3 +47,6 @@ Sentry.init({
     }),
   ],
 });
+
+// Export for Next.js router transition tracking
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

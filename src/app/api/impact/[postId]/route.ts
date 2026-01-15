@@ -11,7 +11,7 @@ export async function GET(
       where: { postId: params.postId },
       include: {
         reports: {
-          where: { verified: true },
+          where: { status: 'VERIFIED' },
           orderBy: { createdAt: 'desc' },
           take: 5,
         },

@@ -3,6 +3,12 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
   reactStrictMode: true,
+  
+  // Enable instrumentation for Sentry
+  experimental: {
+    instrumentationHook: true,
+  },
+  
   images: {
     remotePatterns: [
       {
@@ -58,12 +64,30 @@ const nextConfig = {
 const sentryWebpackPluginOptions = {
   // Suppresses source map uploading logs during build
   silent: true,
-  org: 'urban-grid',
-  project: 'urban-grid-web',
+  
+  // Organization and project in Sentry
+  org: process.env.SENTRY_ORG || 'afriverse',
+  project: process.env.SENTRY_PROJECT || 'afriverse-web',
+  
+  // Auth token for uploading source maps
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  
   // Upload source maps only in production
   sourcemaps: {
     deleteSourcemapsAfterUpload: true,
   },
+  
+  // Disable telemetry
+  telemetry: false,
+  
+  // Hide source maps from generated client bundles
+  hideSourceMaps: true,
+  
+  // Automatically instrument components
+  widenClientFileUpload: true,
+  
+  // Tunnel Sentry requests to avoid ad blockers (optional)
+  // tunnelRoute: '/monitoring-tunnel',
 };
 
 // Wrap Next.js config with Sentry
