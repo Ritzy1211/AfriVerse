@@ -97,17 +97,33 @@ export async function GET(request: NextRequest) {
             articleCategory?.toLowerCase() === category.toLowerCase();
 
           return categoryMatch && (titleMatch || excerptMatch || contentMatch || tagsMatch);
-        }).map(article => ({
-          ...article,
-          publishedAt: article.publishedAt.toISOString(),
-          source: 'markdown',
-          relevance: calculateRelevance(
-            searchQuery, 
-            article.title, 
-            article.excerpt || '', 
-            article.content || ''
-          ),
-        }));
+        }).map(article => {
+          // Ensure category is a string slug, not an object
+          const categorySlug = article.category && typeof article.category === 'object'
+            ? (article.category as { slug?: string }).slug || 'uncategorized'
+            : String(article.category || 'uncategorized');
+          
+          return {
+            id: article.slug,
+            slug: article.slug,
+            title: article.title,
+            excerpt: article.excerpt,
+            category: categorySlug,
+            author: typeof article.author === 'object' 
+              ? (article.author as { name?: string }).name || 'AfriVerse'
+              : String(article.author || 'AfriVerse'),
+            featuredImage: article.featuredImage,
+            publishedAt: article.publishedAt.toISOString(),
+            readTime: article.readTime,
+            source: 'markdown',
+            relevance: calculateRelevance(
+              searchQuery, 
+              article.title, 
+              article.excerpt || '', 
+              article.content || ''
+            ),
+          };
+        });
 
         results.push(...matchingArticles);
       } catch (error) {
