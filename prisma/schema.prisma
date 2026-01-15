@@ -228,6 +228,12 @@ model Post {
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   
+  // Premium & Monetization
+  isPremium       Boolean      @default(false) // Requires subscription to read full content
+  isSponsored     Boolean      @default(false) // Sponsored/branded content
+  sponsorName     String?      // Name of sponsor for disclosure
+  sponsorLogo     String?      // Logo URL for sponsor
+  
   // Impact Score™ relation
   impactScore     ImpactScore?
 
@@ -236,6 +242,8 @@ model Post {
   @@index([authorId])
   @@index([publishedAt])
   @@index([featured])
+  @@index([isPremium])
+  @@index([isSponsored])
 }
 
 enum PostStatus {
@@ -874,4 +882,50 @@ enum AdvertisingOrderStatus {
   COMPLETED
   CANCELLED
   REFUNDED
+}
+
+// Ad Placement Configuration
+model AdPlacement {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String        // e.g., "Header Banner", "Sidebar Ad", "In-Article"
+  slot        String        @unique // e.g., "header", "sidebar-top", "in-content-1"
+  type        AdType        @default(BANNER)
+  width       Int?          // pixels
+  height      Int?          // pixels
+  isActive    Boolean       @default(true)
+  
+  // Content (if house ad or direct sale)
+  imageUrl    String?
+  linkUrl     String?
+  altText     String?
+  
+  // External ad network (e.g., Google AdSense)
+  adNetworkCode String?     // The ad unit code from the network
+  adNetwork     String?     // e.g., "adsense", "carbon", "buysellads"
+  
+  // Targeting
+  categories  String[]      // Show only on these categories, empty = all
+  countries   String[]      // Show only in these countries, empty = all
+  
+  // Scheduling
+  startDate   DateTime?
+  endDate     DateTime?
+  
+  // Stats
+  impressions Int           @default(0)
+  clicks      Int           @default(0)
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([isActive])
+  @@index([type])
+}
+
+enum AdType {
+  BANNER          // Standard display ad
+  NATIVE          // Native content-style ad
+  SPONSORED_POST  // Sponsored article/post
+  VIDEO           // Video ad
+  TEXT            // Text-only ad
 }

@@ -70,6 +70,7 @@ const navigation = [
   { name: 'Comments', href: '/admin/comments', icon: MessageSquare, minRole: 'EDITOR' },
   { name: 'Activity Log', href: '/admin/activity', icon: Activity, minRole: 'ADMIN' },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3, minRole: 'ADMIN' },
+  { name: 'Ad Placements', href: '/admin/ads', icon: Megaphone, minRole: 'ADMIN' },
   { 
     name: 'Settings', 
     icon: Settings,

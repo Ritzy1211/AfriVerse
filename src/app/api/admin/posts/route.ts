@@ -106,6 +106,10 @@ export async function POST(request: NextRequest) {
       metaDescription,
       metaKeywords,
       featured,
+      isPremium,
+      isSponsored,
+      sponsorName,
+      sponsorLogo,
     } = body;
 
     // Validate required fields
@@ -156,6 +160,10 @@ export async function POST(request: NextRequest) {
         metaDescription: metaDescription || excerpt || '',
         metaKeywords: metaKeywords || '',
         featured: featured || false,
+        isPremium: isPremium || false,
+        isSponsored: isSponsored || false,
+        sponsorName: isSponsored ? sponsorName : null,
+        sponsorLogo: isSponsored ? sponsorLogo : null,
         authorId: user.id,
       },
       include: {

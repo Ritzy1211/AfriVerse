@@ -65,6 +65,12 @@ export default function EditPostPage() {
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
 
+  // Monetization fields
+  const [isPremium, setIsPremium] = useState(false);
+  const [isSponsored, setIsSponsored] = useState(false);
+  const [sponsorName, setSponsorName] = useState('');
+  const [sponsorLogo, setSponsorLogo] = useState('');
+
   // Fetch post data
   useEffect(() => {
     async function fetchPost() {
@@ -94,6 +100,10 @@ export default function EditPostPage() {
         setFeaturedImage(post.featuredImage || '');
         setMetaTitle(post.metaTitle || '');
         setMetaDescription(post.metaDescription || '');
+        setIsPremium(post.isPremium || false);
+        setIsSponsored(post.isSponsored || false);
+        setSponsorName(post.sponsorName || '');
+        setSponsorLogo(post.sponsorLogo || '');
         
         if (post.scheduledAt) {
           setPublishDate(new Date(post.scheduledAt).toISOString().slice(0, 16));
@@ -193,6 +203,10 @@ export default function EditPostPage() {
         metaDescription: metaDescription || excerpt,
         metaKeywords: tags.join(', '),
         featured,
+        isPremium,
+        isSponsored,
+        sponsorName: isSponsored ? sponsorName : null,
+        sponsorLogo: isSponsored ? sponsorLogo : null,
       };
 
       const response = await fetch(`/api/admin/posts/${postId}`, {
@@ -567,6 +581,82 @@ export default function EditPostPage() {
                   Mark as featured post
                 </span>
               </label>
+            </div>
+          </div>
+
+          {/* Monetization Settings */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Monetization
+            </h3>
+            
+            <div className="space-y-4">
+              {/* Premium Content */}
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isPremium}
+                  onChange={(e) => setIsPremium(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                />
+                <div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Premium Content
+                  </span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Only premium subscribers can read full article
+                  </p>
+                </div>
+              </label>
+
+              {/* Sponsored Content */}
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isSponsored}
+                    onChange={(e) => setIsSponsored(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                  />
+                  <div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Sponsored Content
+                    </span>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Mark as branded/sponsored content
+                    </p>
+                  </div>
+                </label>
+
+                {isSponsored && (
+                  <div className="mt-4 space-y-3 pl-7">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Sponsor Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={sponsorName}
+                        onChange={(e) => setSponsorName(e.target.value)}
+                        placeholder="e.g., MTN Nigeria"
+                        className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Sponsor Logo URL
+                      </label>
+                      <input
+                        type="text"
+                        value={sponsorLogo}
+                        onChange={(e) => setSponsorLogo(e.target.value)}
+                        placeholder="https://..."
+                        className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

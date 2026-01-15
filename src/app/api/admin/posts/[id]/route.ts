@@ -86,6 +86,10 @@ export async function PUT(
       metaDescription,
       metaKeywords,
       featured,
+      isPremium,
+      isSponsored,
+      sponsorName,
+      sponsorLogo,
     } = body;
 
     // Check if post exists
@@ -138,6 +142,10 @@ export async function PUT(
         metaDescription: metaDescription ?? existingPost.metaDescription,
         metaKeywords: metaKeywords ?? existingPost.metaKeywords,
         featured: featured !== undefined ? featured : existingPost.featured,
+        isPremium: isPremium !== undefined ? isPremium : existingPost.isPremium,
+        isSponsored: isSponsored !== undefined ? isSponsored : existingPost.isSponsored,
+        sponsorName: isSponsored ? (sponsorName ?? existingPost.sponsorName) : null,
+        sponsorLogo: isSponsored ? (sponsorLogo ?? existingPost.sponsorLogo) : null,
       },
       include: {
         author: {
