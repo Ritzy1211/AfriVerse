@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Article } from '@/types';
 import { formatDate } from '@/lib/utils';
-import { Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, Megaphone } from 'lucide-react';
 
 interface ArticleCardProps {
   article: Article;
@@ -38,6 +38,12 @@ export default function ArticleCard({ article, featured = false, horizontal = fa
               <span className="flex items-center gap-1 text-brand-accent text-xs font-bold">
                 <TrendingUp className="w-3 h-3" />
                 TRENDING
+              </span>
+            )}
+            {article.isSponsored && (
+              <span className="flex items-center gap-1 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                <Megaphone className="w-3 h-3" />
+                SPONSORED
               </span>
             )}
           </div>
@@ -81,12 +87,20 @@ export default function ArticleCard({ article, featured = false, horizontal = fa
         </div>
         
         <div className="flex-1 min-w-0">
-          <span 
-            className="inline-block px-2 py-0.5 rounded text-xs font-bold text-white mb-2"
-            style={{ backgroundColor: article.category.color }}
-          >
-            {article.category.name}
-          </span>
+          <div className="flex items-center gap-2 mb-2">
+            <span 
+              className="inline-block px-2 py-0.5 rounded text-xs font-bold text-white"
+              style={{ backgroundColor: article.category.color }}
+            >
+              {article.category.name}
+            </span>
+            {article.isSponsored && (
+              <span className="flex items-center gap-1 bg-amber-500 text-white px-2 py-0.5 rounded text-xs font-bold">
+                <Megaphone className="w-3 h-3" />
+                Sponsored
+              </span>
+            )}
+          </div>
           
           <h3 className="font-bold text-sm md:text-base text-gray-900 dark:text-white mb-1 line-clamp-2 group-hover:text-brand-accent transition-colors">
             {article.title}
@@ -118,6 +132,12 @@ export default function ArticleCard({ article, featured = false, horizontal = fa
           <div className="absolute top-3 right-3 flex items-center gap-1 bg-brand-accent text-white px-2 py-1 rounded-full text-xs font-bold">
             <TrendingUp className="w-3 h-3" />
             HOT
+          </div>
+        )}
+        {article.isSponsored && (
+          <div className="absolute top-3 left-3 flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <Megaphone className="w-3 h-3" />
+            Sponsored
           </div>
         )}
       </div>

@@ -15,6 +15,10 @@ export interface Article {
   views?: number;
   featured?: boolean;
   trending?: boolean;
+  isPremium?: boolean;
+  isSponsored?: boolean;
+  sponsorName?: string | null;
+  sponsorLogo?: string | null;
 }
 
 export interface Author {

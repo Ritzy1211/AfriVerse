@@ -9,7 +9,7 @@ import RelatedArticles from '@/components/RelatedArticles';
 import ReadingProgress from '@/components/ReadingProgress';
 import Comments from '@/components/Comments';
 import Avatar from '@/components/Avatar';
-import { Clock, Bookmark } from 'lucide-react';
+import { Clock, Bookmark, Megaphone } from 'lucide-react';
 import type { Metadata } from 'next';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
 
@@ -114,7 +114,38 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   🔥 TRENDING
                 </span>
               )}
+              {article.isSponsored && (
+                <span className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 text-white rounded-full text-sm font-bold">
+                  <Megaphone className="w-4 h-4" />
+                  SPONSORED
+                </span>
+              )}
             </div>
+
+            {/* Sponsored Content Banner */}
+            {article.isSponsored && (
+              <div className="flex items-center gap-4 p-4 mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg">
+                {article.sponsorLogo && (
+                  <Image
+                    src={article.sponsorLogo}
+                    alt={article.sponsorName || 'Sponsor'}
+                    width={60}
+                    height={40}
+                    className="object-contain"
+                  />
+                )}
+                <div>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    Sponsored Content
+                  </p>
+                  {article.sponsorName && (
+                    <p className="text-xs text-amber-600 dark:text-amber-300">
+                      Brought to you by {article.sponsorName}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Title */}
             <h1 className="text-4xl md:text-5xl font-headline font-bold text-gray-900 dark:text-white mb-6 text-balance">

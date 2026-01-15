@@ -147,6 +147,10 @@ function transformPostToArticle(post: any): Article {
     views: post.views || 0,
     featured: post.featured || false,
     trending: post.featured || false,
+    isPremium: post.isPremium || false,
+    isSponsored: post.isSponsored || false,
+    sponsorName: post.sponsorName || null,
+    sponsorLogo: post.sponsorLogo || null,
   };
 }
 

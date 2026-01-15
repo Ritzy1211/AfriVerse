@@ -5,18 +5,24 @@ const BASE_URL = 'https://afriverse.africa';
 export async function GET() {
   const articles = await getAllArticles();
   
-  const rssItems = articles.map((article) => `
+  const rssItems = articles.map((article) => {
+    // Ensure publishedAt is a proper Date object
+    const pubDate = article.publishedAt instanceof Date 
+      ? article.publishedAt 
+      : new Date(article.publishedAt);
+    
+    return `
     <item>
       <title><![CDATA[${article.title}]]></title>
       <link>${BASE_URL}/${article.category.slug}/${article.slug}</link>
       <guid isPermaLink="true">${BASE_URL}/${article.category.slug}/${article.slug}</guid>
       <description><![CDATA[${article.excerpt}]]></description>
-      <pubDate>${article.publishedAt.toUTCString()}</pubDate>
+      <pubDate>${pubDate.toUTCString()}</pubDate>
       <author>${article.author.name}</author>
       <category>${article.category.name}</category>
       ${article.featuredImage ? `<enclosure url="${article.featuredImage}" type="image/jpeg"/>` : ''}
-    </item>`
-  ).join('');
+    </item>`;
+  }).join('');
 
   const rssFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
