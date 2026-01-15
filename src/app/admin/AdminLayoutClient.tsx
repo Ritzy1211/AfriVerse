@@ -30,6 +30,7 @@ import {
   Activity,
   BadgeCheck,
   Sparkles,
+  Clock,
 } from 'lucide-react';
 
 // Define role hierarchy (higher number = more permissions)
@@ -49,6 +50,7 @@ const navigation = [
   { name: 'Editorial Desk', href: '/admin/desk', icon: ClipboardCheck, minRole: 'EDITOR' },
   { name: 'Review Queue', href: '/admin/review', icon: ClipboardCheck, minRole: 'EDITOR' },
   { name: 'All Posts', href: '/admin/posts', icon: FileText, minRole: 'EDITOR' },
+  { name: 'Scheduled', href: '/admin/scheduled', icon: Clock, minRole: 'EDITOR' },
   { 
     name: 'Editorial', 
     icon: ClipboardCheck,

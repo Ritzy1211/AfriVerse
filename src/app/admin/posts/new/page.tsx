@@ -102,6 +102,22 @@ export default function NewPostPage() {
     setError('');
     
     try {
+      // Determine the actual status and scheduledAt
+      let finalStatus = saveStatus.toUpperCase();
+      let finalScheduledAt = null;
+      
+      // If scheduling, validate the date
+      if (saveStatus === 'scheduled' && publishDate) {
+        const scheduleDate = new Date(publishDate);
+        if (scheduleDate <= new Date()) {
+          throw new Error('Scheduled date must be in the future');
+        }
+        finalScheduledAt = publishDate;
+        finalStatus = 'SCHEDULED';
+      } else if (saveStatus === 'published') {
+        finalStatus = 'PUBLISHED';
+      }
+      
       const postData = {
         title,
         slug,
@@ -110,8 +126,8 @@ export default function NewPostPage() {
         category: category.toLowerCase(),
         tags,
         featuredImage,
-        status: saveStatus.toUpperCase(),
-        scheduledAt: publishDate || null,
+        status: finalStatus,
+        scheduledAt: finalScheduledAt,
         readingTime: calculateReadingTime(content),
         metaTitle: metaTitle || title,
         metaDescription: metaDescription || excerpt,
@@ -138,9 +154,6 @@ export default function NewPostPage() {
     } finally {
       setIsSaving(false);
     }
-    
-    setIsSaving(false);
-    router.push('/admin/posts');
   };
 
   return (
@@ -179,6 +192,21 @@ export default function NewPostPage() {
             <FileText className="w-4 h-4" />
             Save Draft
           </button>
+          {publishDate && new Date(publishDate) > new Date() && (
+            <button
+              onClick={() => handleSave('scheduled')}
+              disabled={isSaving || !title || !content || !category}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              <Clock className="w-4 h-4" />
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Scheduling...
+                </>
+              ) : 'Schedule'}
+            </button>
+          )}
           <button
             onClick={() => handleSave('published')}
             disabled={isSaving || !title || !content || !category}
@@ -190,7 +218,7 @@ export default function NewPostPage() {
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Saving...
               </>
-            ) : 'Publish'}
+            ) : 'Publish Now'}
           </button>
         </div>
       </div>
@@ -284,23 +312,43 @@ export default function NewPostPage() {
                 >
                   <option value="draft">Draft</option>
                   <option value="review">Under Review</option>
-                  <option value="scheduled">Scheduled</option>
                   <option value="published">Published</option>
                 </select>
               </div>
 
-              {/* Publish Date */}
-              <div>
+              {/* Schedule Section */}
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                 <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  <Calendar className="w-4 h-4" />
-                  Publish Date
+                  <Clock className="w-4 h-4" />
+                  Schedule for Later
                 </label>
                 <input
                   type="datetime-local"
                   value={publishDate}
                   onChange={(e) => setPublishDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
                   className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
+                {publishDate && (
+                  <div className="mt-2">
+                    {new Date(publishDate) > new Date() ? (
+                      <p className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        Will publish on {new Date(publishDate).toLocaleString()}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-amber-600 dark:text-amber-400">
+                        ⚠️ Date is in the past. Post will publish immediately.
+                      </p>
+                    )}
+                    <button
+                      onClick={() => setPublishDate('')}
+                      className="text-xs text-red-500 hover:text-red-600 mt-1"
+                    >
+                      Clear schedule
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Featured */}
