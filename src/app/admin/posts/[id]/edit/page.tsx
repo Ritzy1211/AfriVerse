@@ -17,9 +17,11 @@ import {
   FileText,
   Trash2,
   Send,
+  ChevronDown,
 } from 'lucide-react';
 import BrandedSpinner, { AfriPulseSpinner } from '@/components/BrandedSpinner';
 import MediaUploader from '@/components/MediaUploader';
+import { categories as categoryData } from '@/data/categories';
 
 // Dynamically import the editor to avoid SSR issues
 const RichTextEditor = dynamic(
@@ -35,8 +37,6 @@ const RichTextEditor = dynamic(
   }
 );
 
-const categories = ['Business', 'Entertainment', 'Lifestyle', 'Sports', 'Technology', 'Politics'];
-
 export default function EditPostPage() {
   const router = useRouter();
   const params = useParams();
@@ -48,6 +48,7 @@ export default function EditPostPage() {
   const [content, setContent] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [category, setCategory] = useState('');
+  const [subcategory, setSubcategory] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [status, setStatus] = useState('draft');
@@ -71,6 +72,10 @@ export default function EditPostPage() {
   const [sponsorName, setSponsorName] = useState('');
   const [sponsorLogo, setSponsorLogo] = useState('');
 
+  // Get subcategories for selected category
+  const selectedCategory = categoryData.find(c => c.slug === category.toLowerCase());
+  const subcategories = selectedCategory?.subcategories || [];
+
   // Fetch post data
   useEffect(() => {
     async function fetchPost() {
@@ -93,7 +98,8 @@ export default function EditPostPage() {
         setSlug(post.slug || '');
         setContent(post.content || '');
         setExcerpt(post.excerpt || '');
-        setCategory(post.category ? post.category.charAt(0).toUpperCase() + post.category.slice(1) : '');
+        setCategory(post.category || '');
+        setSubcategory(post.subcategory || '');
         setTags(post.tags || []);
         setStatus(post.status?.toLowerCase() || 'draft');
         setFeatured(post.featured || false);
@@ -194,6 +200,7 @@ export default function EditPostPage() {
         excerpt,
         content,
         category: category.toLowerCase(),
+        subcategory: subcategory || null,
         tags,
         featuredImage,
         status: finalStatus,
@@ -660,25 +667,62 @@ export default function EditPostPage() {
             </div>
           </div>
 
-          {/* Category */}
+          {/* Category & Subcategory */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Category
             </h3>
-            <div className="space-y-2">
-              {categories.map((cat) => (
-                <label key={cat} className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="category"
-                    value={cat}
-                    checked={category === cat}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-4 h-4 border-gray-300 text-secondary focus:ring-secondary"
-                  />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{cat}</span>
-                </label>
-              ))}
+            <div className="space-y-4">
+              {/* Category Dropdown */}
+              <div className="relative">
+                <select
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setSubcategory(''); // Reset subcategory when category changes
+                  }}
+                  className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary appearance-none cursor-pointer"
+                >
+                  <option value="">Select a category</option>
+                  {categoryData.map((cat) => (
+                    <option key={cat.slug} value={cat.slug}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              </div>
+
+              {/* Subcategory/Genre Dropdown - Only show if category has subcategories */}
+              {category && subcategories.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {category === 'music' ? 'Genre' : 'Subcategory'}
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={subcategory}
+                      onChange={(e) => setSubcategory(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary appearance-none cursor-pointer"
+                    >
+                      <option value="">
+                        Select {category === 'music' ? 'genre' : 'subcategory'} (optional)
+                      </option>
+                      {subcategories.map((sub) => (
+                        <option key={sub.slug} value={sub.slug}>
+                          {sub.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                  {subcategory && (
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      ✓ Will be posted to: {selectedCategory?.name} → {subcategories.find(s => s.slug === subcategory)?.name}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

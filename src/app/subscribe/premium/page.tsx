@@ -9,8 +9,8 @@ const SUBSCRIPTION_PLANS = [
   {
     id: 'MONTHLY',
     name: 'Monthly',
-    price: '$1.34',
-    priceNGN: '₦2,000',
+    price: '$3',
+    priceNGN: '₦4,500',
     period: '/month',
     description: 'Perfect for casual readers',
     popular: false,
@@ -25,8 +25,8 @@ const SUBSCRIPTION_PLANS = [
   {
     id: 'YEARLY',
     name: 'Yearly',
-    price: '$13.40',
-    priceNGN: '₦20,000',
+    price: '$30',
+    priceNGN: '₦45,000',
     period: '/year',
     description: 'Best value - Save 17%',
     popular: true,

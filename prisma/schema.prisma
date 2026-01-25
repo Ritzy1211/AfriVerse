@@ -213,6 +213,7 @@ model Post {
   content         String       // HTML content from rich text editor
   featuredImage   String?
   category        String
+  subcategory     String?      // Genre/subcategory within the category (e.g., "afrobeats" for music)
   tags            String[]
   status          PostStatus   @default(DRAFT)
   featured        Boolean      @default(false)
@@ -238,6 +239,7 @@ model Post {
   impactScore     ImpactScore?
 
   @@index([category])
+  @@index([subcategory])
   @@index([status])
   @@index([authorId])
   @@index([publishedAt])

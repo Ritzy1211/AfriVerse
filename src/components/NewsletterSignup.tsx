@@ -81,7 +81,7 @@ export default function NewsletterSignup({ variant = 'default', className = '' }
   // Hero variant for homepage
   if (variant === 'hero') {
     return (
-      <div className={`bg-gradient-to-r from-primary via-primary to-primary/90 rounded-2xl p-8 md:p-12 ${className}`}>
+      <div className={`bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800 rounded-2xl p-8 md:p-12 ${className}`}>
         <div className="max-w-2xl mx-auto text-center">
           <span className="inline-block px-4 py-1 bg-secondary/20 text-secondary rounded-full text-sm font-medium mb-4">
             📧 {t('newsletter.title')}
@@ -131,7 +131,7 @@ export default function NewsletterSignup({ variant = 'default', className = '' }
             </div>
           )}
 
-          <p className="text-xs text-gray-400 mt-4">
+          <p className="text-xs text-gray-300 mt-4">
             {t('newsletter.subtitle')}
           </p>
         </div>

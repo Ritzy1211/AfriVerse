@@ -88,6 +88,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/storytellers" className="text-sm text-gray-400 hover:text-brand-accent transition-colors">
+                  Our Authors
+                </Link>
+              </li>
+              <li>
                 <Link href="/advertise" className="text-sm text-gray-400 hover:text-brand-accent transition-colors">
                   {t('nav.advertise')}
                 </Link>

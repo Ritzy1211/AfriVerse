@@ -197,7 +197,9 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   const fetchNotifications = useCallback(async () => {
     try {
       setLoadingNotifications(true);
-      const response = await fetch('/api/admin/notifications?limit=10');
+      const response = await fetch('/api/admin/notifications?limit=10', {
+        credentials: 'include',
+      });
       if (response.ok) {
         const data = await response.json();
         setNotifications(data.data?.notifications || []);
@@ -216,7 +218,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       await fetch('/api/admin/notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notificationIds: [notificationId] })
+        body: JSON.stringify({ notificationIds: [notificationId] }),
+        credentials: 'include',
       });
       // Update local state
       setNotifications(prev => 
@@ -234,7 +237,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       await fetch('/api/admin/notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ markAll: true })
+        body: JSON.stringify({ markAll: true }),
+        credentials: 'include',
       });
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       setUnreadCount(0);
@@ -255,13 +259,16 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
 
   const isActive = (href: string) => pathname === href;
   const isLoginPage = pathname === '/admin/login';
+  const isForgotPasswordPage = pathname === '/admin/forgot-password';
+  const isResetPasswordPage = pathname === '/admin/reset-password';
+  const isPublicAuthPage = isLoginPage || isForgotPasswordPage || isResetPasswordPage;
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: '/admin/login' });
   };
 
-  // For login page, render without the admin layout
-  if (isLoginPage) {
+  // For login, forgot-password, and reset-password pages, render without the admin layout
+  if (isPublicAuthPage) {
     return <>{children}</>;
   }
 

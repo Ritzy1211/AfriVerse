@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getArticleBySlug, getRelatedArticles } from '@/data/articles';
+import { getArticleBySlug, getRelatedArticles, getArticlesByCategory } from '@/data/articles';
+import { getCategoryBySlug, getSubcategoryBySlug } from '@/data/categories';
 import { formatDate } from '@/lib/utils';
 import AdPlacement from '@/components/AdPlacement';
 import SocialShare from '@/components/SocialShare';
@@ -9,24 +10,45 @@ import RelatedArticles from '@/components/RelatedArticles';
 import ReadingProgress from '@/components/ReadingProgress';
 import Comments from '@/components/Comments';
 import Avatar from '@/components/Avatar';
+import ArticleCard from '@/components/ArticleCard';
+import Pagination from '@/components/Pagination';
 import { Clock, Bookmark, Megaphone } from 'lucide-react';
 import type { Metadata } from 'next';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
 
-interface ArticlePageProps {
+const ARTICLES_PER_PAGE = 9;
+
+interface PageProps {
   params: Promise<{
     category: string;
     slug: string;
   }>;
+  searchParams: Promise<{
+    page?: string;
+  }>;
 }
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug, category } = await params;
+  
+  // First check if slug is a subcategory
+  const categoryData = getCategoryBySlug(category);
+  if (categoryData) {
+    const subcategory = getSubcategoryBySlug(category, slug);
+    if (subcategory) {
+      return {
+        title: `${subcategory.name} - ${categoryData.name} | AfriVerse`,
+        description: subcategory.description || `Explore the latest ${subcategory.name} content on AfriVerse`,
+      };
+    }
+  }
+  
+  // Otherwise treat as article
   const article = await getArticleBySlug(slug, category);
   
   if (!article) {
     return {
-      title: 'Article Not Found',
+      title: 'Not Found',
     };
   }
 
@@ -59,15 +81,230 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   };
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function DynamicPage({ params, searchParams }: PageProps) {
   const { slug, category } = await params;
+  const { page } = await searchParams;
+  
+  // First check if this is a subcategory page
+  const categoryData = getCategoryBySlug(category);
+  if (categoryData) {
+    const subcategory = getSubcategoryBySlug(category, slug);
+    if (subcategory) {
+      // Render subcategory page
+      return <SubcategoryPage 
+        category={categoryData} 
+        subcategory={subcategory} 
+        currentPage={Math.max(1, parseInt(page || '1', 10))}
+      />;
+    }
+  }
+  
+  // Otherwise render article page
   const article = await getArticleBySlug(slug, category);
 
   if (!article) {
     notFound();
   }
 
-  const relatedArticles = await getRelatedArticles(article);
+  return <ArticlePage article={article} />;
+}
+
+// Subcategory Page Component
+async function SubcategoryPage({ 
+  category, 
+  subcategory, 
+  currentPage 
+}: { 
+  category: NonNullable<ReturnType<typeof getCategoryBySlug>>;
+  subcategory: NonNullable<ReturnType<typeof getSubcategoryBySlug>>;
+  currentPage: number;
+}) {
+  // Get all articles for this category and filter by subcategory
+  let allArticles = await getArticlesByCategory(category.slug);
+  allArticles = allArticles.filter(article => article.subcategory?.slug === subcategory.slug);
+  
+  // Pagination
+  const totalPages = Math.ceil(allArticles.length / ARTICLES_PER_PAGE);
+  const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+  const articles = allArticles.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Billboard Ad */}
+      <BillboardAd />
+
+      {/* Subcategory Header */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4 py-8">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <Link href="/" className="hover:text-gray-700 dark:hover:text-gray-200">
+              Home
+            </Link>
+            <span>/</span>
+            <Link 
+              href={`/${category.slug}`} 
+              className="hover:text-gray-700 dark:hover:text-gray-200"
+            >
+              {category.name}
+            </Link>
+            <span>/</span>
+            <span className="text-gray-900 dark:text-white font-medium">
+              {subcategory.name}
+            </span>
+          </nav>
+
+          <div className="flex items-center gap-4 mb-4">
+            <span 
+              className="text-4xl p-3 rounded-xl"
+              style={{ backgroundColor: `${subcategory.color || category.color}20` }}
+            >
+              {subcategory.icon || category.icon}
+            </span>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-headline font-bold text-gray-900 dark:text-white">
+                {subcategory.name}
+              </h1>
+              {subcategory.description && (
+                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                  {subcategory.description}
+                </p>
+              )}
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                Part of <Link href={`/${category.slug}`} className="text-brand-primary hover:underline">{category.name}</Link>
+              </p>
+            </div>
+          </div>
+
+          {/* All Subcategories/Genres Filter */}
+          {category.subcategories && category.subcategories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-6">
+              <Link
+                href={`/${category.slug}`}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                All {category.name}
+              </Link>
+              {category.subcategories.map((sub) => (
+                <Link
+                  key={sub.id}
+                  href={`/${category.slug}/${sub.slug}`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                    sub.slug === subcategory.slug
+                      ? 'text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                  style={sub.slug === subcategory.slug ? { backgroundColor: sub.color || category.color } : {}}
+                >
+                  <span>{sub.icon}</span>
+                  {sub.name}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Articles Grid */}
+          <div className="lg:flex-1">
+            {articles.length > 0 ? (
+              <div className="space-y-8">
+                {/* Featured first article if on first page */}
+                {currentPage === 1 && articles[0] && (
+                  <ArticleCard article={articles[0]} featured />
+                )}
+
+                {/* Grid of Articles */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {(currentPage === 1 ? articles.slice(1, 5) : articles.slice(0, 4)).map((article) => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+                </div>
+
+                {/* In-Article Ad after first few articles */}
+                {articles.length > 5 && <InArticleAd className="my-8" />}
+
+                {/* Rest of Articles */}
+                {articles.length > (currentPage === 1 ? 5 : 4) && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {(currentPage === 1 ? articles.slice(5) : articles.slice(4)).map((article) => (
+                      <ArticleCard key={article.id} article={article} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl">
+                <span className="text-6xl mb-4 block">{subcategory.icon || '📰'}</span>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  No articles yet
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  We&apos;re working on bringing you the best {subcategory.name} content.
+                </p>
+                <Link
+                  href={`/${category.slug}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 transition-colors"
+                >
+                  Browse all {category.name}
+                </Link>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  baseUrl={`/${category.slug}/${subcategory.slug}`}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="lg:w-80 space-y-6">
+            <SidebarAds />
+            
+            {/* Other Subcategories */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+                More in {category.name}
+              </h3>
+              <div className="space-y-2">
+                {category.subcategories?.filter(s => s.slug !== subcategory.slug).map((sub) => (
+                  <Link
+                    key={sub.id}
+                    href={`/${category.slug}/${sub.slug}`}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <span 
+                      className="w-8 h-8 flex items-center justify-center rounded-lg text-sm"
+                      style={{ backgroundColor: `${sub.color || category.color}20` }}
+                    >
+                      {sub.icon}
+                    </span>
+                    <span className="text-gray-700 dark:text-gray-300">{sub.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Article Page Component
+async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof getArticleBySlug>> }) {
+  if (!article) return null;
+  
+  const relatedArticles = await getRelatedArticles(article, 6);
   const shareUrl = `https://afriverse.africa/${article.category.slug}/${article.slug}`;
 
   return (
@@ -280,8 +517,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             </div>
 
-            {/* Related Articles */}
-            <RelatedArticles articles={relatedArticles} title="Related Stories" />
+            {/* Related Content Section - Featured */}
+            <div className="mb-12">
+              <RelatedArticles 
+                articles={relatedArticles} 
+                title="Related Content" 
+                variant="featured"
+              />
+            </div>
 
             {/* Comments Section */}
             <Comments articleSlug={article.slug} articleTitle={article.title} />

@@ -4,6 +4,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Default CSS Variables for dynamic theming */
+:root {
+  --color-primary: #1A1A2E;
+  --color-primary-rgb: 26 26 46;
+  --color-secondary: #F39C12;
+  --color-secondary-rgb: 243 156 18;
+  --color-accent: #00D9FF;
+  --color-accent-rgb: 0 217 255;
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
 @layer base {
   body {
     @apply bg-white dark:bg-brand-dark text-gray-900 dark:text-gray-100;
@@ -54,7 +66,7 @@ html {
 
 /* Selection color */
 ::selection {
-  @apply bg-brand-accent/30;
+  background-color: rgba(245, 158, 11, 0.3);
 }
 
 /* Ticker animation keyframe */

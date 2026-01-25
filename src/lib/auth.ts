@@ -156,14 +156,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      // Only store minimal data in token to keep cookie size small
+      // Store user data in token - keep email and name for API authorization
       if (user) {
         token.sub = user.id;
         token.role = (user as { role?: string }).role;
-        // Remove unnecessary default fields to minimize size
-        delete token.name;
-        delete token.email;
-        delete token.picture;
+        token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
@@ -171,6 +169,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.sub as string;
         session.user.role = token.role as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
       }
       return session;
     },

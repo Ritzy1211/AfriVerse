@@ -76,24 +76,20 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-primary to-brand-primary/90 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-headline font-bold mb-6">
-              Get in Touch
-            </h1>
-            <p className="text-xl text-gray-300">
-              Have a question, tip, or want to partner with us? We'd love to hear from you.
-            </p>
-          </div>
-        </div>
-      </section>
-
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Contact Form & Info */}
       <section className="py-16">
         <div className="container mx-auto px-4">
+          {/* Page Header */}
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold text-gray-900 dark:text-white mb-4">
+              Get in Touch
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Have a question, tip, or want to partner with us? We'd love to hear from you.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Contact Form */}
             <div className="lg:col-span-2">

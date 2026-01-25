@@ -86,6 +86,31 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'subcategory',
+      title: 'Subcategory / Genre',
+      type: 'reference',
+      to: [{ type: 'subcategory' }],
+      group: 'meta',
+      description: 'Optional: Select a subcategory or genre within the main category',
+      options: {
+        filter: ({ document }) => {
+          // Only show subcategories that belong to the selected parent category
+          const categoryRef = (document as any)?.category?._ref;
+          if (!categoryRef) {
+            return {
+              filter: '_id == "none"', // Show nothing if no category is selected
+            };
+          }
+          return {
+            filter: 'parentCategory._ref == $categoryRef',
+            params: {
+              categoryRef: categoryRef,
+            },
+          };
+        },
+      },
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',

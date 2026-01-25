@@ -11,6 +11,7 @@ import AfriPulseIndex from '@/components/AfriPulseIndex';
 import { Suspense } from 'react';
 import { ArticleCardSkeleton } from '@/components/Skeleton';
 import AfricaWatermark from '@/components/AfricaWatermark';
+import TrendingPopupWrapper from '@/components/TrendingPopupWrapper';
 
 // Revalidate homepage every 60 seconds
 export const revalidate = 60;
@@ -155,6 +156,9 @@ export default async function Home() {
       <section className="container mx-auto px-4 my-8 flex justify-center">
         <AdPlacement slot="footer" />
       </section>
+
+      {/* Trending/Sponsored Popup - Billboard Style */}
+      <TrendingPopupWrapper articles={allArticles} />
     </div>
   );
 }

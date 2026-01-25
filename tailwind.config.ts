@@ -10,12 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // AfriVerse Brand Colors
+        // AfriVerse Brand Colors - using CSS variables for dynamic theming
+        primary: 'var(--color-primary, #1A1A2E)',
+        secondary: 'var(--color-secondary, #F39C12)',
+        accent: 'var(--color-accent, #00D9FF)',
         brand: {
-          primary: '#1A1A2E',      // Deep Urban Blue
-          secondary: '#F39C12',     // Energetic Amber
-          accent: '#00D9FF',        // Electric Cyan
-          dark: '#0F0F0F',          // Dark mode background
+          primary: 'var(--color-primary, #1A1A2E)',
+          secondary: 'var(--color-secondary, #F39C12)',
+          accent: 'var(--color-accent, #00D9FF)',
+          dark: '#0F0F0F',
         },
         text: {
           primary: '#2C3E50',
@@ -24,8 +27,10 @@ const config: Config = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        sans: ['var(--font-body, Inter)', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-display, Poppins)', 'sans-serif'],
+        display: ['var(--font-display, Poppins)', 'sans-serif'],
+        body: ['var(--font-body, Inter)', 'system-ui', 'sans-serif'],
       },
       animation: {
         'slide-left': 'slideLeft 30s linear infinite',

@@ -201,14 +201,14 @@ export default function ComposePage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.back()}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <ArrowLeft className="w-5 h-5 text-slate-700 dark:text-slate-200" />
           </button>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Create Draft</h1>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Create Draft</h1>
             {lastSaved && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Last saved {lastSaved.toLocaleTimeString()}
               </p>
             )}
@@ -218,7 +218,7 @@ export default function ComposePage() {
           <button
             onClick={saveDraft}
             disabled={saving || !formData.title}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 text-sm font-medium"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             Save Draft
@@ -226,7 +226,7 @@ export default function ComposePage() {
           <button
             onClick={submitForReview}
             disabled={submitting || !formData.title || !formData.content || !formData.categoryId}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-white font-medium rounded-lg hover:bg-brand-accent/90 transition-colors disabled:opacity-50 text-sm"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             Submit for Review
@@ -248,40 +248,40 @@ export default function ComposePage() {
       )}
 
       {/* Editor */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
         {/* Headline */}
-        <div className="border-b border-slate-100">
+        <div className="border-b border-slate-200 dark:border-slate-700">
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
             placeholder="Write your headline..."
-            className="w-full px-6 py-5 text-2xl font-bold focus:outline-none placeholder:text-slate-300"
+            className="w-full px-6 py-5 text-2xl font-bold focus:outline-none bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Excerpt */}
-        <div className="border-b border-slate-100">
+        <div className="border-b border-slate-200 dark:border-slate-700">
           <textarea
             name="excerpt"
             value={formData.excerpt}
             onChange={handleChange}
             placeholder="Write a brief summary (2-3 sentences)..."
             rows={2}
-            className="w-full px-6 py-4 text-sm focus:outline-none placeholder:text-slate-400 resize-none"
+            className="w-full px-6 py-4 text-sm focus:outline-none bg-transparent text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none"
           />
         </div>
 
         {/* Metadata Row */}
-        <div className="flex items-center gap-4 px-6 py-3 border-b border-slate-100 bg-slate-50">
+        <div className="flex flex-wrap items-center gap-4 px-6 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
           <div className="flex items-center gap-2">
-            <label className="text-xs font-medium text-slate-500">Category:</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Category:</label>
             <select
               name="categoryId"
               value={formData.categoryId}
               onChange={handleChange}
-              className="text-sm bg-white border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-slate-800 dark:text-white"
             >
               <option value="">Select...</option>
               {categories.map((cat) => (
@@ -289,15 +289,15 @@ export default function ComposePage() {
               ))}
             </select>
           </div>
-          <div className="flex items-center gap-2 flex-1">
-            <label className="text-xs font-medium text-slate-500">Tags:</label>
+          <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Tags:</label>
             <input
               type="text"
               name="tags"
               value={formData.tags}
               onChange={handleChange}
               placeholder="politics, economy, africa..."
-              className="flex-1 text-sm bg-white border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="flex-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
           </div>
         </div>
@@ -318,11 +318,11 @@ You can use Markdown for formatting:
 - > for quotes
 - [text](url) for links"
             rows={20}
-            className="w-full px-6 py-6 focus:outline-none placeholder:text-slate-400 resize-none text-base leading-relaxed"
+            className="w-full px-6 py-6 focus:outline-none bg-transparent text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none text-base leading-relaxed"
           />
           
           {/* Word count */}
-          <div className="absolute bottom-4 right-6 text-xs text-slate-400 bg-white px-2 py-1 rounded">
+          <div className="absolute bottom-4 right-6 text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-700 px-2 py-1 rounded border border-slate-200 dark:border-slate-600">
             {wordCount} words {wordCount < 300 && <span className="text-amber-500">• min 300</span>}
           </div>
         </div>
@@ -331,14 +331,14 @@ You can use Markdown for formatting:
       {/* Additional Fields */}
       <div className="mt-6 space-y-4">
         {/* Suggested Images */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <ImageIcon className="w-4 h-4 text-blue-600" />
+            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+              <ImageIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h3 className="font-medium text-slate-900">Suggested Images</h3>
-              <p className="text-xs text-slate-500">Add image URLs or descriptions for editors (optional)</p>
+              <h3 className="font-semibold text-slate-900 dark:text-white">Suggested Images</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Add image URLs or descriptions for editors (optional)</p>
             </div>
           </div>
           <textarea
@@ -352,29 +352,29 @@ Example:
 - Suggested: Photo of Lagos skyline at sunset
 - Source: Reuters/AFP"
             rows={4}
-            className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm resize-none"
+            className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none"
           />
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
             Note: Final images will be selected and licensed by the editorial team
           </p>
         </div>
 
         {/* Notes for Editors */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
           <button
             onClick={() => setShowEditorNotes(!showEditorNotes)}
-            className="w-full flex items-center justify-between p-6"
+            className="w-full flex items-center justify-between p-6 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
-                <StickyNote className="w-4 h-4 text-amber-600" />
+              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
+                <StickyNote className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               </div>
               <div className="text-left">
-                <h3 className="font-medium text-slate-900">Notes for Editors</h3>
-                <p className="text-xs text-slate-500">Add context or special requests (optional)</p>
+                <h3 className="font-semibold text-slate-900 dark:text-white">Notes for Editors</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Add context or special requests (optional)</p>
               </div>
             </div>
-            <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${showEditorNotes ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform ${showEditorNotes ? 'rotate-180' : ''}`} />
           </button>
           {showEditorNotes && (
             <div className="px-6 pb-6">
@@ -389,7 +389,7 @@ Example:
 - Please verify the quote from Minister X
 - Sources are confidential"
                 rows={4}
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm resize-none"
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none"
               />
             </div>
           )}
@@ -397,38 +397,38 @@ Example:
       </div>
 
       {/* Submission Checklist */}
-      <div className="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-6">
-        <h3 className="font-semibold text-slate-900 mb-4">Before Submitting</h3>
+      <div className="mt-6 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Before Submitting</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/20" />
-            <span className="text-slate-600">Proofread for spelling/grammar</span>
+          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
+            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
+            <span className="text-slate-700 dark:text-slate-300">Proofread for spelling/grammar</span>
           </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/20" />
-            <span className="text-slate-600">Facts and quotes are accurate</span>
+          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
+            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
+            <span className="text-slate-700 dark:text-slate-300">Facts and quotes are accurate</span>
           </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/20" />
-            <span className="text-slate-600">Selected appropriate category</span>
+          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
+            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
+            <span className="text-slate-700 dark:text-slate-300">Selected appropriate category</span>
           </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/20" />
-            <span className="text-slate-600">Added compelling headline</span>
+          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
+            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
+            <span className="text-slate-700 dark:text-slate-300">Added compelling headline</span>
           </label>
         </div>
       </div>
 
       {/* Important Notice */}
-      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-6">
-        <h4 className="font-medium text-blue-900 mb-2">ℹ️ What happens next?</h4>
-        <ol className="text-sm text-blue-800 space-y-1">
+      <div className="mt-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+        <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">ℹ️ What happens next?</h4>
+        <ol className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
           <li>1. Your article enters the editorial queue</li>
           <li>2. An editor will review your submission</li>
-          <li>3. You'll receive feedback or approval notification</li>
+          <li>3. You&apos;ll receive feedback or approval notification</li>
           <li>4. If approved, the editorial team handles publication</li>
         </ol>
-        <p className="text-xs text-blue-600 mt-3">
+        <p className="text-xs text-blue-600 dark:text-blue-400 mt-3">
           Note: Once submitted, you cannot edit the article until the review is complete or revisions are requested.
         </p>
       </div>

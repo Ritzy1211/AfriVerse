@@ -58,7 +58,9 @@ export default function AppearanceSettingsPage() {
 
   async function fetchSettings() {
     try {
-      const response = await fetch('/api/admin/settings?category=appearance');
+      const response = await fetch('/api/admin/settings?category=appearance', {
+        credentials: 'include',
+      });
       if (response.ok) {
         const data = await response.json();
         setSettings(prev => ({ ...prev, ...data }));
@@ -91,11 +93,19 @@ export default function AppearanceSettingsPage() {
       const response = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ category: 'appearance', settings }),
       });
 
       if (response.ok) {
         setSaved(true);
+        // Show success message with refresh prompt
+        const refreshNow = window.confirm(
+          'Settings saved successfully! The changes will take effect on page refresh.\n\nWould you like to refresh the page now to see the changes?'
+        );
+        if (refreshNow) {
+          window.location.reload();
+        }
         setTimeout(() => setSaved(false), 3000);
       } else {
         alert('Failed to save settings');

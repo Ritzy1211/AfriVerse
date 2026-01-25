@@ -3,6 +3,7 @@ import { Inter, Poppins } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import ConditionalLayout from '@/components/ConditionalLayout';
+import AppearanceProvider from '@/components/providers/AppearanceProvider';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -93,9 +94,11 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-screen bg-white dark:bg-gray-900">
-        <ConditionalLayout>
-          {children}
-        </ConditionalLayout>
+        <AppearanceProvider>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
+        </AppearanceProvider>
       </body>
     </html>
   );

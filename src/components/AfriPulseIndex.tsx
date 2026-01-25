@@ -463,10 +463,10 @@ export default function AfriPulseIndex({
           {displayCountries.map((country) => {
             const TrendIcon = trendConfig[country.overallTrend].icon;
             return (
-              <div
+              <Link
                 key={country.id}
-                onClick={() => setSelectedCountry(selectedCountry?.id === country.id ? null : country)}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                href={`/afripulse/${country.country.toLowerCase()}`}
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
                   selectedCountry?.id === country.id
                     ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20'
                     : 'border-gray-200 dark:border-gray-700 hover:border-amber-300 dark:hover:border-amber-600'
@@ -538,14 +538,13 @@ export default function AfriPulseIndex({
 
                 {/* Top Story */}
                 {country.topStory && (
-                  <Link
-                    href={country.topStoryUrl || '#'}
-                    className="block text-sm text-gray-600 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors truncate"
+                  <div
+                    className="block text-sm text-gray-600 dark:text-gray-400 truncate"
                   >
                     📰 {country.topStory}
-                  </Link>
+                  </div>
                 )}
-              </div>
+              </Link>
             );
           })}
         </div>

@@ -1,16 +1,8 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background with gradient feel -->
-  <rect width="32" height="32" rx="8" fill="#1A1A2E"/>
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#1A1A2E"/>
   
-  <!-- Africa-inspired pattern accent (top corner) -->
-  <circle cx="6" cy="6" r="2" fill="#00D9FF" opacity="0.6"/>
-  <circle cx="26" cy="6" r="1.5" fill="#E91E63" opacity="0.5"/>
-  
-  <!-- Stylized "A" for AfriVerse -->
-  <path d="M16 6L8 26H11L13 21H19L21 26H24L16 6Z" fill="#F39C12"/>
-  <path d="M14 18L16 12L18 18H14Z" fill="#1A1A2E"/>
-  
-  <!-- Pulse/heartbeat line representing AfriPulse -->
-  <path d="M4 28L8 28L10 25L12 28L14 28" stroke="#00D9FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M18 28L20 28L22 25L24 28L28 28" stroke="#E91E63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Bold "A" for AfriVerse -->
+  <path d="M16 5L6 27H10.5L12.5 22H19.5L21.5 27H26L16 5Z" fill="#F59E0B"/>
+  <path d="M14 18L16 11L18 18H14Z" fill="#1A1A2E"/>
 </svg>

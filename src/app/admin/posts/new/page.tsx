@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import {
   ArrowLeft,
@@ -16,8 +17,11 @@ import {
   Tag,
   FileText,
   Loader2,
+  Send,
+  ChevronDown,
 } from 'lucide-react';
 import MediaUploader from '@/components/MediaUploader';
+import { categories as categoryData } from '@/data/categories';
 
 // Dynamically import the editor to avoid SSR issues
 const RichTextEditor = dynamic(
@@ -33,15 +37,21 @@ const RichTextEditor = dynamic(
   }
 );
 
-const categories = ['Business', 'Entertainment', 'Lifestyle', 'Sports', 'Technology', 'Politics'];
+// Roles that can publish directly
+const CAN_PUBLISH_ROLES = ['EDITOR', 'ADMIN', 'SUPER_ADMIN'];
 
 export default function NewPostPage() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const userRole = (session?.user as any)?.role || 'AUTHOR';
+  const canPublishDirectly = CAN_PUBLISH_ROLES.includes(userRole);
+  
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [content, setContent] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [category, setCategory] = useState('');
+  const [subcategory, setSubcategory] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [status, setStatus] = useState('draft');
@@ -52,6 +62,7 @@ export default function NewPostPage() {
   const [showPreview, setShowPreview] = useState(false);
   const [showMediaModal, setShowMediaModal] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   
   // SEO fields
   const [metaTitle, setMetaTitle] = useState('');
@@ -62,6 +73,15 @@ export default function NewPostPage() {
   const [isSponsored, setIsSponsored] = useState(false);
   const [sponsorName, setSponsorName] = useState('');
   const [sponsorLogo, setSponsorLogo] = useState('');
+
+  // Get subcategories for selected category
+  const selectedCategory = categoryData.find(c => c.slug === category);
+  const subcategories = selectedCategory?.subcategories || [];
+
+  // Reset subcategory when category changes
+  useEffect(() => {
+    setSubcategory('');
+  }, [category]);
 
   // Auto-generate slug from title
   const generateSlug = (text: string) => {
@@ -106,6 +126,7 @@ export default function NewPostPage() {
   const handleSave = async (saveStatus: string) => {
     setIsSaving(true);
     setError('');
+    setSuccessMessage('');
     
     try {
       // Determine the actual status and scheduledAt
@@ -122,6 +143,8 @@ export default function NewPostPage() {
         finalStatus = 'SCHEDULED';
       } else if (saveStatus === 'published') {
         finalStatus = 'PUBLISHED';
+      } else if (saveStatus === 'pending_review') {
+        finalStatus = 'PENDING_REVIEW';
       }
       
       const postData = {
@@ -130,6 +153,7 @@ export default function NewPostPage() {
         excerpt,
         content,
         category: category.toLowerCase(),
+        subcategory: subcategory || null,
         tags,
         featuredImage,
         status: finalStatus,
@@ -150,6 +174,7 @@ export default function NewPostPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(postData),
       });
 
@@ -158,7 +183,18 @@ export default function NewPostPage() {
         throw new Error(data.error || 'Failed to create post');
       }
 
-      router.push('/admin/posts');
+      const result = await response.json();
+      
+      // Check if the post was submitted for review (either directly or because user doesn't have publish permission)
+      if (result.status === 'PENDING_REVIEW' || result.statusChanged) {
+        setSuccessMessage(result.message || 'Your article has been submitted for review. An editor will review it before publication.');
+        // Redirect after a short delay to show the message
+        setTimeout(() => {
+          router.push('/admin/posts');
+        }, 2500);
+      } else {
+        router.push('/admin/posts');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -202,36 +238,63 @@ export default function NewPostPage() {
             <FileText className="w-4 h-4" />
             Save Draft
           </button>
-          {publishDate && new Date(publishDate) > new Date() && (
+          
+          {/* Show different buttons based on user role */}
+          {canPublishDirectly ? (
+            <>
+              {publishDate && new Date(publishDate) > new Date() && (
+                <button
+                  onClick={() => handleSave('scheduled')}
+                  disabled={isSaving || !title || !content || !category}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                >
+                  <Clock className="w-4 h-4" />
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Scheduling...
+                    </>
+                  ) : 'Schedule'}
+                </button>
+              )}
+              <button
+                onClick={() => handleSave('published')}
+                disabled={isSaving || !title || !content || !category}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-primary font-semibold rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Publishing...
+                  </>
+                ) : 'Publish Now'}
+              </button>
+            </>
+          ) : (
             <button
-              onClick={() => handleSave('scheduled')}
+              onClick={() => handleSave('pending_review')}
               disabled={isSaving || !title || !content || !category}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50"
             >
-              <Clock className="w-4 h-4" />
+              <Send className="w-4 h-4" />
               {isSaving ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Scheduling...
+                  Submitting...
                 </>
-              ) : 'Schedule'}
+              ) : 'Submit for Review'}
             </button>
           )}
-          <button
-            onClick={() => handleSave('published')}
-            disabled={isSaving || !title || !content || !category}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-primary font-semibold rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
-          >
-            <Save className="w-4 h-4" />
-            {isSaving ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Saving...
-              </>
-            ) : 'Publish Now'}
-          </button>
         </div>
       </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400">
+          {successMessage}
+        </div>
+      )}
 
       {error && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400">
@@ -452,25 +515,59 @@ export default function NewPostPage() {
             </div>
           </div>
 
-          {/* Category */}
+          {/* Category & Subcategory */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Category
             </h3>
-            <div className="space-y-2">
-              {categories.map((cat) => (
-                <label key={cat} className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="category"
-                    value={cat}
-                    checked={category === cat}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-4 h-4 border-gray-300 text-secondary focus:ring-secondary"
-                  />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{cat}</span>
-                </label>
-              ))}
+            <div className="space-y-4">
+              {/* Category Dropdown */}
+              <div className="relative">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary appearance-none cursor-pointer"
+                >
+                  <option value="">Select a category</option>
+                  {categoryData.map((cat) => (
+                    <option key={cat.slug} value={cat.slug}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              </div>
+
+              {/* Subcategory/Genre Dropdown - Only show if category has subcategories */}
+              {category && subcategories.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {category === 'music' ? 'Genre' : 'Subcategory'}
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={subcategory}
+                      onChange={(e) => setSubcategory(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary appearance-none cursor-pointer"
+                    >
+                      <option value="">
+                        Select {category === 'music' ? 'genre' : 'subcategory'} (optional)
+                      </option>
+                      {subcategories.map((sub) => (
+                        <option key={sub.slug} value={sub.slug}>
+                          {sub.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                  {subcategory && (
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      ✓ Will be posted to: {selectedCategory?.name} → {subcategories.find(s => s.slug === subcategory)?.name}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

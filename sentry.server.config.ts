@@ -15,6 +15,6 @@ Sentry.init({
   // Only send errors in production
   enabled: process.env.NODE_ENV === 'production',
 
-  // Spotlight for local development (if using Sentry Spotlight)
-  spotlight: process.env.NODE_ENV === 'development',
+  // Spotlight disabled - requires running Sentry Spotlight sidecar locally
+  spotlight: false,
 });

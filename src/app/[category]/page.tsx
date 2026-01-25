@@ -5,6 +5,7 @@ import ArticleCard from '@/components/ArticleCard';
 import Pagination from '@/components/Pagination';
 import type { Metadata } from 'next';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
+import Link from 'next/link';
 
 // Revalidate category pages every 60 seconds
 export const revalidate = 60;
@@ -54,27 +55,52 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const articles = allArticles.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Billboard Ad - Top of category */}
       <BillboardAd />
 
-      {/* Category Header */}
-      <div 
-        className="py-16 text-white"
-        style={{ 
-          background: `linear-gradient(135deg, ${category.color} 0%, ${category.color}dd 100%)`
-        }}
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
-            <div className="text-6xl mb-4">{category.icon}</div>
-            <h1 className="text-4xl md:text-5xl font-headline font-bold mb-4">
-              {category.name}
-            </h1>
-            <p className="text-xl opacity-90">
-              {category.description}
-            </p>
+      {/* Category Header - Clean, No Hero */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center gap-4 mb-4">
+            <span 
+              className="text-4xl p-3 rounded-xl"
+              style={{ backgroundColor: `${category.color}20` }}
+            >
+              {category.icon}
+            </span>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-headline font-bold text-gray-900 dark:text-white">
+                {category.name}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
+                {category.description}
+              </p>
+            </div>
           </div>
+
+          {/* Subcategories/Genres Filter */}
+          {category.subcategories && category.subcategories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-6">
+              <Link
+                href={`/${category.slug}`}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-colors text-white"
+                style={{ backgroundColor: category.color }}
+              >
+                All {category.name}
+              </Link>
+              {category.subcategories.map((sub) => (
+                <Link
+                  key={sub.id}
+                  href={`/${category.slug}/${sub.slug}`}
+                  className="px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                >
+                  <span>{sub.icon}</span>
+                  {sub.name}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

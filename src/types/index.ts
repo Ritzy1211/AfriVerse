@@ -7,6 +7,7 @@ export interface Article {
   excerpt: string;
   content: string;
   category: Category;
+  subcategory?: Subcategory;
   author: Author;
   featuredImage: string;
   publishedAt: Date;
@@ -34,6 +35,15 @@ export interface Author {
   };
 }
 
+export interface Subcategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -41,6 +51,7 @@ export interface Category {
   description: string;
   color: string;
   icon?: string;
+  subcategories?: Subcategory[];
 }
 
 export interface TrendingTopic {

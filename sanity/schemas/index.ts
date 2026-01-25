@@ -2,6 +2,7 @@
 import article from './article';
 import author from './author';
 import category from './category';
+import subcategory from './subcategory';
 import tag from './tag';
 import blockContent from './blockContent';
 import siteSettings from './siteSettings';
@@ -11,6 +12,7 @@ export const schemaTypes = [
   article,
   author,
   category,
+  subcategory,
   tag,
   siteSettings,
   

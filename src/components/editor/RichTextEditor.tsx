@@ -55,6 +55,9 @@ export default function RichTextEditor({
 }: RichTextEditorProps) {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
+  const [showImageInput, setShowImageInput] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageAlt, setImageAlt] = useState('');
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -111,9 +114,12 @@ export default function RichTextEditor({
     editor?.chain().focus().unsetLink().run();
   }, [editor]);
 
-  const addImage = useCallback((url: string) => {
+  const addImage = useCallback((url: string, alt?: string) => {
     if (url) {
-      editor?.chain().focus().setImage({ src: url }).run();
+      editor?.chain().focus().setImage({ src: url, alt: alt || '' }).run();
+      setImageUrl('');
+      setImageAlt('');
+      setShowImageInput(false);
     }
   }, [editor]);
 
@@ -335,16 +341,69 @@ export default function RichTextEditor({
               </div>
             )}
           </div>
-          {onImageUpload && (
+          
+          {/* Image Insert Button */}
+          <div className="relative">
             <MenuButton
-              onClick={onImageUpload}
+              onClick={() => setShowImageInput(!showImageInput)}
               title="Insert Image"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </MenuButton>
-          )}
+            {showImageInput && (
+              <div className="absolute top-full left-0 mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 min-w-[350px]">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Insert Image</p>
+                <div className="space-y-2">
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="Image URL (e.g., https://images.unsplash.com/...)"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={imageAlt}
+                    onChange={(e) => setImageAlt(e.target.value)}
+                    placeholder="Alt text (optional, for accessibility)"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addImage(imageUrl, imageAlt);
+                      }
+                    }}
+                  />
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowImageInput(false);
+                        setImageUrl('');
+                        setImageAlt('');
+                      }}
+                      className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addImage(imageUrl, imageAlt)}
+                      disabled={!imageUrl.trim()}
+                      className="px-3 py-1.5 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Insert
+                    </button>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  Tip: Use images from Unsplash, Cloudinary, or any public URL
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Highlight Group */}

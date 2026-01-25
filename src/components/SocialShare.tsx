@@ -86,27 +86,62 @@ export default function SocialShare({
     );
   };
 
-  // Floating sidebar variant (for article pages)
+  // Floating sidebar variant (for article pages) - positioned in left margin, outside content
+  // Only visible on very wide screens (1536px+) where there's actual margin space
+  // Styled like Legit.ng with branded colored icons
   if (variant === 'floating') {
+    const floatingShareLinks = [
+      {
+        name: 'Facebook',
+        icon: Facebook,
+        href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        color: '#1877F2',
+      },
+      {
+        name: 'Messenger',
+        icon: MessageCircle,
+        href: `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=291494419107518&redirect_uri=${encodedUrl}`,
+        color: '#0099FF',
+      },
+      {
+        name: 'Twitter',
+        icon: Twitter,
+        href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+        color: '#000000',
+      },
+      {
+        name: 'WhatsApp',
+        icon: MessageCircle,
+        href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+        color: '#25D366',
+      },
+      {
+        name: 'LinkedIn',
+        icon: Linkedin,
+        href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedExcerpt}`,
+        color: '#0A66C2',
+      },
+    ];
+
     return (
-      <div className={`fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-2 ${className}`}>
-        <span className="text-xs text-gray-500 font-medium mb-1 text-center">Share</span>
-        {shareLinks.map((link) => (
+      <div className={`fixed left-0 top-1/4 z-40 hidden 2xl:flex flex-col items-center ${className}`}>
+        {floatingShareLinks.map((link) => (
           <button
             key={link.name}
             onClick={() => handleShare(link.href, link.name)}
-            className={`p-3 rounded-full bg-white shadow-lg border border-gray-100 text-gray-600 transition-all duration-200 ${link.color}`}
+            className="p-4 transition-all duration-200 hover:scale-110 hover:opacity-80"
+            style={{ color: link.color }}
             title={`Share on ${link.name}`}
           >
-            <link.icon className="w-5 h-5" />
+            <link.icon className="w-6 h-6" strokeWidth={1.5} fill={link.name === 'Twitter' ? 'currentColor' : 'none'} />
           </button>
         ))}
         <button
           onClick={copyToClipboard}
-          className="p-3 rounded-full bg-white shadow-lg border border-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-all duration-200"
+          className="p-4 text-gray-500 transition-all duration-200 hover:scale-110 hover:text-gray-700"
           title="Copy link"
         >
-          {copied ? <Check className="w-5 h-5 text-green-500" /> : <Link2 className="w-5 h-5" />}
+          {copied ? <Check className="w-6 h-6 text-green-500" /> : <Link2 className="w-6 h-6" strokeWidth={1.5} />}
         </button>
       </div>
     );

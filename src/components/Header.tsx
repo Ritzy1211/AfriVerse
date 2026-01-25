@@ -22,7 +22,6 @@ export default function Header() {
   // Translated more links
   const moreLinks = [
     { name: t('common.about'), href: '/about', icon: Info },
-    { name: t('nav.authors'), href: '/authors', icon: Users },
     { name: t('common.contact'), href: '/contact', icon: Phone },
     { name: t('nav.advertise'), href: '/advertise', icon: Megaphone },
     { name: t('nav.careers'), href: '/careers', icon: Briefcase },
@@ -113,8 +112,8 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {categories.slice(0, 5).map((category) => {
+          <nav className="hidden md:flex items-center gap-5">
+            {categories.map((category) => {
               const translationKey = `nav.${category.slug}`;
               const translated = t(translationKey);
               return (

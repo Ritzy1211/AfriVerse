@@ -228,10 +228,16 @@ async function _getAllArticles(): Promise<Article[]> {
   
   const articles = Array.from(articleMap.values());
   
-  // Sort by date (newest first)
-  return articles.sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+  // Sort: Sponsored posts first (pinned), then by date (newest first)
+  return articles.sort((a, b) => {
+    // Sponsored posts always come first
+    if (a.isSponsored && !b.isSponsored) return -1;
+    if (!a.isSponsored && b.isSponsored) return 1;
+    
+    // Among sponsored posts, sort by date
+    // Among non-sponsored posts, also sort by date
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
 }
 
 // Cached version - revalidates every 60 seconds
@@ -340,7 +346,15 @@ export async function getTrendingArticles(limit: number = 5): Promise<Article[]>
 export async function getArticlesByCategory(categorySlug: string, limit?: number): Promise<Article[]> {
   const allArticles = await getAllArticles();
   const filtered = allArticles.filter(article => article.category.slug === categorySlug);
-  return limit ? filtered.slice(0, limit) : filtered;
+  
+  // Sort: Sponsored posts first (pinned), then by date
+  const sorted = filtered.sort((a, b) => {
+    if (a.isSponsored && !b.isSponsored) return -1;
+    if (!a.isSponsored && b.isSponsored) return 1;
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
+  
+  return limit ? sorted.slice(0, limit) : sorted;
 }
 
 // Get related articles
@@ -370,5 +384,13 @@ export function getAuthorById(id: string): Author | null {
 export async function getArticlesByAuthor(authorId: string, limit?: number): Promise<Article[]> {
   const allArticles = await getAllArticles();
   const filtered = allArticles.filter(article => article.author.id === authorId);
-  return limit ? filtered.slice(0, limit) : filtered;
+  
+  // Sort: Sponsored posts first (pinned), then by date
+  const sorted = filtered.sort((a, b) => {
+    if (a.isSponsored && !b.isSponsored) return -1;
+    if (!a.isSponsored && b.isSponsored) return 1;
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
+  
+  return limit ? sorted.slice(0, limit) : sorted;
 }

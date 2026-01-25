@@ -59,14 +59,22 @@ export default function SearchPageClient() {
       filtered = filtered.filter(article => article.category.slug === selectedCategory);
     }
 
-    // Sort results
+    // Sort results - Sponsored posts always pinned at top
     if (sortBy === 'date') {
-      filtered = [...filtered].sort((a, b) => 
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      );
-    } else {
-      // Sort by relevance (title matches first, then featured)
       filtered = [...filtered].sort((a, b) => {
+        // Sponsored posts first
+        if (a.isSponsored && !b.isSponsored) return -1;
+        if (!a.isSponsored && b.isSponsored) return 1;
+        // Then by date
+        return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+      });
+    } else {
+      // Sort by relevance (sponsored first, then title matches, then featured)
+      filtered = [...filtered].sort((a, b) => {
+        // Sponsored posts always first
+        if (a.isSponsored && !b.isSponsored) return -1;
+        if (!a.isSponsored && b.isSponsored) return 1;
+        
         const queryLower = query.toLowerCase();
         const aTitleMatch = a.title.toLowerCase().includes(queryLower);
         const bTitleMatch = b.title.toLowerCase().includes(queryLower);
@@ -80,12 +88,13 @@ export default function SearchPageClient() {
     }
 
     return filtered;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, selectedCategory, sortBy]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Search Header */}
-      <div className="bg-primary text-white py-12">
+      <div className="bg-primary dark:bg-gray-800 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl md:text-4xl font-display font-bold mb-6">
             Search Articles
@@ -106,7 +115,7 @@ export default function SearchPageClient() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search articles, topics, authors..."
-              className="w-full pl-14 pr-4 py-4 text-lg text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+              className="w-full pl-14 pr-4 py-4 text-lg text-gray-900 dark:text-white dark:bg-gray-700 dark:placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
             />
           </div>
         </div>
@@ -123,7 +132,7 @@ export default function SearchPageClient() {
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === 'all'
                   ? 'bg-primary text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               All Categories
@@ -135,7 +144,7 @@ export default function SearchPageClient() {
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   selectedCategory === cat.slug
                     ? 'bg-primary text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 {cat.icon} {cat.name}
@@ -148,7 +157,7 @@ export default function SearchPageClient() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'relevance' | 'date')}
-              className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary"
+              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary"
             >
               <option value="relevance">Sort by Relevance</option>
               <option value="date">Sort by Date</option>
@@ -158,7 +167,7 @@ export default function SearchPageClient() {
 
         {/* Results Count */}
         <div className="mb-6">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             {query.length >= 2 ? (
               <>
                 Found <span className="font-semibold text-primary">{results.length}</span> result{results.length !== 1 ? 's' : ''} 
@@ -179,13 +188,13 @@ export default function SearchPageClient() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
-            <p className="text-gray-500 mb-6">Try adjusting your search or filters</p>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No articles found</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search or filters</p>
             <Link 
               href="/"
               className="inline-flex items-center gap-2 text-secondary font-medium hover:underline"

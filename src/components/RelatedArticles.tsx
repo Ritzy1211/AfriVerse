@@ -2,12 +2,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Article } from '@/types';
 import { formatDate } from '@/lib/utils';
-import { Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
 
 interface RelatedArticlesProps {
   articles: Article[];
   title?: string;
-  variant?: 'grid' | 'list' | 'compact';
+  variant?: 'grid' | 'list' | 'compact' | 'featured';
 }
 
 export default function RelatedArticles({ 
@@ -16,6 +16,135 @@ export default function RelatedArticles({
   variant = 'grid' 
 }: RelatedArticlesProps) {
   if (articles.length === 0) return null;
+
+  // Featured variant - prominent section for end of article
+  if (variant === 'featured') {
+    return (
+      <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-2xl p-8 md:p-10 border border-gray-200 dark:border-gray-700">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
+                {title}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Continue your reading journey
+              </p>
+            </div>
+          </div>
+          <Link 
+            href="/search" 
+            className="hidden md:flex items-center gap-2 text-sm font-medium text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors"
+          >
+            View all articles
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Articles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {articles.slice(0, 6).map((article, index) => (
+            <Link
+              key={article.id}
+              href={`/${article.category.slug}/${article.slug}`}
+              className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ${
+                index === 0 ? 'md:col-span-2 lg:col-span-1' : ''
+              }`}
+            >
+              {/* Image Container */}
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src={article.featuredImage}
+                  alt={article.title}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                
+                {/* Category Badge */}
+                <div className="absolute top-3 left-3">
+                  <span 
+                    className="px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-sm"
+                    style={{ backgroundColor: `${article.category.color}dd` }}
+                  >
+                    {article.category.name}
+                  </span>
+                </div>
+
+                {/* Sponsored Badge */}
+                {article.isSponsored && (
+                  <div className="absolute top-3 right-3">
+                    <span className="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-full">
+                      Sponsored
+                    </span>
+                  </div>
+                )}
+
+                {/* Read Time - Bottom */}
+                <div className="absolute bottom-3 right-3">
+                  <span className="flex items-center gap-1 px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs rounded-full">
+                    <Clock className="w-3 h-3" />
+                    {article.readTime} min
+                  </span>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-5">
+                <h4 className="font-semibold text-gray-900 dark:text-white text-lg leading-tight line-clamp-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors mb-2">
+                  {article.title}
+                </h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4">
+                  {article.excerpt}
+                </p>
+                
+                {/* Author & Date */}
+                <div className="flex items-center gap-3">
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                    <Image
+                      src={article.author.avatar}
+                      alt={article.author.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                      {article.author.name}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                      {formatDate(article.publishedAt)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hover Arrow Indicator */}
+              <div className="absolute bottom-5 right-5 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                <ArrowRight className="w-4 h-4 text-white" />
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile View All Link */}
+        <div className="mt-6 md:hidden">
+          <Link 
+            href="/search" 
+            className="flex items-center justify-center gap-2 w-full py-3 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors"
+          >
+            Explore More Stories
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // Compact variant for sidebar
   if (variant === 'compact') {

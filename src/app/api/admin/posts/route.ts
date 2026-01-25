@@ -142,6 +142,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Role-based permission check for publishing
+    // Only EDITOR, ADMIN, and SUPER_ADMIN can publish directly
+    const canPublishDirectly = ['EDITOR', 'ADMIN', 'SUPER_ADMIN'].includes(user.role);
+    let finalStatus = status || 'DRAFT';
+    
+    // If user tries to publish but doesn't have permission, change to PENDING_REVIEW
+    if (!canPublishDirectly && (finalStatus === 'PUBLISHED' || finalStatus === 'SCHEDULED')) {
+      finalStatus = 'PENDING_REVIEW';
+    }
+
     // Create the post
     const post = await prisma.post.create({
       data: {
@@ -152,8 +162,8 @@ export async function POST(request: NextRequest) {
         category: category || 'uncategorized',
         tags: tags || [],
         featuredImage: featuredImage || null,
-        status: status || 'DRAFT',
-        publishedAt: status === 'PUBLISHED' ? new Date() : null,
+        status: finalStatus,
+        publishedAt: finalStatus === 'PUBLISHED' ? new Date() : null,
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
         readingTime: readingTime || 1,
         metaTitle: metaTitle || title,
@@ -180,7 +190,7 @@ export async function POST(request: NextRequest) {
 
     // Send notifications based on status
     try {
-      const postStatus = status?.toUpperCase() || 'DRAFT';
+      const postStatus = finalStatus;
       
       // Notify author about post status
       await notifyPostStatusChange(
@@ -203,7 +213,15 @@ export async function POST(request: NextRequest) {
       console.error('Error sending notifications:', notifyError);
     }
 
-    return NextResponse.json(post, { status: 201 });
+    // Include info about whether status was changed due to permissions
+    const response: any = { ...post };
+    if (!canPublishDirectly && (status === 'PUBLISHED' || status === 'SCHEDULED')) {
+      response.statusChanged = true;
+      response.originalStatus = status;
+      response.message = 'Your article has been submitted for review. Editors will review it before publication.';
+    }
+
+    return NextResponse.json(response, { status: 201 });
   } catch (error) {
     console.error('Error creating post:', error);
     return NextResponse.json(

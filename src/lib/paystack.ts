@@ -9,18 +9,18 @@ const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY!;
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 
 // Subscription pricing in kobo (smallest currency unit)
-// $1.34/month ≈ ₦2,000/month (using approximate exchange rate)
+// $3/month ≈ ₦4,500/month (using approximate exchange rate)
 export const SUBSCRIPTION_PRICES = {
   MONTHLY: {
-    amount: 200000, // ₦2,000 in kobo
-    amountUSD: 134, // $1.34 in cents
+    amount: 450000, // ₦4,500 in kobo
+    amountUSD: 300, // $3.00 in cents
     interval: 'monthly',
     label: 'Monthly',
     description: 'Premium Newsletter - Monthly',
   },
   YEARLY: {
-    amount: 2000000, // ₦20,000 in kobo (2 months free)
-    amountUSD: 1340, // $13.40 in cents
+    amount: 4500000, // ₦45,000 in kobo (2 months free)
+    amountUSD: 3000, // $30.00 in cents
     interval: 'annually',
     label: 'Yearly',
     description: 'Premium Newsletter - Yearly (Save 17%)',

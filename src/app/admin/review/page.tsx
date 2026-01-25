@@ -128,7 +128,9 @@ export default function ReviewQueuePage() {
   const fetchReviewQueue = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/workflow/review?status=${activeTab}`);
+      const response = await fetch(`/api/workflow/review?status=${activeTab}`, {
+        credentials: 'include',
+      });
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       setPosts(data.posts);
@@ -154,6 +156,7 @@ export default function ReviewQueuePage() {
           action,
           feedback: feedbackText,
         }),
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -181,6 +184,7 @@ export default function ReviewQueuePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ postId, action: 'publish' }),
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -242,11 +246,13 @@ export default function ReviewQueuePage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         {Object.entries(STATUS_CONFIG).map(([status, config]) => {
           const count = stats[status as keyof Stats] || 0;
-          const isActive = activeTab === status.replace('_REVIEW', '').replace('PENDING_REVIEW', 'PENDING');
+          // Map status to API query parameter
+          const tabValue = status === 'PENDING_REVIEW' ? 'PENDING' : status;
+          const isActive = activeTab === tabValue;
           return (
             <button
               key={status}
-              onClick={() => setActiveTab(status.replace('_REVIEW', '').replace('PENDING_REVIEW', 'PENDING'))}
+              onClick={() => setActiveTab(tabValue)}
               className={`p-4 rounded-xl border transition-all ${
                 isActive 
                   ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20' 

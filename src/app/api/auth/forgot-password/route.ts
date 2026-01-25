@@ -7,7 +7,7 @@ import { sendEmail, getPasswordResetEmailHtml } from '@/lib/email';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email } = body;
+    const { email, userType } = body;
 
     if (!email) {
       return NextResponse.json(
@@ -50,9 +50,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Build reset link
+    // Build reset link - use admin or writer path based on userType or user role
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afriverse.africa';
-    const resetLink = `${siteUrl}/writer/reset-password?token=${token}&email=${encodeURIComponent(user.email)}`;
+    const isAdmin = userType === 'admin' || user.role === 'ADMIN' || user.role === 'EDITOR';
+    const resetPath = isAdmin ? '/admin/reset-password' : '/writer/reset-password';
+    const resetLink = `${siteUrl}${resetPath}?token=${token}&email=${encodeURIComponent(user.email)}`;
 
     // Send reset email
     try {

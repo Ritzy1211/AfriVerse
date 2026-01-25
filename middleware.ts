@@ -22,7 +22,11 @@ export function middleware(req: NextRequest) {
   const isWriterRoute = pathname.startsWith('/writer');
   const isStudioRoute = pathname.startsWith('/studio');
   const isAdminLoginPage = pathname === '/admin/login';
+  const isAdminForgotPassword = pathname === '/admin/forgot-password';
+  const isAdminResetPassword = pathname === '/admin/reset-password';
   const isWriterLoginPage = pathname === '/writer/login';
+  const isWriterForgotPassword = pathname === '/writer/forgot-password';
+  const isWriterResetPassword = pathname === '/writer/reset-password';
   const isApiAuthRoute = pathname.startsWith('/api/auth');
   const isWriterApiRoute = pathname.startsWith('/api/writer');
   const isAdminApiRoute = pathname.startsWith('/api/admin');
@@ -60,7 +64,8 @@ export function middleware(req: NextRequest) {
   }
 
   // If user is trying to access writer routes but not logged in, redirect to writer login
-  if (isWriterRoute && !isWriterLoginPage && !isLoggedIn) {
+  // Exclude forgot-password and reset-password pages
+  if (isWriterRoute && !isWriterLoginPage && !isWriterForgotPassword && !isWriterResetPassword && !isLoggedIn) {
     const loginUrl = new URL('/writer/login', req.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
@@ -81,7 +86,8 @@ export function middleware(req: NextRequest) {
   }
 
   // If user is trying to access admin routes but not logged in, redirect to admin login
-  if (isAdminRoute && !isAdminLoginPage && !isLoggedIn) {
+  // Exclude forgot-password and reset-password pages
+  if (isAdminRoute && !isAdminLoginPage && !isAdminForgotPassword && !isAdminResetPassword && !isLoggedIn) {
     const loginUrl = new URL('/admin/login', req.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
