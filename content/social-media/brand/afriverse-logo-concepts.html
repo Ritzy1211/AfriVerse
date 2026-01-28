@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfriVerse Logo Design Concepts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #E8C965;
+            --gold-dark: #B8960F;
+            --green: #1B4332;
+            --green-light: #2D5A45;
+            --green-dark: #0D251C;
+            --black: #1A1A1A;
+            --white: #FAFAFA;
+            --gray: #888888;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .logo-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .logo-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .logo-card.featured {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .logo-card.featured::before {
+            content: '★ RECOMMENDED';
+            display: block;
+            font-size: 0.7rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .logo-display {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .logo-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 1: Triangle Icon + Bold Text */
+        /* ==================== */
+        .logo-concept-1 {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-concept-1 .icon {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .logo-concept-1 .triangle {
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 52px solid var(--gold);
+            position: relative;
+        }
+
+        .logo-concept-1 .triangle::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: -15px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 26px solid var(--black);
+        }
+
+        .logo-concept-1 .text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+
+        .logo-concept-1 .text span {
+            color: var(--gold);
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 2: Stacked with Africa Outline */
+        /* ==================== */
+        .logo-concept-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-concept-2 .icon-container {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-concept-2 .icon-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+        }
+
+        .logo-concept-2 .africa-shape {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo-concept-2 .text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--white);
+            letter-spacing: 2px;
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 3: Minimal Triangle Mark */
+        /* ==================== */
+        .logo-concept-3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-concept-3 .mark {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--gold);
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-concept-3 .mark .inner {
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+        }
+
+        .logo-concept-3 .text-group {
+            text-align: left;
+        }
+
+        .logo-concept-3 .main-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .logo-concept-3 .sub-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 4: Circle Badge */
+        /* ==================== */
+        .logo-concept-4 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-concept-4 .badge {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            position: relative;
+            background: var(--green-dark);
+        }
+
+        .logo-concept-4 .badge::before {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-concept-4 .badge .av {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        .logo-concept-4 .text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--white);
+            letter-spacing: 3px;
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 5: Modern Geometric (FEATURED) */
+        /* ==================== */
+        .logo-concept-5 {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-concept-5 .symbol {
+            width: 55px;
+            height: 55px;
+            position: relative;
+        }
+
+        .logo-concept-5 .symbol .outer-triangle {
+            width: 0;
+            height: 0;
+            border-left: 27.5px solid transparent;
+            border-right: 27.5px solid transparent;
+            border-bottom: 48px solid var(--gold);
+        }
+
+        .logo-concept-5 .symbol .inner-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px;
+            height: 3px;
+            background: var(--black);
+        }
+
+        .logo-concept-5 .symbol .dot {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        .logo-concept-5 .wordmark {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--white) 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .logo-concept-5 .wordmark .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 6: Bold Monogram */
+        /* ==================== */
+        .logo-concept-6 {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-concept-6 .monogram {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gold);
+        }
+
+        .logo-concept-6 .monogram span {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--gold);
+        }
+
+        .logo-concept-6 .brand-text {
+            text-align: left;
+        }
+
+        .logo-concept-6 .brand-text .name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .logo-concept-6 .brand-text .tagline {
+            font-size: 0.6rem;
+            color: var(--gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 7: Continent Silhouette */
+        /* ==================== */
+        .logo-concept-7 {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-concept-7 .continent {
+            width: 50px;
+            height: 55px;
+            position: relative;
+        }
+
+        .logo-concept-7 .continent svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-concept-7 .text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .logo-concept-7 .text .gold {
+            color: var(--gold);
+        }
+
+        /* ==================== */
+        /* LOGO CONCEPT 8: Luxury Serif */
+        /* ==================== */
+        .logo-concept-8 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-concept-8 .line-top {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin-bottom: 15px;
+        }
+
+        .logo-concept-8 .text {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: var(--white);
+            letter-spacing: 4px;
+        }
+
+        .logo-concept-8 .text span {
+            color: var(--gold);
+        }
+
+        .logo-concept-8 .tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            color: var(--gray);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .logo-concept-8 .line-bottom {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin-top: 15px;
+        }
+
+        /* ==================== */
+        /* VARIATIONS SECTION */
+        /* ==================== */
+        .variations-section {
+            margin-top: 60px;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .variation-card {
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .variation-card.dark-bg {
+            background: var(--black);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .variation-card.light-bg {
+            background: var(--white);
+        }
+
+        .variation-card.green-bg {
+            background: var(--green);
+        }
+
+        .variation-card.gold-bg {
+            background: var(--gold);
+        }
+
+        .var-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .var-logo .symbol {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .var-logo .symbol .tri {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid var(--gold);
+        }
+
+        .var-logo.on-light .symbol .tri {
+            border-bottom-color: var(--green);
+        }
+
+        .var-logo.on-gold .symbol .tri {
+            border-bottom-color: var(--black);
+        }
+
+        .var-logo .text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--white);
+        }
+
+        .var-logo.on-light .text {
+            color: var(--black);
+        }
+
+        .var-logo.on-gold .text {
+            color: var(--black);
+        }
+
+        /* ==================== */
+        /* ICON ONLY SECTION */
+        /* ==================== */
+        .icons-section {
+            margin-top: 60px;
+        }
+
+        .icons-grid {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .icon-card {
+            text-align: center;
+        }
+
+        .icon-display {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .icon-display.app-icon {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            box-shadow: 0 10px 30px rgba(27, 67, 50, 0.5);
+        }
+
+        .icon-display .app-tri {
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-bottom: 38px solid var(--gold);
+        }
+
+        .icon-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        /* ==================== */
+        /* COLOR PALETTE */
+        /* ==================== */
+        .palette-section {
+            margin-top: 60px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .palette-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .swatch-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .swatch-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--white);
+        }
+
+        .swatch-hex {
+            font-size: 0.75rem;
+            color: var(--gray);
+            font-family: monospace;
+        }
+
+        /* ==================== */
+        /* FOOTER */
+        /* ==================== */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .variations-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .logo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>▲ AFRIVERSE LOGO CONCEPTS</h1>
+            <p>Brand Identity Design Options — January 2026</p>
+        </div>
+
+        <!-- PRIMARY LOGO CONCEPTS -->
+        <h2 class="section-title">PRIMARY LOGO CONCEPTS</h2>
+        <div class="logo-grid">
+            
+            <!-- Concept 1: Triangle + Bold Text -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-1">
+                        <div class="icon">
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="text">AFRI<span>VERSE</span></div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 1: Rising Triangle</div>
+                <div class="logo-desc">Bold triangle symbol representing growth & ascension</div>
+            </div>
+
+            <!-- Concept 2: Stacked Badge -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-2">
+                        <div class="icon-container">
+                            <span class="africa-shape">🌍</span>
+                        </div>
+                        <div class="text">AFRIVERSE</div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 2: Globe Badge</div>
+                <div class="logo-desc">App-friendly stacked design with globe icon</div>
+            </div>
+
+            <!-- Concept 3: Minimal Geometric -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-3">
+                        <div class="mark">
+                            <div class="inner"></div>
+                        </div>
+                        <div class="text-group">
+                            <div class="main-text">AfriVerse</div>
+                            <div class="sub-text">Africa's Voice</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 3: Diamond Mark</div>
+                <div class="logo-desc">Minimal geometric with tagline integration</div>
+            </div>
+
+            <!-- Concept 4: Circle Badge -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-4">
+                        <div class="badge">
+                            <span class="av">AV</span>
+                        </div>
+                        <div class="text">AFRIVERSE</div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 4: Monogram Badge</div>
+                <div class="logo-desc">Classic circular emblem with AV monogram</div>
+            </div>
+
+            <!-- Concept 5: FEATURED Modern Geometric -->
+            <div class="logo-card featured">
+                <div class="logo-display">
+                    <div class="logo-concept-5">
+                        <div class="symbol">
+                            <div class="outer-triangle"></div>
+                            <div class="inner-line"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <span class="wordmark">Afri<span class="highlight">Verse</span></span>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 5: Modern Pulse</div>
+                <div class="logo-desc">Contemporary triangle with pulse detail — Premium feel</div>
+            </div>
+
+            <!-- Concept 6: Bold Monogram Box -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-6">
+                        <div class="monogram">
+                            <span>A</span>
+                        </div>
+                        <div class="brand-text">
+                            <div class="name">AfriVerse</div>
+                            <div class="tagline">Africa's Voice • Amplified</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 6: Boxed Monogram</div>
+                <div class="logo-desc">Strong initial with full tagline</div>
+            </div>
+
+            <!-- Concept 7: Continent Silhouette -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-7">
+                        <div class="continent">
+                            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 5 L55 15 L70 12 L75 25 L85 30 L90 45 L85 60 L90 75 L80 90 L70 95 L55 110 L45 115 L35 105 L25 95 L15 80 L10 65 L15 50 L12 35 L20 25 L30 15 L45 10 Z" fill="#D4AF37"/>
+                            </svg>
+                        </div>
+                        <div class="text">AFRI<span class="gold">VERSE</span></div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 7: Africa Silhouette</div>
+                <div class="logo-desc">Stylized continent outline in gold</div>
+            </div>
+
+            <!-- Concept 8: Luxury Serif -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <div class="logo-concept-8">
+                        <div class="line-top"></div>
+                        <div class="text">AFRI<span>VERSE</span></div>
+                        <div class="tagline">Africa's Voice</div>
+                        <div class="line-bottom"></div>
+                    </div>
+                </div>
+                <div class="logo-name">Concept 8: Editorial Serif</div>
+                <div class="logo-desc">Elegant editorial masthead style</div>
+            </div>
+        </div>
+
+        <!-- COLOR VARIATIONS -->
+        <div class="variations-section">
+            <h2 class="section-title">COLOR VARIATIONS (Recommended Logo)</h2>
+            <div class="variations-grid">
+                <div class="variation-card dark-bg">
+                    <div class="var-logo">
+                        <div class="symbol"><div class="tri"></div></div>
+                        <span class="text">AfriVerse</span>
+                    </div>
+                </div>
+                <div class="variation-card light-bg">
+                    <div class="var-logo on-light">
+                        <div class="symbol"><div class="tri"></div></div>
+                        <span class="text">AfriVerse</span>
+                    </div>
+                </div>
+                <div class="variation-card green-bg">
+                    <div class="var-logo">
+                        <div class="symbol"><div class="tri"></div></div>
+                        <span class="text">AfriVerse</span>
+                    </div>
+                </div>
+                <div class="variation-card gold-bg">
+                    <div class="var-logo on-gold">
+                        <div class="symbol"><div class="tri"></div></div>
+                        <span class="text">AfriVerse</span>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 20px; color: var(--gray); font-size: 0.8rem;">
+                On Dark Background • On Light Background • On Green Background • On Gold Background
+            </p>
+        </div>
+
+        <!-- APP ICONS -->
+        <div class="icons-section">
+            <h2 class="section-title">APP ICON / FAVICON</h2>
+            <div class="icons-grid">
+                <div class="icon-card">
+                    <div class="icon-display app-icon">
+                        <div class="app-tri"></div>
+                    </div>
+                    <div class="icon-label">iOS / Android App</div>
+                </div>
+                <div class="icon-card">
+                    <div class="icon-display" style="background: var(--gold); border-radius: 12px;">
+                        <div class="app-tri" style="border-bottom-color: var(--green);"></div>
+                    </div>
+                    <div class="icon-label">Alt: Gold Background</div>
+                </div>
+                <div class="icon-card">
+                    <div class="icon-display" style="background: var(--black); border: 2px solid var(--gold); border-radius: 12px;">
+                        <div class="app-tri"></div>
+                    </div>
+                    <div class="icon-label">Alt: Bordered</div>
+                </div>
+                <div class="icon-card">
+                    <div class="icon-display" style="background: linear-gradient(135deg, var(--gold) 0%, var(--green) 100%); border-radius: 50%;">
+                        <span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.8rem; color: white;">A</span>
+                    </div>
+                    <div class="icon-label">Alt: Gradient Circle</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLOR PALETTE -->
+        <div class="palette-section">
+            <h2 class="section-title">BRAND COLOR PALETTE</h2>
+            <div class="palette-grid">
+                <div class="color-swatch">
+                    <div class="swatch-box" style="background: var(--gold);"></div>
+                    <div class="swatch-name">AfriVerse Gold</div>
+                    <div class="swatch-hex">#D4AF37</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-box" style="background: var(--green);"></div>
+                    <div class="swatch-name">Deep Green</div>
+                    <div class="swatch-hex">#1B4332</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-box" style="background: var(--black);"></div>
+                    <div class="swatch-name">Warm Black</div>
+                    <div class="swatch-hex">#1A1A1A</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-box" style="background: var(--white);"></div>
+                    <div class="swatch-name">Off White</div>
+                    <div class="swatch-hex">#FAFAFA</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-box" style="background: var(--gold-light);"></div>
+                    <div class="swatch-name">Gold Light</div>
+                    <div class="swatch-hex">#E8C965</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-box" style="background: var(--green-light);"></div>
+                    <div class="swatch-name">Green Light</div>
+                    <div class="swatch-hex">#2D5A45</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            AfriVerse Brand Identity Concepts — January 2026<br>
+            Choose your favorite and let's finalize the design!
+        </div>
+    </div>
+</body>
+</html>

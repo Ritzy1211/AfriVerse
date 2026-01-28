@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getArticleBySlug, getRelatedArticles, getArticlesByCategory } from '@/data/articles';
+import { getArticleBySlug, getRelatedArticles, getArticlesByCategory, getAllArticles } from '@/data/articles';
 import { getCategoryBySlug, getSubcategoryBySlug } from '@/data/categories';
 import { formatDate } from '@/lib/utils';
+import { getSpotlights } from '@/lib/sanity-queries';
 import AdPlacement from '@/components/AdPlacement';
 import SocialShare from '@/components/SocialShare';
 import RelatedArticles from '@/components/RelatedArticles';
@@ -12,6 +13,8 @@ import Comments from '@/components/Comments';
 import Avatar from '@/components/Avatar';
 import ArticleCard from '@/components/ArticleCard';
 import Pagination from '@/components/Pagination';
+import MoreNews from '@/components/MoreNews';
+import Spotlight, { SpotlightFull, SpotlightData } from '@/components/Spotlight';
 import { Clock, Bookmark, Megaphone } from 'lucide-react';
 import type { Metadata } from 'next';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
@@ -305,7 +308,41 @@ async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof get
   if (!article) return null;
   
   const relatedArticles = await getRelatedArticles(article, 6);
+  const allArticles = await getAllArticles();
   const shareUrl = `https://afriverse.africa/${article.category.slug}/${article.slug}`;
+  
+  // Fetch any active spotlights for articles
+  let spotlightData: SpotlightData | null = null;
+  try {
+    const spotlights = await getSpotlights('article');
+    if (spotlights && spotlights.length > 0) {
+      const spotlight = spotlights[0];
+      spotlightData = {
+        id: spotlight._id,
+        title: spotlight.title,
+        subtitle: spotlight.subtitle,
+        quote: spotlight.quote,
+        quoteHighlight: spotlight.quoteHighlight,
+        mediaType: spotlight.mediaType || 'image',
+        mediaUrl: spotlight.mediaUrl,
+        thumbnailUrl: spotlight.thumbnailUrl,
+        linkUrl: spotlight.linkUrl,
+        linkText: spotlight.linkText,
+        overlayPosition: spotlight.overlayPosition || 'left',
+        textColor: spotlight.textColor,
+        highlightColor: spotlight.highlightColor,
+        relatedArticles: spotlight.relatedArticles?.map((a: any) => ({
+          id: a._id,
+          title: a.title,
+          image: a.image,
+          slug: a.slug,
+          category: a.category,
+        })),
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching spotlight:', error);
+  }
 
   return (
     <>
@@ -450,7 +487,13 @@ async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof get
             {/* Article Body */}
             <div className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-headings:font-headline prose-a:text-brand-accent prose-strong:text-gray-900 dark:prose-strong:text-white">
               <div 
-                className="text-gray-800 dark:text-gray-200 leading-relaxed"
+                className="text-gray-800 dark:text-gray-200 leading-relaxed article-content"
+                style={{ 
+                  wordBreak: 'normal', 
+                  overflowWrap: 'break-word',
+                  whiteSpace: 'normal',
+                  maxWidth: '100%'
+                }}
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
             </div>
@@ -548,6 +591,47 @@ async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof get
                 title={`Popular in ${article.category.name}`}
                 variant="compact"
               />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Spotlight Section - Full Width Featured Content */}
+      {spotlightData && (
+        <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+          {spotlightData.relatedArticles && spotlightData.relatedArticles.length > 0 ? (
+            <Spotlight 
+              data={spotlightData}
+              sectionTitle="SPOTLIGHT"
+            />
+          ) : (
+            <SpotlightFull 
+              data={spotlightData}
+              sectionTitle="SPOTLIGHT"
+            />
+          )}
+        </div>
+      )}
+
+      {/* More News Section - Billboard Style */}
+      <div className="border-t border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {/* Main More News */}
+            <div className="lg:col-span-2">
+              <MoreNews 
+                articles={allArticles} 
+                currentArticleId={article.id}
+                title="MORE NEWS"
+              />
+            </div>
+
+            {/* Sidebar Ad */}
+            <div className="hidden lg:block">
+              <div className="sticky top-20 pt-12">
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider text-center mb-2">Advertisement</p>
+                <SidebarAds />
+              </div>
             </div>
           </div>
         </div>

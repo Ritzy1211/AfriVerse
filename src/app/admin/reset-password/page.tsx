@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -93,15 +94,10 @@ function ResetPasswordForm() {
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/admin/login" className="inline-block">
-            <img 
-              src="/assets/logos/Afriverse-logo.png" 
-              alt="AfriVerse" 
-              className="h-12 mx-auto mb-2"
-            />
+          <Link href="/admin/login" className="inline-flex flex-col items-center gap-3">
+            <Logo size="xl" variant="full" colorScheme="green" />
+            <p className="text-sm text-gray-400">Admin Panel</p>
           </Link>
-          <h1 className="text-2xl font-bold text-white">AfriVerse</h1>
-          <p className="text-gray-400 text-sm">Admin Panel</p>
         </div>
 
         {/* Card */}

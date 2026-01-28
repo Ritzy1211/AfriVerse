@@ -199,12 +199,12 @@ export default function MediaKitPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="/media-kit/AfriVerse-MediaKit-2026.pdf"
-                download
+                href="/api/media-kit"
+                download="AfriVerse-MediaKit-2026.html"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-amber-500 text-gray-900 rounded-xl font-bold hover:bg-amber-400 transition-colors"
               >
                 <Download className="w-5 h-5" />
-                Download Full Media Kit (PDF)
+                Download Media Kit
               </a>
               <Link
                 href="/contact"

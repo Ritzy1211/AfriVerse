@@ -484,3 +484,111 @@ export async function getAfriPulseArticles(
   
   return getClient(preview).fetch(query);
 }
+
+// ============================================
+// Spotlight Queries
+// ============================================
+
+/**
+ * Get active spotlights by placement
+ */
+export async function getSpotlights(
+  placement?: 'homepage' | 'category' | 'article' | 'global',
+  categorySlug?: string,
+  preview: boolean = false
+) {
+  const now = new Date().toISOString();
+  
+  let filter = `_type == "spotlight" && isActive == true`;
+  
+  // Add date filters
+  filter += ` && (startDate == null || startDate <= "${now}")`;
+  filter += ` && (endDate == null || endDate >= "${now}")`;
+  
+  // Add placement filter
+  if (placement) {
+    if (placement === 'category' && categorySlug) {
+      filter += ` && placement == "category" && category->slug.current == "${categorySlug}"`;
+    } else if (placement === 'article') {
+      filter += ` && (placement == "article" || placement == "global")`;
+    } else {
+      filter += ` && placement == "${placement}"`;
+    }
+  }
+  
+  const query = groq`
+    *[${filter}] | order(priority desc, _createdAt desc) [0...5] {
+      _id,
+      title,
+      quote,
+      quoteHighlight,
+      subtitle,
+      mediaType,
+      "mediaUrl": select(
+        mediaType == "video" => videoUrl,
+        mediaType == "image" => image.asset->url
+      ),
+      "thumbnailUrl": select(
+        mediaType == "video" => videoThumbnail.asset->url,
+        image.asset->url
+      ),
+      linkUrl,
+      linkText,
+      overlayPosition,
+      highlightColor,
+      textColor,
+      placement,
+      "relatedArticles": relatedArticles[]->{
+        _id,
+        title,
+        "image": mainImage.asset->url,
+        "slug": slug.current,
+        "category": category->slug.current
+      }
+    }
+  `;
+  
+  return getClient(preview).fetch(query);
+}
+
+/**
+ * Get a single spotlight by ID
+ */
+export async function getSpotlightById(
+  id: string,
+  preview: boolean = false
+) {
+  const query = groq`
+    *[_type == "spotlight" && _id == $id][0] {
+      _id,
+      title,
+      quote,
+      quoteHighlight,
+      subtitle,
+      mediaType,
+      "mediaUrl": select(
+        mediaType == "video" => videoUrl,
+        mediaType == "image" => image.asset->url
+      ),
+      "thumbnailUrl": select(
+        mediaType == "video" => videoThumbnail.asset->url,
+        image.asset->url
+      ),
+      linkUrl,
+      linkText,
+      overlayPosition,
+      highlightColor,
+      textColor,
+      placement,
+      "relatedArticles": relatedArticles[]->{
+        _id,
+        title,
+        "image": mainImage.asset->url,
+        "slug": slug.current,
+        "category": category->slug.current
+      }
+    }
+  `;
+  
+  return getClient(preview).fetch(query, { id });
+}

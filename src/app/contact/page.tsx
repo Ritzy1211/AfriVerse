@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Briefcase, Newspaper } from 'lucide-react';
+import { Mail, Phone, Send, MessageSquare, Briefcase, Newspaper } from 'lucide-react';
 import type { Metadata } from 'next';
 
 const contactReasons = [
@@ -9,21 +9,6 @@ const contactReasons = [
   { id: 'advertising', label: 'Advertising', icon: Briefcase },
   { id: 'editorial', label: 'Editorial/Tips', icon: Newspaper },
   { id: 'support', label: 'Technical Support', icon: Mail },
-];
-
-const offices = [
-  {
-    city: 'Lagos',
-    address: '15 Adeola Odeku Street, Victoria Island, Lagos',
-    phone: '+234 810 956 1020',
-    email: 'lagos@afriverse.africa',
-  },
-  {
-    city: 'Abuja',
-    address: '25 Aminu Kano Crescent, Wuse 2, Abuja',
-    phone: '+234 912 271 9293',
-    email: 'abuja@afriverse.africa',
-  },
 ];
 
 export default function ContactPage() {
@@ -294,46 +279,14 @@ export default function ContactPage() {
                     tips@afriverse.africa
                   </a>
                   <a
-                    href="tel:+2348012345678"
+                    href="tel:+2348109561020"
                     className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
                   >
                     <Phone className="w-5 h-5" />
-                    +234 801 234 5678
+                    +234 810 956 1020
                   </a>
                 </div>
               </div>
-
-              {/* Office Locations */}
-              {offices.map((office) => (
-                <div
-                  key={office.city}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-soft p-6"
-                >
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                    {office.city} Office
-                  </h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-start gap-3 text-gray-600 dark:text-gray-400">
-                      <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                      {office.address}
-                    </div>
-                    <a
-                      href={`tel:${office.phone.replace(/\s/g, '')}`}
-                      className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
-                    >
-                      <Phone className="w-5 h-5" />
-                      {office.phone}
-                    </a>
-                    <a
-                      href={`mailto:${office.email}`}
-                      className="flex items-center gap-3 text-gray-600 dark:text-gray-400 hover:text-brand-accent transition-colors"
-                    >
-                      <Mail className="w-5 h-5" />
-                      {office.email}
-                    </a>
-                  </div>
-                </div>
-              ))}
 
               {/* Response Time */}
               <div className="bg-gradient-to-br from-brand-accent to-brand-secondary rounded-lg p-6 text-white">

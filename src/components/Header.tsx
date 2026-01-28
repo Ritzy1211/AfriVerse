@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Search, Menu, X, Moon, Sun, ChevronDown, Info, Phone, Megaphone, Briefcase, FileText, Shield, Users } from 'lucide-react';
 import { categories } from '@/data/categories';
 import { getPreferences, toggleDarkMode } from '@/lib/preferences';
 import SearchModal from './SearchModal';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from '@/components/providers/TranslationProvider';
+import Logo from './Logo';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -94,20 +94,9 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <Image
-              src="/assets/logos/Afriverse-logo.png"
-              alt="AfriVerse Logo"
-              width={48}
-              height={48}
-              className="h-12 w-12 object-contain transform group-hover:scale-105 transition-transform"
-              priority
-            />
-            <div>
-              <h1 className="text-xl font-headline font-bold text-brand-primary dark:text-white">
-                {t('common.siteName')}
-              </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">{t('common.tagline')}</p>
+          <Link href="/" className="flex items-center group">
+            <div className="transform group-hover:scale-105 transition-transform">
+              <Logo size="lg" variant="full" showTagline />
             </div>
           </Link>
 

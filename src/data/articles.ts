@@ -159,7 +159,9 @@ async function getArticlesFromDatabase(): Promise<Article[]> {
   try {
     const posts = await prisma.post.findMany({
       where: {
-        status: 'PUBLISHED',
+        status: {
+          in: ['PUBLISHED', 'APPROVED'],
+        },
       },
       include: {
         author: {
@@ -254,7 +256,9 @@ export async function getArticleBySlug(slug: string, categorySlug?: string): Pro
     const post = await prisma.post.findFirst({
       where: {
         slug,
-        status: 'PUBLISHED',
+        status: {
+          in: ['PUBLISHED', 'APPROVED'],
+        },
       },
       include: {
         author: {

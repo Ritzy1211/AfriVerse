@@ -697,7 +697,7 @@ export default function EditPostPage() {
               {category && subcategories.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {category === 'music' ? 'Genre' : 'Subcategory'}
+                    {category === 'entertainment' ? 'Type' : 'Subcategory'}
                   </label>
                   <div className="relative">
                     <select
@@ -706,7 +706,7 @@ export default function EditPostPage() {
                       className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary appearance-none cursor-pointer"
                     >
                       <option value="">
-                        Select {category === 'music' ? 'genre' : 'subcategory'} (optional)
+                        Select {category === 'entertainment' ? 'type' : 'subcategory'} (optional)
                       </option>
                       {subcategories.map((sub) => (
                         <option key={sub.slug} value={sub.slug}>

@@ -6,6 +6,7 @@ import subcategory from './subcategory';
 import tag from './tag';
 import blockContent from './blockContent';
 import siteSettings from './siteSettings';
+import spotlight from './spotlight';
 
 export const schemaTypes = [
   // Document types
@@ -15,6 +16,7 @@ export const schemaTypes = [
   subcategory,
   tag,
   siteSettings,
+  spotlight,
   
   // Block types
   blockContent,

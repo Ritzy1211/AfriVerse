@@ -12,6 +12,7 @@ import { Suspense } from 'react';
 import { ArticleCardSkeleton } from '@/components/Skeleton';
 import AfricaWatermark from '@/components/AfricaWatermark';
 import TrendingPopupWrapper from '@/components/TrendingPopupWrapper';
+import HomepageSpotlight from '@/components/HomepageSpotlight';
 
 // Revalidate homepage every 60 seconds
 export const revalidate = 60;
@@ -64,6 +65,9 @@ export default async function Home() {
       <section className="container mx-auto px-4 my-8 flex justify-center">
         <AdPlacement slot="header" />
       </section>
+
+      {/* Spotlight Section - Billboard VIDEO Style */}
+      <HomepageSpotlight placement="homepage" sectionTitle="SPOTLIGHT" />
 
       {/* Main Content Grid */}
       <section className="container mx-auto px-4 py-8">

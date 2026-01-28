@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfriVerse Official Logo — Brand Assets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #E8C965;
+            --gold-dark: #B8960F;
+            --green: #1B4332;
+            --green-light: #2D5A45;
+            --green-dark: #0D251C;
+            --black: #1A1A1A;
+            --white: #FAFAFA;
+            --gray: #888888;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0a0a;
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--black) 50%, var(--green-dark) 100%);
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="rgba(212,175,55,0.03)" d="M30 0L60 52H0z"/></svg>') repeat;
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--gold);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        /* Main Logo Display */
+        .main-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .logo-symbol {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .logo-symbol .outer-triangle {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid var(--gold);
+            filter: drop-shadow(0 4px 20px rgba(212, 175, 55, 0.4));
+        }
+
+        .logo-symbol .inner-line {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 36px;
+            height: 4px;
+            background: var(--black);
+            border-radius: 2px;
+        }
+
+        .logo-symbol .dot {
+            position: absolute;
+            top: 44px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        .logo-wordmark {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--white) 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+        }
+
+        .logo-wordmark .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--gold);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Logo Variations Grid */
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .variation-card {
+            border-radius: 16px;
+            padding: 50px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .variation-card .label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 0.7rem;
+            color: var(--gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .variation-card.dark-bg {
+            background: var(--black);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .variation-card.dark-bg .label {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .variation-card.light-bg {
+            background: var(--white);
+        }
+
+        .variation-card.light-bg .label {
+            color: rgba(0,0,0,0.4);
+        }
+
+        .variation-card.green-bg {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+        }
+
+        .variation-card.gold-bg {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+        }
+
+        /* Logo Variants */
+        .logo-full {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-full .symbol {
+            width: 50px;
+            height: 50px;
+            position: relative;
+        }
+
+        .logo-full .tri {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 44px solid var(--gold);
+        }
+
+        .logo-full .line {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 3px;
+            background: var(--black);
+            border-radius: 1px;
+        }
+
+        .logo-full .dot {
+            position: absolute;
+            top: 27px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        .logo-full .text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+
+        .logo-full .text .gold {
+            color: var(--gold);
+        }
+
+        /* On Light Background */
+        .on-light .tri {
+            border-bottom-color: var(--green);
+        }
+
+        .on-light .line,
+        .on-light .dot {
+            background: var(--white);
+        }
+
+        .on-light .text {
+            color: var(--black);
+        }
+
+        .on-light .text .gold {
+            color: var(--green);
+        }
+
+        /* On Gold Background */
+        .on-gold .tri {
+            border-bottom-color: var(--black);
+        }
+
+        .on-gold .line,
+        .on-gold .dot {
+            background: var(--gold);
+        }
+
+        .on-gold .text {
+            color: var(--black);
+        }
+
+        .on-gold .text .gold {
+            color: var(--white);
+        }
+
+        /* Icon Only Section */
+        .icons-section {
+            margin-bottom: 60px;
+        }
+
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .icon-card {
+            text-align: center;
+        }
+
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-box .mini-symbol {
+            position: relative;
+        }
+
+        .icon-box .mini-tri {
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-bottom: 32px solid var(--gold);
+        }
+
+        .icon-box .mini-line {
+            position: absolute;
+            top: 13px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 2px;
+            background: var(--green-dark);
+            border-radius: 1px;
+        }
+
+        .icon-box .mini-dot {
+            position: absolute;
+            top: 19px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--green-dark);
+            border-radius: 50%;
+        }
+
+        .icon-box.primary {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            box-shadow: 0 8px 30px rgba(27, 67, 50, 0.5);
+        }
+
+        .icon-box.dark {
+            background: var(--black);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .icon-box.light {
+            background: var(--white);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .icon-box.light .mini-tri {
+            border-bottom-color: var(--green);
+        }
+
+        .icon-box.light .mini-line,
+        .icon-box.light .mini-dot {
+            background: var(--white);
+        }
+
+        .icon-box.gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+        }
+
+        .icon-box.gold .mini-tri {
+            border-bottom-color: var(--black);
+        }
+
+        .icon-box.gold .mini-line,
+        .icon-box.gold .mini-dot {
+            background: var(--gold);
+        }
+
+        .icon-box.circle {
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+        }
+
+        .icon-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        /* Sizes Section */
+        .sizes-section {
+            margin-bottom: 60px;
+        }
+
+        .sizes-display {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .size-item {
+            text-align: center;
+        }
+
+        .size-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .size-logo.xl .sym { width: 60px; height: 60px; }
+        .size-logo.xl .sym .t { border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 52px solid var(--gold); }
+        .size-logo.xl .sym .l { top: 21px; width: 27px; height: 3px; }
+        .size-logo.xl .sym .d { top: 31px; width: 6px; height: 6px; }
+        .size-logo.xl .txt { font-size: 2.4rem; }
+
+        .size-logo.lg .sym { width: 45px; height: 45px; }
+        .size-logo.lg .sym .t { border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 39px solid var(--gold); }
+        .size-logo.lg .sym .l { top: 16px; width: 20px; height: 3px; }
+        .size-logo.lg .sym .d { top: 24px; width: 5px; height: 5px; }
+        .size-logo.lg .txt { font-size: 1.8rem; }
+
+        .size-logo.md .sym { width: 35px; height: 35px; }
+        .size-logo.md .sym .t { border-left: 17px solid transparent; border-right: 17px solid transparent; border-bottom: 30px solid var(--gold); }
+        .size-logo.md .sym .l { top: 12px; width: 15px; height: 2px; }
+        .size-logo.md .sym .d { top: 18px; width: 4px; height: 4px; }
+        .size-logo.md .txt { font-size: 1.4rem; }
+
+        .size-logo.sm .sym { width: 25px; height: 25px; }
+        .size-logo.sm .sym .t { border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 21px solid var(--gold); }
+        .size-logo.sm .sym .l { top: 9px; width: 11px; height: 2px; }
+        .size-logo.sm .sym .d { top: 13px; width: 3px; height: 3px; }
+        .size-logo.sm .txt { font-size: 1rem; }
+
+        .size-logo.xs .sym { width: 18px; height: 18px; }
+        .size-logo.xs .sym .t { border-left: 9px solid transparent; border-right: 9px solid transparent; border-bottom: 16px solid var(--gold); }
+        .size-logo.xs .sym .l { top: 7px; width: 8px; height: 1px; }
+        .size-logo.xs .sym .d { top: 10px; width: 2px; height: 2px; }
+        .size-logo.xs .txt { font-size: 0.75rem; }
+
+        .size-logo .sym {
+            position: relative;
+        }
+
+        .size-logo .sym .t {
+            width: 0;
+            height: 0;
+        }
+
+        .size-logo .sym .l {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--black);
+            border-radius: 1px;
+        }
+
+        .size-logo .sym .d {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        .size-logo .txt {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+
+        .size-logo .txt .g {
+            color: var(--gold);
+        }
+
+        .size-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        /* Usage Guidelines */
+        .guidelines-section {
+            margin-bottom: 60px;
+        }
+
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .guideline-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .guideline-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--white);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guideline-card h3 .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--green);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .guideline-card ul {
+            list-style: none;
+        }
+
+        .guideline-card li {
+            font-size: 0.85rem;
+            color: var(--gray);
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guideline-card li:last-child {
+            border-bottom: none;
+        }
+
+        .guideline-card li .check {
+            color: var(--gold);
+        }
+
+        .guideline-card li .x {
+            color: #e74c3c;
+        }
+
+        /* Clear Space */
+        .clearspace-section {
+            margin-bottom: 60px;
+        }
+
+        .clearspace-visual {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clearspace-box {
+            position: relative;
+            padding: 40px;
+            border: 2px dashed rgba(212, 175, 55, 0.3);
+        }
+
+        .clearspace-box::before {
+            content: 'X';
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: var(--gold);
+        }
+
+        .clearspace-box::after {
+            content: 'X';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--gold);
+        }
+
+        .clearspace-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .clearspace-logo .sym {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .clearspace-logo .sym .t {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid var(--gold);
+        }
+
+        .clearspace-logo .sym .l {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 2px;
+            background: var(--black);
+        }
+
+        .clearspace-logo .sym .d {
+            position: absolute;
+            top: 21px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        .clearspace-logo .txt {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--white);
+        }
+
+        .clearspace-logo .txt .g {
+            color: var(--gold);
+        }
+
+        .clearspace-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .footer strong {
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .main-logo {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo-wordmark {
+                font-size: 2.5rem;
+            }
+            
+            .variations-grid,
+            .guidelines-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .icons-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .sizes-display {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Official Brand Identity</div>
+            
+            <div class="main-logo">
+                <div class="logo-symbol">
+                    <div class="outer-triangle"></div>
+                    <div class="inner-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <span class="logo-wordmark">Afri<span class="highlight">Verse</span></span>
+            </div>
+            
+            <div class="tagline">Africa's Voice • Amplified</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Color Variations -->
+        <h2 class="section-title">Logo Color Variations</h2>
+        <div class="variations-grid">
+            <div class="variation-card dark-bg">
+                <span class="label">On Dark Background</span>
+                <div class="logo-full">
+                    <div class="symbol">
+                        <div class="tri"></div>
+                        <div class="line"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <span class="text">Afri<span class="gold">Verse</span></span>
+                </div>
+            </div>
+
+            <div class="variation-card light-bg">
+                <span class="label">On Light Background</span>
+                <div class="logo-full on-light">
+                    <div class="symbol">
+                        <div class="tri"></div>
+                        <div class="line"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <span class="text">Afri<span class="gold">Verse</span></span>
+                </div>
+            </div>
+
+            <div class="variation-card green-bg">
+                <span class="label">On Brand Green</span>
+                <div class="logo-full">
+                    <div class="symbol">
+                        <div class="tri"></div>
+                        <div class="line"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <span class="text">Afri<span class="gold">Verse</span></span>
+                </div>
+            </div>
+
+            <div class="variation-card gold-bg">
+                <span class="label">On Brand Gold</span>
+                <div class="logo-full on-gold">
+                    <div class="symbol">
+                        <div class="tri"></div>
+                        <div class="line"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <span class="text">Afri<span class="gold">Verse</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Icons -->
+        <div class="icons-section">
+            <h2 class="section-title">App Icon / Favicon / Social Avatar</h2>
+            <div class="icons-grid">
+                <div class="icon-card">
+                    <div class="icon-box primary">
+                        <div class="mini-symbol">
+                            <div class="mini-tri"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-dot"></div>
+                        </div>
+                    </div>
+                    <div class="icon-label">Primary (Recommended)</div>
+                </div>
+
+                <div class="icon-card">
+                    <div class="icon-box dark">
+                        <div class="mini-symbol">
+                            <div class="mini-tri"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-dot"></div>
+                        </div>
+                    </div>
+                    <div class="icon-label">Dark Mode</div>
+                </div>
+
+                <div class="icon-card">
+                    <div class="icon-box light">
+                        <div class="mini-symbol">
+                            <div class="mini-tri"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-dot"></div>
+                        </div>
+                    </div>
+                    <div class="icon-label">Light Mode</div>
+                </div>
+
+                <div class="icon-card">
+                    <div class="icon-box gold">
+                        <div class="mini-symbol">
+                            <div class="mini-tri"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-dot"></div>
+                        </div>
+                    </div>
+                    <div class="icon-label">Gold Variant</div>
+                </div>
+
+                <div class="icon-card">
+                    <div class="icon-box circle">
+                        <div class="mini-symbol">
+                            <div class="mini-tri"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-dot"></div>
+                        </div>
+                    </div>
+                    <div class="icon-label">Social Avatar</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Size Variations -->
+        <div class="sizes-section">
+            <h2 class="section-title">Size Variations</h2>
+            <div class="sizes-display">
+                <div class="size-item">
+                    <div class="size-logo xl">
+                        <div class="sym">
+                            <div class="t"></div>
+                            <div class="l"></div>
+                            <div class="d"></div>
+                        </div>
+                        <span class="txt">Afri<span class="g">Verse</span></span>
+                    </div>
+                    <div class="size-label">X-Large (Hero)</div>
+                </div>
+
+                <div class="size-item">
+                    <div class="size-logo lg">
+                        <div class="sym">
+                            <div class="t"></div>
+                            <div class="l"></div>
+                            <div class="d"></div>
+                        </div>
+                        <span class="txt">Afri<span class="g">Verse</span></span>
+                    </div>
+                    <div class="size-label">Large (Header)</div>
+                </div>
+
+                <div class="size-item">
+                    <div class="size-logo md">
+                        <div class="sym">
+                            <div class="t"></div>
+                            <div class="l"></div>
+                            <div class="d"></div>
+                        </div>
+                        <span class="txt">Afri<span class="g">Verse</span></span>
+                    </div>
+                    <div class="size-label">Medium</div>
+                </div>
+
+                <div class="size-item">
+                    <div class="size-logo sm">
+                        <div class="sym">
+                            <div class="t"></div>
+                            <div class="l"></div>
+                            <div class="d"></div>
+                        </div>
+                        <span class="txt">Afri<span class="g">Verse</span></span>
+                    </div>
+                    <div class="size-label">Small</div>
+                </div>
+
+                <div class="size-item">
+                    <div class="size-logo xs">
+                        <div class="sym">
+                            <div class="t"></div>
+                            <div class="l"></div>
+                            <div class="d"></div>
+                        </div>
+                        <span class="txt">Afri<span class="g">Verse</span></span>
+                    </div>
+                    <div class="size-label">X-Small (Footer)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear Space -->
+        <div class="clearspace-section">
+            <h2 class="section-title">Minimum Clear Space</h2>
+            <div class="clearspace-visual">
+                <div>
+                    <div class="clearspace-box">
+                        <div class="clearspace-logo">
+                            <div class="sym">
+                                <div class="t"></div>
+                                <div class="l"></div>
+                                <div class="d"></div>
+                            </div>
+                            <span class="txt">Afri<span class="g">Verse</span></span>
+                        </div>
+                    </div>
+                    <div class="clearspace-note">
+                        Maintain clear space equal to "X" (height of triangle symbol) around all sides of the logo.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Guidelines -->
+        <div class="guidelines-section">
+            <h2 class="section-title">Usage Guidelines</h2>
+            <div class="guidelines-grid">
+                <div class="guideline-card">
+                    <h3><span class="icon">✓</span> Do</h3>
+                    <ul>
+                        <li><span class="check">✓</span> Use approved color variations only</li>
+                        <li><span class="check">✓</span> Maintain minimum clear space</li>
+                        <li><span class="check">✓</span> Use on contrasting backgrounds</li>
+                        <li><span class="check">✓</span> Scale proportionally</li>
+                        <li><span class="check">✓</span> Use icon-only for small applications</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="icon" style="background: #e74c3c;">✕</span> Don't</h3>
+                    <ul>
+                        <li><span class="x">✕</span> Stretch or distort the logo</li>
+                        <li><span class="x">✕</span> Change the logo colors</li>
+                        <li><span class="x">✕</span> Add effects (shadows, gradients, etc.)</li>
+                        <li><span class="x">✕</span> Place on busy backgrounds</li>
+                        <li><span class="x">✕</span> Rotate or flip the logo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>▲ AfriVerse</strong> — Official Brand Assets<br>
+        January 2026 • Africa's Voice, Amplified
+    </div>
+</body>
+</html>

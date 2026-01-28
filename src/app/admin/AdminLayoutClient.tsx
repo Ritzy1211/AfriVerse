@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Logo, { AppIcon } from '@/components/Logo';
 import {
   LayoutDashboard,
   FileText,
@@ -61,6 +62,7 @@ const navigation = [
       { name: 'Roles & Permissions', href: '/admin/editorial/roles', minRole: 'ADMIN' },
     ]
   },
+  { name: 'Spotlights', href: '/admin/spotlights', icon: Sparkles, minRole: 'EDITOR' },
   { name: 'Categories & Tags', href: '/admin/categories', icon: FolderOpen, minRole: 'EDITOR' },
   { name: 'Media Library', href: '/admin/media', icon: Image, minRole: 'AUTHOR' },
   { name: 'Trending Topics', href: '/admin/trending', icon: Flame, minRole: 'EDITOR' },
@@ -359,13 +361,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-slate-700 bg-slate-900">
           <Link href="/admin" className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center">
-              <img
-                src="/assets/logos/Afriverse-logo.png"
-                alt="AfriVerse Logo"
-                className="w-7 h-7 object-contain"
-              />
-            </div>
+            <AppIcon size={36} variant="primary" rounded="md" />
             <div>
               <span className="font-display font-bold text-sm text-white">AfriVerse</span>
               <span className="block text-[10px] text-slate-400">Admin Panel</span>

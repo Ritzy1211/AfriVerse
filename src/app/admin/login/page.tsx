@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Shield } from 'lucide-react';
 import BrandedSpinner from '@/components/BrandedSpinner';
 import Captcha from '@/components/Captcha';
+import Logo from '@/components/Logo';
 
 interface SecurityConfig {
   enableCaptcha: boolean;
@@ -133,16 +134,9 @@ function LoginForm() {
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <img
-              src="/assets/logos/Afriverse-logo.png"
-              alt="AfriVerse Logo"
-              className="w-12 h-12 object-contain"
-            />
-            <div className="text-left">
-              <h1 className="text-2xl font-display font-bold text-white">AfriVerse</h1>
-              <p className="text-sm text-gray-400">Admin Panel</p>
-            </div>
+          <Link href="/" className="inline-flex flex-col items-center gap-3">
+            <Logo size="xl" variant="full" colorScheme="green" />
+            <p className="text-sm text-gray-400">Admin Panel</p>
           </Link>
         </div>
 

@@ -931,3 +931,57 @@ enum AdType {
   VIDEO           // Video ad
   TEXT            // Text-only ad
 }
+
+// ==========================================
+// SPOTLIGHT - Featured Visual Content
+// ==========================================
+
+model Spotlight {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  subtitle        String?
+  quote           String?         // Quote text to display
+  quoteHighlight  String?         // Word(s) to highlight in quote
+  
+  // Media
+  mediaType       SpotlightMedia  @default(IMAGE)
+  mediaUrl        String          // Image or video URL
+  thumbnailUrl    String?         // Thumbnail for video
+  
+  // Link
+  linkUrl         String?         // URL to link to
+  linkText        String?         // Link button text
+  
+  // Styling
+  overlayPosition String?         @default("left") // left, center, right
+  textColor       String?         @default("#FFFFFF")
+  highlightColor  String?         @default("#00D9FF")
+  
+  // Placement & Scheduling
+  placement       String          @default("homepage") // homepage, article, category
+  categorySlug    String?         // If placement is category-specific
+  isActive        Boolean         @default(true)
+  priority        Int             @default(0) // Higher = shows first
+  startDate       DateTime?
+  endDate         DateTime?
+  
+  // Related content
+  relatedArticles String[]        // Array of article slugs
+  
+  // Author tracking
+  createdBy       String?         @db.ObjectId
+  createdByName   String?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([placement])
+  @@index([isActive])
+  @@index([priority])
+  @@index([startDate, endDate])
+}
+
+enum SpotlightMedia {
+  IMAGE
+  VIDEO
+}

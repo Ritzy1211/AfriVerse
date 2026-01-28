@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description: 'Your trusted source for news, culture, tech, and everything that matters across Africa.',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/assets/logos/Afriverse-logo.png',
         width: 1200,
         height: 630,
         alt: 'AfriVerse',

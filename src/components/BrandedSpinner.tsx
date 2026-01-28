@@ -96,7 +96,39 @@ export function BrandedLoadingOverlay({ message = 'Loading...' }: { message?: st
           
           {/* Center logo mark */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-brand-secondary font-bold text-xl">A</span>
+            <div className="w-6 h-6 relative">
+              <div
+                style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '12px solid transparent',
+                  borderRight: '12px solid transparent',
+                  borderBottom: '21px solid #D4AF37',
+                }}
+              />
+              <div
+                className="absolute rounded-sm"
+                style={{
+                  top: '8px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '11px',
+                  height: '2px',
+                  backgroundColor: '#1A1A1A',
+                }}
+              />
+              <div
+                className="absolute rounded-full"
+                style={{
+                  top: '12px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '3px',
+                  height: '3px',
+                  backgroundColor: '#1A1A1A',
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

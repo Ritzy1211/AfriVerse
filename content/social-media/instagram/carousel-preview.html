@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfriVerse Instagram Carousel Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .carousel-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .slide {
+            width: 324px;  /* 1080/3.33 for preview */
+            height: 405px; /* 1350/3.33 for preview - 4:5 ratio */
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .slide:hover {
+            transform: scale(1.02);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.6);
+            color: #D4AF37;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+
+        .slide-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        /* Slide 1 - The Hook */
+        .slide-1 {
+            background: linear-gradient(135deg, #1B4332 0%, #0d251c 50%, #1a1a1a 100%);
+        }
+
+        .slide-1::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100"><rect fill="%231a1a1a" width="400" height="100"/><rect fill="%23222" x="20" y="60" width="8" height="40"/><rect fill="%23333" x="35" y="50" width="12" height="50"/><rect fill="%23222" x="55" y="40" width="10" height="60"/><rect fill="%23444" x="75" y="55" width="6" height="45"/><rect fill="%23333" x="90" y="35" width="15" height="65"/><rect fill="%23222" x="115" y="45" width="8" height="55"/><rect fill="%23444" x="130" y="30" width="20" height="70"/><rect fill="%23333" x="160" y="50" width="10" height="50"/><rect fill="%23222" x="180" y="25" width="25" height="75"/><rect fill="%23444" x="215" y="40" width="12" height="60"/><rect fill="%23333" x="235" y="55" width="8" height="45"/><rect fill="%23222" x="250" y="35" width="18" height="65"/><rect fill="%23444" x="280" y="45" width="10" height="55"/><rect fill="%23333" x="300" y="30" width="22" height="70"/><rect fill="%23222" x="330" y="50" width="14" height="50"/><rect fill="%23444" x="355" y="40" width="10" height="60"/><rect fill="%23333" x="375" y="55" width="8" height="45"/></svg>') center bottom no-repeat;
+            background-size: cover;
+            opacity: 0.5;
+        }
+
+        .slide-1 h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.2rem;
+            color: #D4AF37;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .slide-1 p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .slide-1 .swipe {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            position: absolute;
+            bottom: 25px;
+        }
+
+        .slide-1 .swipe::after {
+            content: ' →';
+            animation: swipe 1.5s infinite;
+        }
+
+        @keyframes swipe {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Slide 2 - The Problem */
+        .slide-2 {
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d1f1f 100%);
+        }
+
+        .slide-2 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 25px;
+        }
+
+        .slide-2 .headlines {
+            margin-bottom: 25px;
+        }
+
+        .slide-2 .headline {
+            background: rgba(196, 30, 58, 0.2);
+            border-left: 3px solid #C41E3A;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+            text-align: left;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .slide-2 .bottom-text {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .slide-2 .bottom-text strong {
+            color: #fff;
+            display: block;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        /* Slide 3 - The Truth */
+        .slide-3 {
+            background: linear-gradient(135deg, #1B4332 0%, #2d5a45 50%, #1B4332 100%);
+        }
+
+        .slide-3 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: #D4AF37;
+            margin-bottom: 20px;
+        }
+
+        .slide-3 .stats {
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-3 .stat {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .slide-3 .stat-icon {
+            color: #D4AF37;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+
+        .slide-3 .stat-number {
+            font-weight: 700;
+            color: #fff;
+            margin-right: 8px;
+        }
+
+        .slide-3 .stat-label {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .slide-3 .tagline {
+            margin-top: 20px;
+            font-style: italic;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Slide 4 - Introducing */
+        .slide-4 {
+            background: linear-gradient(180deg, #D4AF37 0%, #1B4332 50%, #0d251c 100%);
+        }
+
+        .slide-4 .intro-text {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+        }
+
+        .slide-4 .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .slide-4 .logo-icon {
+            color: #D4AF37;
+            font-size: 2rem;
+        }
+
+        .slide-4 .tagline {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.9);
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .slide-4 .categories {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 15px;
+        }
+
+        .slide-4 .byline {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        /* Slide 5 - What We Cover */
+        .slide-5 {
+            background: #1a1a1a;
+        }
+
+        .slide-5 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .slide-5 .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .slide-5 .category {
+            background: rgba(27, 67, 50, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 12px 10px;
+            text-align: center;
+        }
+
+        .slide-5 .category-icon {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .slide-5 .category-name {
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: #D4AF37;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Slide 6 - Our Promise */
+        .slide-6 {
+            background: linear-gradient(180deg, #1B4332 0%, #1a1a1a 100%);
+        }
+
+        .slide-6 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: #D4AF37;
+            margin-bottom: 20px;
+        }
+
+        .slide-6 .promises {
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-6 .promise {
+            margin-bottom: 15px;
+        }
+
+        .slide-6 .promise-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .slide-6 .checkmark {
+            color: #D4AF37;
+            margin-right: 8px;
+        }
+
+        .slide-6 .promise-desc {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            margin-left: 22px;
+        }
+
+        /* Slide 7 - Who We Are */
+        .slide-7 {
+            background: linear-gradient(135deg, #1B4332 0%, #0d251c 100%);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="rgba(212,175,55,0.05)" d="M0 0h50v50H0zM50 50h50v50H50z"/></svg>');
+        }
+
+        .slide-7 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #D4AF37;
+            margin-bottom: 20px;
+        }
+
+        .slide-7 .people {
+            text-align: left;
+        }
+
+        .slide-7 .person {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 12px;
+            padding-left: 15px;
+            border-left: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .slide-7 .finale {
+            margin-top: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        /* Slide 8 - Stories We'll Tell */
+        .slide-8 {
+            background: linear-gradient(180deg, #1a1a1a 0%, #1B4332 100%);
+        }
+
+        .slide-8 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .slide-8 .stories {
+            text-align: left;
+            width: 100%;
+        }
+
+        .slide-8 .story {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .slide-8 .story-icon {
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+
+        .slide-8 .tagline {
+            margin-top: 20px;
+            color: #D4AF37;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Slide 9 - Join the Movement */
+        .slide-9 {
+            background: linear-gradient(135deg, #D4AF37 0%, #1B4332 40%, #1a1a1a 100%);
+        }
+
+        .slide-9 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .slide-9 .movement-text {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+        }
+
+        .slide-9 .beliefs {
+            text-align: left;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .slide-9 .belief {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 8px;
+            padding-left: 10px;
+            border-left: 2px solid #D4AF37;
+        }
+
+        .slide-9 .goals {
+            font-size: 0.85rem;
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        .slide-9 .question {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* Slide 10 - CTA */
+        .slide-10 {
+            background: linear-gradient(180deg, #1B4332 0%, #D4AF37 100%);
+        }
+
+        .slide-10 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .slide-10 .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .slide-10 .tagline {
+            font-size: 0.8rem;
+            color: rgba(0,0,0,0.7);
+            margin-bottom: 25px;
+        }
+
+        .slide-10 .cta-button {
+            background: #1a1a1a;
+            color: #D4AF37;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slide-10 .actions {
+            font-size: 0.75rem;
+            color: rgba(0,0,0,0.7);
+            margin-bottom: 20px;
+        }
+
+        .slide-10 .actions div {
+            margin-bottom: 5px;
+        }
+
+        .slide-10 .final-text {
+            font-size: 0.85rem;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .slide-10 .handle {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        /* Instructions Panel */
+        .instructions {
+            max-width: 800px;
+            margin: 60px auto 0;
+            background: #111;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #333;
+        }
+
+        .instructions h2 {
+            color: #D4AF37;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .instructions p {
+            color: #888;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .instructions code {
+            background: #1a1a1a;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #D4AF37;
+        }
+
+        .color-swatches {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .swatch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .swatch-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .swatch-info {
+            font-size: 0.8rem;
+        }
+
+        .swatch-name {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .swatch-hex {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>▲ AFRIVERSE CAROUSEL PREVIEW</h1>
+        <p>Instagram Launch Post — 10 Slides — 1080×1350px (4:5 ratio)</p>
+    </div>
+
+    <div class="carousel-container">
+        <!-- Slide 1 -->
+        <div class="slide slide-1">
+            <div class="slide-number">1</div>
+            <div class="slide-content">
+                <h1>AFRICA<br>HAS A NEW<br>VOICE.</h1>
+                <p>And it sounds like us.</p>
+                <span class="swipe">Swipe to meet AfriVerse</span>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide slide-2">
+            <div class="slide-number">2</div>
+            <div class="slide-content">
+                <h2>FOR TOO LONG,</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">The world told our story.</p>
+                <div class="headlines">
+                    <div class="headline">"Africa: The Dark Continent"</div>
+                    <div class="headline">"Poverty. War. Disease."</div>
+                    <div class="headline">"Developing nation struggles"</div>
+                </div>
+                <div class="bottom-text">
+                    Same headlines. Same narrative.<br>Same lies.
+                    <strong>But that ends now.</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide slide-3">
+            <div class="slide-number">3</div>
+            <div class="slide-content">
+                <h2>THE REAL AFRICA:</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-icon">🌟</span>
+                        <span class="stat-number">1.4 billion</span>
+                        <span class="stat-label">people</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🌟</span>
+                        <span class="stat-number">54</span>
+                        <span class="stat-label">nations</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🌟</span>
+                        <span class="stat-number">2,000+</span>
+                        <span class="stat-label">languages</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🌟</span>
+                        <span class="stat-number">Youngest</span>
+                        <span class="stat-label">population</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🌟</span>
+                        <span class="stat-number">$3 trillion</span>
+                        <span class="stat-label">economy</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🌟</span>
+                        <span class="stat-number">Fastest-growing</span>
+                        <span class="stat-label">tech ecosystem</span>
+                    </div>
+                </div>
+                <div class="tagline">This is the Africa they don't show you.</div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide slide-4">
+            <div class="slide-number">4</div>
+            <div class="slide-content">
+                <div class="intro-text">INTRODUCING</div>
+                <div class="logo-icon">▲</div>
+                <div class="logo">AFRIVERSE</div>
+                <div class="tagline">Where Africa tells<br>its own story.</div>
+                <div class="categories">News. Culture. Business.<br>Sports. Entertainment. Tech.</div>
+                <div class="byline">By Africans. For Africa.<br>For the world.</div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide slide-5">
+            <div class="slide-number">5</div>
+            <div class="slide-content">
+                <h2>WE COVER IT ALL 🌍</h2>
+                <div class="categories-grid">
+                    <div class="category">
+                        <div class="category-icon">📰</div>
+                        <div class="category-name">Politics</div>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">💼</div>
+                        <div class="category-name">Business</div>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">⚽</div>
+                        <div class="category-name">Sports</div>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">🎵</div>
+                        <div class="category-name">Entertainment</div>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">💻</div>
+                        <div class="category-name">Technology</div>
+                    </div>
+                    <div class="category">
+                        <div class="category-icon">🌿</div>
+                        <div class="category-name">Lifestyle</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide slide-6">
+            <div class="slide-number">6</div>
+            <div class="slide-content">
+                <h2>OUR PROMISE TO YOU:</h2>
+                <div class="promises">
+                    <div class="promise">
+                        <div class="promise-title"><span class="checkmark">✓</span> Truth over clickbait</div>
+                        <div class="promise-desc">Real journalism, not sensationalism</div>
+                    </div>
+                    <div class="promise">
+                        <div class="promise-title"><span class="checkmark">✓</span> African perspective first</div>
+                        <div class="promise-desc">Our lens, our narrative</div>
+                    </div>
+                    <div class="promise">
+                        <div class="promise-title"><span class="checkmark">✓</span> Excellence celebrated</div>
+                        <div class="promise-desc">Every win deserves spotlight</div>
+                    </div>
+                    <div class="promise">
+                        <div class="promise-title"><span class="checkmark">✓</span> Problems addressed honestly</div>
+                        <div class="promise-desc">We don't hide from hard stories</div>
+                    </div>
+                    <div class="promise">
+                        <div class="promise-title"><span class="checkmark">✓</span> Community always</div>
+                        <div class="promise-desc">Your voice matters here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide slide-7">
+            <div class="slide-number">7</div>
+            <div class="slide-content">
+                <h2>WE ARE:</h2>
+                <div class="people">
+                    <div class="person">The journalist in Lagos<br>staying up to break the story.</div>
+                    <div class="person">The creative in Nairobi<br>documenting the culture.</div>
+                    <div class="person">The analyst in Johannesburg<br>tracking African markets.</div>
+                    <div class="person">The diaspora in London<br>staying connected to home.</div>
+                </div>
+                <div class="finale">We are Africa's children.<br>And we're taking the mic.</div>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide slide-8">
+            <div class="slide-number">8</div>
+            <div class="slide-content">
+                <h2>STORIES WE'LL BRING YOU:</h2>
+                <div class="stories">
+                    <div class="story"><span class="story-icon">🦁</span> The athletes making history</div>
+                    <div class="story"><span class="story-icon">💰</span> The deals reshaping economies</div>
+                    <div class="story"><span class="story-icon">🎤</span> The artists conquering charts</div>
+                    <div class="story"><span class="story-icon">🚀</span> The startups solving problems</div>
+                    <div class="story"><span class="story-icon">🗳️</span> The politics affecting your life</div>
+                    <div class="story"><span class="story-icon">❤️</span> The culture connecting us all</div>
+                </div>
+                <div class="tagline">Every story that matters. Told right.</div>
+            </div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide slide-9">
+            <div class="slide-number">9</div>
+            <div class="slide-content">
+                <h2>THIS IS BIGGER THAN US.</h2>
+                <div class="movement-text">This is a movement.</div>
+                <div class="beliefs">
+                    <div class="belief">"I want the REAL story."</div>
+                    <div class="belief">"I believe in African excellence."</div>
+                    <div class="belief">"I'm proud of where I'm from."</div>
+                </div>
+                <div class="goals">10,000 of us by February.<br>100,000 by year end.</div>
+                <div class="question">Will you be part of it?</div>
+            </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide slide-10">
+            <div class="slide-number">10</div>
+            <div class="slide-content">
+                <h2>THE STORY STARTS NOW.</h2>
+                <div class="logo">▲ AFRIVERSE</div>
+                <div class="tagline">Africa's Voice. Amplified.</div>
+                <div class="cta-button">TAP FOLLOW</div>
+                <div class="actions">
+                    <div>🔔 Turn on notifications</div>
+                    <div>📤 Share with your people</div>
+                </div>
+                <div class="final-text">Let's tell our story. Together.</div>
+                <div class="handle">@AfriVerseHQ</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h2>📋 Design Notes</h2>
+        <p>This is a visual preview of your Instagram carousel. When recreating in Canva:</p>
+        <p>• Export at <code>1080 x 1350 px</code> for optimal Instagram quality</p>
+        <p>• Use high-quality African imagery for backgrounds (Unsplash has great options)</p>
+        <p>• The cityscape silhouette on Slide 1 can be a real photo of Lagos, Nairobi, etc.</p>
+        <p>• Keep text away from edges (Instagram crops slightly)</p>
+        
+        <h2 style="margin-top: 30px;">🎨 Brand Colors</h2>
+        <div class="color-swatches">
+            <div class="swatch">
+                <div class="swatch-color" style="background: #D4AF37;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">AfriVerse Gold</div>
+                    <div class="swatch-hex">#D4AF37</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background: #1B4332;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Deep Green</div>
+                    <div class="swatch-hex">#1B4332</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background: #1A1A1A;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Warm Black</div>
+                    <div class="swatch-hex">#1A1A1A</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #444; font-size: 0.8rem;">
+        AfriVerse Instagram Carousel Preview — January 2026<br>
+        Open this file in a browser to view the mockup
+    </div>
+</body>
+</html>

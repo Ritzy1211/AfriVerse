@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, ArrowLeft, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 export default function AdminForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -57,15 +58,10 @@ export default function AdminForgotPasswordPage() {
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/admin/login" className="inline-block">
-            <img 
-              src="/assets/logos/afriverse-logo.svg" 
-              alt="AfriVerse" 
-              className="h-12 mx-auto mb-2"
-            />
+          <Link href="/admin/login" className="inline-flex flex-col items-center gap-3">
+            <Logo size="xl" variant="full" colorScheme="green" />
+            <p className="text-sm text-gray-400">Admin Panel</p>
           </Link>
-          <h1 className="text-2xl font-bold text-white">AfriVerse</h1>
-          <p className="text-gray-400 text-sm">Admin Panel</p>
         </div>
 
         {/* Card */}

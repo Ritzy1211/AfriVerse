@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { categories } from '@/data/categories';
 import { Facebook, Twitter, Instagram, Youtube, Rss } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { useTranslation } from '@/components/providers/TranslationProvider';
 import AfricaWatermark from './AfricaWatermark';
+import Logo from './Logo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -26,18 +26,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-3">
-              <Image
-                src="/assets/logos/Afriverse-logo.png"
-                alt="AfriVerse Logo"
-                width={48}
-                height={48}
-                className="h-12 w-12 object-contain"
-              />
-              <div>
-                <h3 className="font-headline font-bold text-lg">{t('common.siteName')}</h3>
-                <p className="text-xs text-gray-400">{t('common.tagline')}</p>
-              </div>
+            <Link href="/" className="inline-block">
+              <Logo size="lg" variant="full" colorScheme="green" showTagline />
             </Link>
             <p className="text-sm text-gray-400">
               {t('footer.aboutText')}
@@ -88,7 +78,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/storytellers" className="text-sm text-gray-400 hover:text-brand-accent transition-colors">
+                <Link href="/authors" className="text-sm text-gray-400 hover:text-brand-accent transition-colors">
                   Our Authors
                 </Link>
               </li>

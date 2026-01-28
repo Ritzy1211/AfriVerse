@@ -94,3 +94,43 @@ export function debounce<T extends (...args: any[]) => any>(
     }, wait);
   };
 }
+
+/**
+ * Format distance to now (e.g., "50 MINUTES AGO")
+ */
+export function formatDistanceToNow(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  const diff = now.getTime() - d.getTime();
+  
+  const minutes = Math.floor(diff / (1000 * 60));
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  
+  if (minutes < 1) {
+    return 'JUST NOW';
+  }
+  
+  if (minutes < 60) {
+    return `${minutes} MINUTE${minutes !== 1 ? 'S' : ''} AGO`;
+  }
+  
+  if (hours < 24) {
+    return `${hours} HOUR${hours !== 1 ? 'S' : ''} AGO`;
+  }
+  
+  if (days < 7) {
+    return `${days} DAY${days !== 1 ? 'S' : ''} AGO`;
+  }
+  
+  if (days < 30) {
+    const weeks = Math.floor(days / 7);
+    return `${weeks} WEEK${weeks !== 1 ? 'S' : ''} AGO`;
+  }
+  
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).toUpperCase();
+}

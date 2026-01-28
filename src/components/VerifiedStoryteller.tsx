@@ -459,6 +459,8 @@ export function BadgeProgression({
 // Application Form
 export function StorytellerApplicationForm({ onSubmit, className = '' }: ApplicationFormProps) {
   const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
     country: '',
     city: '',
     expertise: [] as string[],
@@ -535,6 +537,8 @@ export function StorytellerApplicationForm({ onSubmit, className = '' }: Applica
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
           country: formData.country,
           city: formData.city,
           languages: formData.languages,
@@ -619,12 +623,22 @@ export function StorytellerApplicationForm({ onSubmit, className = '' }: Applica
         <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
           <Clock className="w-8 h-8 text-amber-500" />
         </div>
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Application Under Review</h3>
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          {submitted ? '🎉 Application Submitted!' : 'Application Under Review'}
+        </h3>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
           {submitted 
-            ? "Thank you for applying! Our team will review your application within 5-7 business days."
+            ? "Thank you for applying! We've sent a confirmation email with all the details."
             : "Your application is being reviewed by our editorial team."}
         </p>
+        {submitted && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+            <p className="text-sm text-blue-700 dark:text-blue-300">
+              📧 <strong>Check your inbox!</strong> You should receive a confirmation email shortly. 
+              Our team will review your application within 5-7 business days.
+            </p>
+          </div>
+        )}
         {existingApplication && (
           <div className="text-left bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Application Details:</p>
@@ -668,6 +682,39 @@ export function StorytellerApplicationForm({ onSubmit, className = '' }: Applica
       )}
 
       <div className="p-6 space-y-6">
+        {/* Full Name */}
+        <div>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+            Full Name *
+          </label>
+          <input
+            type="text"
+            required
+            value={formData.fullName}
+            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+            placeholder="Your full name"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          />
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+            Email Address *
+          </label>
+          <input
+            type="email"
+            required
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            placeholder="your.email@example.com"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          />
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            We'll send application updates to this email
+          </p>
+        </div>
+
         {/* Country */}
         <div>
           <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
