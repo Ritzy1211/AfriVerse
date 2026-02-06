@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, Menu, X, Moon, Sun, ChevronDown, Info, Phone, Megaphone, Briefcase, FileText, Shield, Users, Radio, Calendar, BriefcaseIcon, History } from 'lucide-react';
+import { Search, Menu, X, Moon, Sun, ChevronDown, Info, Phone, Megaphone, Briefcase, FileText, Shield, Users, Radio, Calendar, BriefcaseIcon, History, BookOpen } from 'lucide-react';
 import { categories } from '@/data/categories';
 import { getPreferences, toggleDarkMode } from '@/lib/preferences';
 import SearchModal from './SearchModal';
@@ -24,6 +24,7 @@ export default function Header() {
     { name: '📻 AfriVerse Radio', href: '/radio', icon: Radio },
     { name: '📅 Events', href: '/events', icon: Calendar },
     { name: '💼 Jobs', href: '/jobs', icon: BriefcaseIcon },
+    { name: '🗣️ African Slangs', href: '/slang', icon: BookOpen },
     { name: t('common.about'), href: '/about', icon: Info },
     { name: t('common.contact'), href: '/contact', icon: Phone },
     { name: t('nav.advertise'), href: '/advertise', icon: Megaphone },

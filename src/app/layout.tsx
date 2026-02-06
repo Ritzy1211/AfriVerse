@@ -5,6 +5,7 @@ import './globals.css';
 import ConditionalLayout from '@/components/ConditionalLayout';
 import AppearanceProvider from '@/components/providers/AppearanceProvider';
 import { AdsterraSocialBar, PropellerAdsPush } from '@/components/ads';
+import AfricanSlangPopup from '@/components/AfricanSlangPopup';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -105,6 +106,8 @@ export default function RootLayout({
           <ConditionalLayout>
             {children}
           </ConditionalLayout>
+          {/* African Slang Daily Popup - Shows once per session after 5s */}
+          <AfricanSlangPopup delay={5000} showOnce={true} />
           {/* Adsterra Social Bar - Floating bar on all pages */}
           <AdsterraSocialBar />
           {/* PropellerAds Push Notifications */}
