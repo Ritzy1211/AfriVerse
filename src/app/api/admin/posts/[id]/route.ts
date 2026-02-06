@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { notifyPostStatusChange, notifyEditorsNewSubmission } from '@/lib/notifications';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // Helper to validate MongoDB ObjectID
 function isValidObjectId(id: string): boolean {
@@ -194,6 +195,16 @@ export async function PUT(
       }
     }
 
+    // Revalidate caches so changes appear immediately on the site
+    revalidateTag('articles');
+    revalidatePath('/', 'layout');
+    revalidatePath(`/${post.category}`, 'page');
+    revalidatePath(`/${post.category}/${post.slug}`, 'page');
+    // Also revalidate old slug path if slug changed
+    if (slug && slug !== existingPost.slug) {
+      revalidatePath(`/${existingPost.category}/${existingPost.slug}`, 'page');
+    }
+
     return NextResponse.json(post);
   } catch (error) {
     console.error('Error updating post:', error);
@@ -234,6 +245,12 @@ export async function DELETE(
     await prisma.post.delete({
       where: { id: params.id },
     });
+
+    // Revalidate caches so deletion reflects immediately
+    revalidateTag('articles');
+    revalidatePath('/', 'layout');
+    revalidatePath(`/${existingPost.category}`, 'page');
+    revalidatePath(`/${existingPost.category}/${existingPost.slug}`, 'page');
 
     return NextResponse.json({ message: 'Post deleted successfully' });
   } catch (error) {

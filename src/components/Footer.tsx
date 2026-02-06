@@ -39,7 +39,7 @@ export default function Footer() {
               <a href="https://x.com/afriverseHQ" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="X (Twitter)">
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="https://www.instagram.com/AfriverseHQ" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="Instagram">
+              <a href="https://www.instagram.com/afriverse_hq" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="Instagram">
                 <Instagram className="w-4 h-4" />
               </a>
               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors opacity-50" aria-label="YouTube">

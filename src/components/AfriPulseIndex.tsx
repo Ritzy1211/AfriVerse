@@ -97,7 +97,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'RISING',
     techTrend: 'RISING',
     topStory: 'Hilda Baci breaks 3rd Guinness World Record',
-    topStoryUrl: '/entertainment/hilda-baci-third-guinness-world-record-2025',
+    topStoryUrl: '/search?q=Hilda+Baci+Guinness+World+Record',
     keyIndicators: ['Hilda Baci 3rd world record', 'IShowSpeed Lagos celebration', 'Cultural exports booming'],
     lastUpdated: new Date().toISOString(),
   },
@@ -117,7 +117,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'STABLE',
     techTrend: 'RISING',
     topStory: 'M-Pesa expands to 10 new markets',
-    topStoryUrl: '/technology/mpesa-expansion',
+    topStoryUrl: '/search?q=M-Pesa+expansion',
     keyIndicators: ['Fintech growth 25%', 'Tourism rebounding', 'Stable inflation'],
     lastUpdated: new Date().toISOString(),
   },
@@ -137,7 +137,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'FALLING',
     techTrend: 'STABLE',
     topStory: 'Southern Africa floods crisis deepens',
-    topStoryUrl: '/politics/southern-africa-floods-crisis-2025-mozambique-malawi',
+    topStoryUrl: '/search?q=Southern+Africa+floods+crisis',
     keyIndicators: ['Regional flood response', 'Climate aid mobilization', 'Humanitarian support surge'],
     lastUpdated: new Date().toISOString(),
   },
@@ -157,7 +157,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'RISING',
     techTrend: 'RISING',
     topStory: 'Ghana Business Forum 2026 announced',
-    topStoryUrl: '/business/ghana-business-forum-2026',
+    topStoryUrl: '/search?q=Ghana+Business+Forum+2026',
     keyIndicators: ['Cedi stabilizing', 'Tech hub growth', 'Agricultural exports up'],
     lastUpdated: new Date().toISOString(),
   },
@@ -177,7 +177,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'STABLE',
     techTrend: 'RISING',
     topStory: 'Regional energy boost from Libya oil deal',
-    topStoryUrl: '/business/libya-totalenergies-20-billion-oil-deal-2025',
+    topStoryUrl: '/search?q=Libya+TotalEnergies+oil+deal',
     keyIndicators: ['Libya deal regional benefits', 'Energy sector optimism', 'North Africa trade up'],
     lastUpdated: new Date().toISOString(),
   },
@@ -197,7 +197,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'RISING',
     techTrend: 'STABLE',
     topStory: 'Senegal crowned AFCON 2025 Champions',
-    topStoryUrl: '/sports/senegal-afcon-2025-champions-africa',
+    topStoryUrl: '/search?q=Senegal+AFCON+2025+Champions',
     keyIndicators: ['AFCON 2025 victory', 'National pride soaring', 'Tourism boost expected'],
     lastUpdated: new Date().toISOString(),
   },
@@ -217,7 +217,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'STABLE',
     techTrend: 'STABLE',
     topStory: '$20B TotalEnergies oil deal signed',
-    topStoryUrl: '/business/libya-totalenergies-20-billion-oil-deal-2025',
+    topStoryUrl: '/search?q=TotalEnergies+Libya+oil+deal',
     keyIndicators: ['$20B oil investment', 'Production targets 2.2M bpd', 'Economic recovery hopes'],
     lastUpdated: new Date().toISOString(),
   },
@@ -237,7 +237,7 @@ const fallbackCountries: CountryPulse[] = [
     socialTrend: 'FALLING',
     techTrend: 'STABLE',
     topStory: 'Devastating floods displace 1.1 million',
-    topStoryUrl: '/politics/southern-africa-floods-crisis-2025-mozambique-malawi',
+    topStoryUrl: '/search?q=Mozambique+floods+displacement',
     keyIndicators: ['700+ deaths from floods', '$4.2B economic losses', 'Humanitarian emergency'],
     lastUpdated: new Date().toISOString(),
   },
@@ -526,88 +526,93 @@ export default function AfriPulseIndex({
           {displayCountries.map((country) => {
             const TrendIcon = trendConfig[country.overallTrend].icon;
             return (
-              <Link
+              <div
                 key={country.id}
-                href={`/afripulse/${country.country.toLowerCase()}`}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
+                className={`p-4 rounded-xl border-2 transition-all hover:shadow-md ${
                   selectedCountry?.id === country.id
                     ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20'
                     : 'border-gray-200 dark:border-gray-700 hover:border-amber-300 dark:hover:border-amber-600'
                 }`}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{country.flagEmoji}</span>
-                    <span className="font-bold text-gray-900 dark:text-white">{country.countryName}</span>
-                  </div>
-                  <div className={`flex items-center gap-1 px-2 py-1 rounded-full ${trendConfig[country.overallTrend].bg}`}>
-                    <TrendIcon className={`w-4 h-4 ${trendConfig[country.overallTrend].color}`} />
-                    <span className={`text-xs font-medium ${trendConfig[country.overallTrend].color}`}>
-                      {trendConfig[country.overallTrend].label}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Score Circle */}
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="relative w-16 h-16">
-                    <svg className="w-16 h-16 transform -rotate-90">
-                      <circle
-                        cx="32"
-                        cy="32"
-                        r="28"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                        className="text-gray-200 dark:text-gray-700"
-                      />
-                      <circle
-                        cx="32"
-                        cy="32"
-                        r="28"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                        strokeDasharray={`${(country.overallScore / 100) * 176} 176`}
-                        className={getSentimentColor(country.overallScore)}
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className={`text-lg font-bold ${getSentimentColor(country.overallScore)}`}>
-                        {country.overallScore}
+                <Link
+                  href={`/afripulse/${country.country.toLowerCase()}`}
+                  className="block"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">{country.flagEmoji}</span>
+                      <span className="font-bold text-gray-900 dark:text-white">{country.countryName}</span>
+                    </div>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full ${trendConfig[country.overallTrend].bg}`}>
+                      <TrendIcon className={`w-4 h-4 ${trendConfig[country.overallTrend].color}`} />
+                      <span className={`text-xs font-medium ${trendConfig[country.overallTrend].color}`}>
+                        {trendConfig[country.overallTrend].label}
                       </span>
                     </div>
                   </div>
-                  <div className="flex-1 space-y-1">
-                    {[
-                      { label: 'Economy', score: country.economyScore },
-                      { label: 'Politics', score: country.politicsScore },
-                      { label: 'Social', score: country.socialScore },
-                      { label: 'Tech', score: country.techScore },
-                    ].map(({ label, score }) => (
-                      <div key={label} className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500 w-14">{label}</span>
-                        <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full ${getSentimentBg(score)}`}
-                            style={{ width: `${score}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400 w-6">{score}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
 
-                {/* Top Story */}
+                  {/* Score Circle */}
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="relative w-16 h-16">
+                      <svg className="w-16 h-16 transform -rotate-90">
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          className="text-gray-200 dark:text-gray-700"
+                        />
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          strokeDasharray={`${(country.overallScore / 100) * 176} 176`}
+                          className={getSentimentColor(country.overallScore)}
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className={`text-lg font-bold ${getSentimentColor(country.overallScore)}`}>
+                          {country.overallScore}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      {[
+                        { label: 'Economy', score: country.economyScore },
+                        { label: 'Politics', score: country.politicsScore },
+                        { label: 'Social', score: country.socialScore },
+                        { label: 'Tech', score: country.techScore },
+                      ].map(({ label, score }) => (
+                        <div key={label} className="flex items-center gap-2">
+                          <span className="text-xs text-gray-500 w-14">{label}</span>
+                          <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${getSentimentBg(score)}`}
+                              style={{ width: `${score}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400 w-6">{score}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Top Story - separate clickable link */}
                 {country.topStory && (
-                  <div
-                    className="block text-sm text-gray-600 dark:text-gray-400 truncate"
+                  <Link
+                    href={country.topStoryUrl || `/afripulse/${country.country.toLowerCase()}`}
+                    className="block text-sm text-gray-600 dark:text-gray-400 truncate hover:text-amber-600 dark:hover:text-amber-400 transition-colors mt-2 pt-2 border-t border-gray-100 dark:border-gray-700"
                   >
                     📰 {country.topStory}
-                  </div>
+                  </Link>
                 )}
-              </Link>
+              </div>
             );
           })}
         </div>

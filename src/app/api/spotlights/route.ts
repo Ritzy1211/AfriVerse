@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// Disable caching so spotlights always show latest data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // GET /api/spotlights - Get active spotlights (public API)
 export async function GET(request: NextRequest) {
   try {
@@ -50,23 +54,55 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    // Transform for frontend
-    const transformedSpotlights = spotlights.map(spotlight => ({
-      id: spotlight.id,
-      title: spotlight.title,
-      subtitle: spotlight.subtitle,
-      quote: spotlight.quote,
-      quoteHighlight: spotlight.quoteHighlight,
-      mediaType: spotlight.mediaType.toLowerCase(),
-      mediaUrl: spotlight.mediaUrl,
-      thumbnailUrl: spotlight.thumbnailUrl,
-      linkUrl: spotlight.linkUrl,
-      linkText: spotlight.linkText,
-      overlayPosition: spotlight.overlayPosition,
-      textColor: spotlight.textColor,
-      highlightColor: spotlight.highlightColor,
-      relatedArticles: spotlight.relatedArticles,
-    }));
+    // Transform for frontend with populated related articles
+    const transformedSpotlights = await Promise.all(
+      spotlights.map(async (spotlight) => {
+        // Fetch related articles if there are any slugs
+        let populatedRelatedArticles: any[] = [];
+        
+        if (spotlight.relatedArticles && spotlight.relatedArticles.length > 0) {
+          const posts = await prisma.post.findMany({
+            where: {
+              slug: { in: spotlight.relatedArticles },
+              status: 'PUBLISHED',
+            },
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              featuredImage: true,
+              category: true,
+            },
+            take: 4,
+          });
+
+          populatedRelatedArticles = posts.map((post) => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            image: post.featuredImage || '/assets/images/placeholder.jpg',
+            category: post.category,
+          }));
+        }
+
+        return {
+          id: spotlight.id,
+          title: spotlight.title,
+          subtitle: spotlight.subtitle,
+          quote: spotlight.quote,
+          quoteHighlight: spotlight.quoteHighlight,
+          mediaType: spotlight.mediaType.toLowerCase(),
+          mediaUrl: spotlight.mediaUrl,
+          thumbnailUrl: spotlight.thumbnailUrl,
+          linkUrl: spotlight.linkUrl,
+          linkText: spotlight.linkText,
+          overlayPosition: spotlight.overlayPosition,
+          textColor: spotlight.textColor,
+          highlightColor: spotlight.highlightColor,
+          relatedArticles: populatedRelatedArticles,
+        };
+      })
+    );
 
     return NextResponse.json(transformedSpotlights);
   } catch (error) {

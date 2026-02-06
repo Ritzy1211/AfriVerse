@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // GET - Fetch all settings or settings by category
 export async function GET(request: NextRequest) {
@@ -78,6 +79,10 @@ export async function POST(request: NextRequest) {
     );
 
     await Promise.all(upsertPromises);
+
+    // Revalidate all pages so appearance/settings changes reflect immediately
+    revalidateTag('settings');
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ success: true, message: 'Settings saved successfully' });
   } catch (error) {

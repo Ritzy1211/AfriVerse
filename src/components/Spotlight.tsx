@@ -45,25 +45,34 @@ export default function Spotlight({
   const highlightColor = data.highlightColor || '#00D9FF';
   const textColor = data.textColor || '#FFFFFF';
 
+  // Escape special regex characters
+  const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
   // Parse quote to highlight specific words
   const renderQuote = () => {
     if (!data.quote) return null;
     
     if (data.quoteHighlight) {
-      const parts = data.quote.split(new RegExp(`(${data.quoteHighlight})`, 'gi'));
-      return parts.map((part, i) => 
-        part.toLowerCase() === data.quoteHighlight?.toLowerCase() ? (
-          <span 
-            key={i} 
-            className="px-2 py-1"
-            style={{ backgroundColor: highlightColor, color: '#000' }}
-          >
-            {part}
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        )
-      );
+      try {
+        const escapedHighlight = escapeRegex(data.quoteHighlight);
+        const parts = data.quote.split(new RegExp(`(${escapedHighlight})`, 'gi'));
+        return parts.map((part, i) => 
+          part.toLowerCase() === data.quoteHighlight?.toLowerCase() ? (
+            <span 
+              key={i} 
+              className="px-2 py-1"
+              style={{ backgroundColor: highlightColor, color: '#000' }}
+            >
+              {part}
+            </span>
+          ) : (
+            <span key={i}>{part}</span>
+          )
+        );
+      } catch (e) {
+        // If regex fails, return quote without highlighting
+        return data.quote;
+      }
     }
     return data.quote;
   };
@@ -77,12 +86,12 @@ export default function Spotlight({
   return (
     <section className={`py-8 ${className}`}>
       {/* Section Header with Line */}
-      <div className="container mx-auto px-4 mb-6">
-        <div className="flex items-center gap-4">
-          <h2 className="text-2xl md:text-3xl font-headline font-black text-gray-900 dark:text-white uppercase tracking-tight whitespace-nowrap">
+      <div className="container mx-auto px-4 mb-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-sm md:text-base font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-[0.2em] whitespace-nowrap">
             {sectionTitle}
           </h2>
-          <div className="flex-1 h-[3px] bg-gray-900 dark:bg-white"></div>
+          <div className="flex-1 h-[2px] bg-emerald-700 dark:bg-emerald-400"></div>
         </div>
       </div>
 
@@ -93,7 +102,7 @@ export default function Spotlight({
           <div className="lg:col-span-2">
             <div 
               className="relative w-full overflow-hidden rounded-xl group"
-              style={{ minHeight: '500px', height: '60vh', maxHeight: '700px' }}
+              style={{ minHeight: '450px', height: '55vh', maxHeight: '600px' }}
             >
               {/* Background Media */}
               {data.mediaType === 'video' ? (
@@ -154,16 +163,16 @@ export default function Spotlight({
                 />
               )}
 
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent z-[5]"></div>
+              {/* Gradient Overlay - More subtle, only at bottom */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[5]"></div>
 
-              {/* Quote/Text Overlay */}
+              {/* Quote/Text Overlay - Positioned at bottom for cleaner look */}
               <div 
-                className={`absolute inset-0 flex flex-col justify-center z-10 ${overlayClasses[data.overlayPosition || 'left']}`}
+                className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10"
               >
                 {data.quote && (
                   <blockquote 
-                    className="text-3xl md:text-5xl lg:text-6xl font-headline font-black leading-tight max-w-2xl"
+                    className="text-lg md:text-2xl lg:text-3xl font-headline font-bold leading-snug max-w-xl"
                     style={{ color: textColor }}
                   >
                     "{renderQuote()}"
@@ -172,32 +181,32 @@ export default function Spotlight({
                 
                 {data.subtitle && (
                   <p 
-                    className="mt-4 text-lg md:text-xl font-medium opacity-90"
+                    className="mt-2 text-sm md:text-base font-medium opacity-80"
                     style={{ color: textColor }}
                   >
-                    {data.subtitle}
+                    — {data.subtitle}
                   </p>
                 )}
 
                 {data.linkUrl && (
                   <Link
                     href={data.linkUrl}
-                    className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 font-bold rounded-full hover:bg-gray-100 transition-colors w-fit"
+                    className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-white text-gray-900 text-sm font-semibold rounded-full hover:bg-gray-100 transition-colors w-fit"
                   >
                     {data.linkText || 'Read More'}
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                 )}
-              </div>
 
-              {/* Title Badge */}
-              <div className="absolute bottom-4 left-4 z-20">
-                <span 
-                  className="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded"
-                  style={{ backgroundColor: highlightColor, color: '#000' }}
-                >
-                  {data.title}
-                </span>
+                {/* Title Badge - Inline with content */}
+                <div className="mt-4">
+                  <span 
+                    className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded"
+                    style={{ backgroundColor: highlightColor, color: '#000' }}
+                  >
+                    {data.title}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -270,24 +279,32 @@ export function SpotlightFull({
   const highlightColor = data.highlightColor || '#00D9FF';
   const textColor = data.textColor || '#FFFFFF';
 
+  // Escape special regex characters
+  const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
   const renderQuote = () => {
     if (!data.quote) return null;
     
     if (data.quoteHighlight) {
-      const parts = data.quote.split(new RegExp(`(${data.quoteHighlight})`, 'gi'));
-      return parts.map((part, i) => 
-        part.toLowerCase() === data.quoteHighlight?.toLowerCase() ? (
-          <span 
-            key={i} 
-            className="px-2 py-1"
-            style={{ backgroundColor: highlightColor, color: '#000' }}
-          >
-            {part}
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        )
-      );
+      try {
+        const escapedHighlight = escapeRegex(data.quoteHighlight);
+        const parts = data.quote.split(new RegExp(`(${escapedHighlight})`, 'gi'));
+        return parts.map((part, i) => 
+          part.toLowerCase() === data.quoteHighlight?.toLowerCase() ? (
+            <span 
+              key={i} 
+              className="px-2 py-1"
+              style={{ backgroundColor: highlightColor, color: '#000' }}
+            >
+              {part}
+            </span>
+          ) : (
+            <span key={i}>{part}</span>
+          )
+        );
+      } catch (e) {
+        return data.quote;
+      }
     }
     return data.quote;
   };
@@ -295,12 +312,12 @@ export function SpotlightFull({
   return (
     <section className={`py-8 ${className}`}>
       {/* Section Header */}
-      <div className="container mx-auto px-4 mb-6">
-        <div className="flex items-center gap-4">
-          <h2 className="text-2xl md:text-3xl font-headline font-black text-gray-900 dark:text-white uppercase tracking-tight whitespace-nowrap">
+      <div className="container mx-auto px-4 mb-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-sm md:text-base font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-[0.2em] whitespace-nowrap">
             {sectionTitle}
           </h2>
-          <div className="flex-1 h-[3px] bg-gray-900 dark:bg-white"></div>
+          <div className="flex-1 h-[2px] bg-emerald-700 dark:bg-emerald-400"></div>
         </div>
       </div>
 
@@ -308,7 +325,7 @@ export function SpotlightFull({
       <div className="container mx-auto px-4">
         <div 
           className="relative w-full overflow-hidden rounded-xl group"
-          style={{ minHeight: '500px', height: '60vh', maxHeight: '800px' }}
+          style={{ minHeight: '450px', height: '55vh', maxHeight: '650px' }}
         >
           {/* Background */}
           {data.mediaType === 'video' ? (
@@ -361,14 +378,14 @@ export function SpotlightFull({
             />
           )}
 
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-[5]"></div>
+          {/* Overlay - Subtle gradient from bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-[5]"></div>
 
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col justify-center items-start text-left pl-8 md:pl-16 lg:pl-24 z-10">
+          {/* Content - Positioned at bottom left */}
+          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-16 z-10">
             {data.quote && (
               <blockquote 
-                className="text-4xl md:text-6xl lg:text-7xl font-headline font-black leading-tight max-w-3xl"
+                className="text-xl md:text-3xl lg:text-4xl font-headline font-bold leading-snug max-w-2xl"
                 style={{ color: textColor }}
               >
                 "{renderQuote()}"
@@ -377,7 +394,7 @@ export function SpotlightFull({
             
             {data.subtitle && (
               <p 
-                className="mt-6 text-xl md:text-2xl font-medium opacity-90 max-w-xl"
+                className="mt-3 text-base md:text-lg font-medium opacity-80 max-w-xl"
                 style={{ color: textColor }}
               >
                 — {data.subtitle}
@@ -387,22 +404,22 @@ export function SpotlightFull({
             {data.linkUrl && (
               <Link
                 href={data.linkUrl}
-                className="mt-8 inline-flex items-center gap-2 px-8 py-4 bg-white text-gray-900 font-bold rounded-full hover:bg-gray-100 transition-colors"
+                className="mt-5 inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 text-sm font-semibold rounded-full hover:bg-gray-100 transition-colors"
               >
                 {data.linkText || 'Read Full Story'}
-                <ExternalLink className="w-5 h-5" />
+                <ExternalLink className="w-4 h-4" />
               </Link>
             )}
-          </div>
 
-          {/* Title Badge */}
-          <div className="absolute bottom-6 left-6 z-20">
-            <span 
-              className="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded"
-              style={{ backgroundColor: highlightColor, color: '#000' }}
-            >
-              {data.title}
-            </span>
+            {/* Title Badge */}
+            <div className="mt-5">
+              <span 
+                className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded"
+                style={{ backgroundColor: highlightColor, color: '#000' }}
+              >
+                {data.title}
+              </span>
+            </div>
           </div>
         </div>
       </div>

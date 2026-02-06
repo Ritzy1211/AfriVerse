@@ -31,10 +31,10 @@ export async function GET() {
       }
     }
 
-    // Return with cache headers for performance
+    // Return with no-cache headers so changes reflect immediately
     return NextResponse.json(appearanceSettings, {
       headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        'Cache-Control': 'no-store, must-revalidate',
       },
     });
   } catch (error) {

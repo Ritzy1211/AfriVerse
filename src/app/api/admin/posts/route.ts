@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { notifyPostStatusChange, notifyEditorsNewSubmission } from '@/lib/notifications';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // GET /api/admin/posts - Get all posts
 export async function GET(request: NextRequest) {
@@ -220,6 +221,12 @@ export async function POST(request: NextRequest) {
       response.originalStatus = status;
       response.message = 'Your article has been submitted for review. Editors will review it before publication.';
     }
+
+    // Revalidate caches so changes appear immediately
+    revalidateTag('articles');
+    revalidatePath('/', 'layout');
+    revalidatePath(`/${category}`, 'page');
+    revalidatePath(`/${category}/${slug}`, 'page');
 
     return NextResponse.json(response, { status: 201 });
   } catch (error) {

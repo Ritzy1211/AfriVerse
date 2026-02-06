@@ -432,7 +432,7 @@ async function createSiteSettings(): Promise<void> {
     description: 'Your premiere source for African news, culture, and stories',
     socialLinks: {
       twitter: 'https://twitter.com/afriverse',
-      instagram: 'https://instagram.com/afriverse',
+      instagram: 'https://www.instagram.com/afriverse_hq',
     },
     newsletter: {
       heading: 'Stay Updated',

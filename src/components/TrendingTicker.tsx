@@ -5,16 +5,9 @@ import { TrendingTopic } from '@/types';
 import { Flame } from 'lucide-react';
 import { useTranslation } from '@/components/providers/TranslationProvider';
 
-// Fallback mock data in case API fails
-const fallbackTopics: TrendingTopic[] = [
-  { id: '1', title: 'Nigerian Tech Startups Raise $500M in 2024', upiScore: 95, trend: 'up', category: 'Business', url: '/business/nigerian-tech-startups-500m-2024' },
-  { id: '2', title: 'Davido World Tour 2025 Announced', upiScore: 88, trend: 'up', category: 'Entertainment', url: '/entertainment/davido-world-tour-2025' },
-  { id: '3', title: 'Super Eagles AFCON 2025: Finidi Tactics', upiScore: 82, trend: 'up', category: 'Sports', url: '/sports/super-eagles-afcon-2025-finidi-tactics' },
-];
-
 export default function TrendingTicker() {
-  // Start with fallback data immediately for faster render
-  const [topics, setTopics] = useState<TrendingTopic[]>(fallbackTopics);
+  const [topics, setTopics] = useState<TrendingTopic[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -25,21 +18,20 @@ export default function TrendingTicker() {
         });
         if (response.ok) {
           const data = await response.json();
-          if (data.length > 0) {
-            setTopics(data);
-          }
+          setTopics(data);
         }
       } catch (error) {
-        // Keep fallback data on error
         console.error('Error fetching trending topics:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchTrendingTopics();
   }, []);
 
-  // Always render with available topics (fallback or fetched)
-  if (topics.length === 0) {
+  // Don't render if no topics or still loading
+  if (isLoading || topics.length === 0) {
     return null;
   }
 

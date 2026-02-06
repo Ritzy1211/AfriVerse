@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // Roles that can manage spotlights
 const CAN_MANAGE_SPOTLIGHTS = ['EDITOR', 'ADMIN', 'SUPER_ADMIN'];
@@ -137,6 +138,10 @@ export async function POST(request: NextRequest) {
         createdByName: session.user.name || session.user.email || 'Unknown',
       },
     });
+
+    // Revalidate so spotlight changes appear immediately
+    revalidateTag('spotlights');
+    revalidatePath('/', 'layout');
 
     return NextResponse.json(spotlight, { status: 201 });
   } catch (error) {

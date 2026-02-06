@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Article } from '@/types';
 import { formatDate } from '@/lib/utils';
-import { Clock, TrendingUp, Megaphone } from 'lucide-react';
+import { Clock, TrendingUp, Megaphone, Lock } from 'lucide-react';
 
 interface ArticleCardProps {
   article: Article;
@@ -44,6 +44,12 @@ export default function ArticleCard({ article, featured = false, horizontal = fa
               <span className="flex items-center gap-1 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                 <Megaphone className="w-3 h-3" />
                 SPONSORED
+              </span>
+            )}
+            {article.isPremium && (
+              <span className="flex items-center gap-1 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                <Lock className="w-3 h-3" />
+                PREMIUM
               </span>
             )}
           </div>
@@ -100,6 +106,12 @@ export default function ArticleCard({ article, featured = false, horizontal = fa
                 Sponsored
               </span>
             )}
+            {article.isPremium && (
+              <span className="flex items-center gap-1 bg-purple-600 text-white px-2 py-0.5 rounded text-xs font-bold">
+                <Lock className="w-3 h-3" />
+                Premium
+              </span>
+            )}
           </div>
           
           <h3 className="font-bold text-sm md:text-base text-gray-900 dark:text-white mb-1 line-clamp-2 group-hover:text-brand-accent transition-colors">
@@ -138,6 +150,12 @@ export default function ArticleCard({ article, featured = false, horizontal = fa
           <div className="absolute top-3 left-3 flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
             <Megaphone className="w-3 h-3" />
             Sponsored
+          </div>
+        )}
+        {article.isPremium && (
+          <div className="absolute top-3 left-3 flex items-center gap-1 bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <Lock className="w-3 h-3" />
+            Premium
           </div>
         )}
       </div>

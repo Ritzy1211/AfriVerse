@@ -6,16 +6,17 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import { categories } from '@/data/categories';
 import Link from 'next/link';
 import { TranslatedSectionHeader, TranslatedTopStoriesHeader } from '@/components/TranslatedContent';
-import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
+import { BillboardAd, SidebarAds, InArticleAd, AdsterraNativeBanner, AdsterraBanner } from '@/components/ads';
 import AfriPulseIndex from '@/components/AfriPulseIndex';
 import { Suspense } from 'react';
 import { ArticleCardSkeleton } from '@/components/Skeleton';
 import AfricaWatermark from '@/components/AfricaWatermark';
 import TrendingPopupWrapper from '@/components/TrendingPopupWrapper';
 import HomepageSpotlight from '@/components/HomepageSpotlight';
+import ThisDayInHistory from '@/components/ThisDayInHistory';
 
-// Revalidate homepage every 60 seconds
-export const revalidate = 60;
+// Revalidate homepage every 10 seconds for faster updates
+export const revalidate = 10;
 
 export default async function Home() {
   const allArticles = await getAllArticles();
@@ -123,11 +124,20 @@ export default async function Home() {
           {/* Sticky Sidebar */}
           <div className="space-y-6">
             <div className="sticky top-20 space-y-6">
+              {/* This Day in African History */}
+              <ThisDayInHistory />
+
               {/* AfriPulse Index - Real-time African Sentiment */}
               <AfriPulseIndex variant="compact" maxCountries={5} />
 
               {/* Urban Pulse Index */}
               <UrbanPulseIndex />
+
+              {/* Adsterra 300x250 Banner */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-soft p-2">
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider text-center mb-2">Advertisement</p>
+                <AdsterraBanner />
+              </div>
 
               {/* Sidebar Ads - Billboard Style */}
               <SidebarAds />
@@ -154,6 +164,14 @@ export default async function Home() {
       {/* Newsletter CTA Section */}
       <section className="container mx-auto px-4 my-12">
         <NewsletterSignup variant="hero" />
+      </section>
+
+      {/* Adsterra Native Banner - Recommended Content */}
+      <section className="container mx-auto px-4 my-8">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 text-center">Recommended For You</p>
+          <AdsterraNativeBanner />
+        </div>
       </section>
 
       {/* Bottom Ad */}

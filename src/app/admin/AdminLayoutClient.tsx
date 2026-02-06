@@ -32,6 +32,9 @@ import {
   BadgeCheck,
   Sparkles,
   Clock,
+  Crown,
+  DollarSign,
+  TrendingUp,
 } from 'lucide-react';
 
 // Define role hierarchy (higher number = more permissions)
@@ -66,13 +69,24 @@ const navigation = [
   { name: 'Categories & Tags', href: '/admin/categories', icon: FolderOpen, minRole: 'EDITOR' },
   { name: 'Media Library', href: '/admin/media', icon: Image, minRole: 'AUTHOR' },
   { name: 'Trending Topics', href: '/admin/trending', icon: Flame, minRole: 'EDITOR' },
+  { name: 'Google Trends', href: '/admin/trends', icon: TrendingUp, minRole: 'CONTRIBUTOR' },
   { name: 'AfriPulse Index', href: '/admin/afripulse', icon: Activity, minRole: 'EDITOR' },
   { name: 'Storytellers', href: '/admin/storytellers', icon: BadgeCheck, minRole: 'ADMIN' },
+  { name: 'Subscribers', href: '/admin/subscribers', icon: Crown, minRole: 'ADMIN' },
   { name: 'Users & Authors', href: '/admin/users', icon: Users, minRole: 'ADMIN' },
   { name: 'Comments', href: '/admin/comments', icon: MessageSquare, minRole: 'EDITOR' },
   { name: 'Activity Log', href: '/admin/activity', icon: Activity, minRole: 'ADMIN' },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3, minRole: 'ADMIN' },
-  { name: 'Ad Placements', href: '/admin/ads', icon: Megaphone, minRole: 'ADMIN' },
+  { 
+    name: 'Monetization', 
+    icon: DollarSign,
+    minRole: 'ADMIN',
+    children: [
+      { name: 'Ad Networks', href: '/admin/monetization/ad-networks' },
+      { name: 'Ad Placements', href: '/admin/ads' },
+      { name: 'Subscriptions', href: '/admin/subscribers' },
+    ]
+  },
   { 
     name: 'Settings', 
     icon: Settings,

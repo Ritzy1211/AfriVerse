@@ -7,7 +7,72 @@ import Link from 'next/link';
 declare global {
   interface Window {
     adsbygoogle: unknown[];
+    atOptions?: any;
   }
+}
+
+// Adsterra Banner Embed Component
+function AdsterraBannerEmbed({ slot }: { slot: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const key = process.env.NEXT_PUBLIC_ADSTERRA_BANNER_KEY || '6cef7c73d9e7809b268030f63ea69ae';
+    
+    // Set options
+    window.atOptions = {
+      'key': key,
+      'format': 'iframe',
+      'height': 250,
+      'width': 300,
+      'params': {}
+    };
+    
+    // Load script
+    const script = document.createElement('script');
+    script.src = `//www.highperformanceformat.com/${key}/invoke.js`;
+    script.async = true;
+    containerRef.current.appendChild(script);
+    
+    return () => {
+      if (containerRef.current && script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
+  
+  return <div ref={containerRef} id={`adsterra-banner-${slot}`} />;
+}
+
+// Adsterra Native Embed Component
+function AdsterraNativeEmbed() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const key = process.env.NEXT_PUBLIC_ADSTERRA_NATIVE_KEY || '8468b3413a41d83e9710099afc8c5932';
+    
+    // Load script
+    const script = document.createElement('script');
+    script.src = `//pl25485917.profitablegatecpm.com/${key}/invoke.js`;
+    script.async = true;
+    script.setAttribute('data-cfasync', 'false');
+    containerRef.current.appendChild(script);
+    
+    return () => {
+      if (containerRef.current && script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
+  
+  return (
+    <div ref={containerRef}>
+      <div id="container-8468b3413a41d83e9710099afc8c5932"></div>
+    </div>
+  );
 }
 
 // Ad configuration types
@@ -76,14 +141,20 @@ const HOUSE_ADS = [
     bgClass: 'bg-gradient-to-r from-blue-600 to-purple-600',
   },
   {
-    id: 'podcast',
-    title: '🎙️ Listen to AfriVerse Podcast',
-    subtitle: 'Conversations that matter',
-    cta: 'Listen Now',
-    link: '/podcast',
-    bgClass: 'bg-gradient-to-r from-green-500 to-teal-500',
+    id: 'premium',
+    title: '👑 Go Premium',
+    subtitle: 'Ad-free reading + exclusive content',
+    cta: 'Upgrade Now',
+    link: '/subscribe',
+    bgClass: 'bg-gradient-to-r from-purple-600 to-pink-600',
   },
 ];
+
+// Slots that should use Adsterra as fallback instead of house ads
+const ADSTERRA_FALLBACK_SLOTS: AdSlotType[] = ['medium-rect', 'half-page', 'in-article'];
+
+// Slots reserved for AdSense (show house ads until approved)
+const ADSENSE_RESERVED_SLOTS: AdSlotType[] = ['billboard', 'leaderboard', 'sticky-footer'];
 
 interface AdUnitProps {
   slot: AdSlotType;
@@ -177,8 +248,35 @@ export default function AdUnit({
   // Randomly select a house ad (memoized to prevent re-selection on re-render)
   const [houseAd] = useState(() => HOUSE_ADS[Math.floor(Math.random() * HOUSE_ADS.length)]);
 
+  // Check if this slot should use Adsterra
+  const shouldUseAdsterra = ADSTERRA_FALLBACK_SLOTS.includes(slot);
+
+  // Render Adsterra ad for secondary slots
+  const renderAdsterraFallback = () => {
+    // Use Adsterra 300x250 banner for medium-rect and half-page slots
+    if (slot === 'medium-rect' || slot === 'half-page') {
+      return (
+        <div className="flex justify-center">
+          <AdsterraBannerEmbed slot={slot} />
+        </div>
+      );
+    }
+
+    // For in-article, use native banner
+    if (slot === 'in-article') {
+      return (
+        <div className="my-4">
+          <AdsterraNativeEmbed />
+        </div>
+      );
+    }
+
+    // Default to house ad
+    return renderHouseAd();
+  };
+
   // Render fallback house ad
-  const renderFallback = () => {
+  const renderHouseAd = () => {
     if (slot === 'native') {
       return (
         <Link href={houseAd.link} className="block group">
@@ -213,6 +311,14 @@ export default function AdUnit({
         </div>
       </Link>
     );
+  };
+
+  // Main render fallback function - decides between Adsterra or house ads
+  const renderFallback = () => {
+    if (shouldUseAdsterra) {
+      return renderAdsterraFallback();
+    }
+    return renderHouseAd();
   };
 
   // Native ad styling

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getArticleBySlug, getRelatedArticles, getArticlesByCategory, getAllArticles } from '@/data/articles';
+import { getArticleBySlug, getArticlesByCategory, getAllArticles } from '@/data/articles';
 import { getCategoryBySlug, getSubcategoryBySlug } from '@/data/categories';
 import { formatDate } from '@/lib/utils';
 import { getSpotlights } from '@/lib/sanity-queries';
@@ -17,7 +17,7 @@ import MoreNews from '@/components/MoreNews';
 import Spotlight, { SpotlightFull, SpotlightData } from '@/components/Spotlight';
 import { Clock, Bookmark, Megaphone } from 'lucide-react';
 import type { Metadata } from 'next';
-import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
+import { BillboardAd, SidebarAds, InArticleAd, AdsterraNativeBanner, AdsterraBanner } from '@/components/ads';
 
 const ARTICLES_PER_PAGE = 9;
 
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: article.title,
       description: article.excerpt,
       type: 'article',
-      publishedTime: article.publishedAt.toISOString(),
+      publishedTime: new Date(article.publishedAt).toISOString(),
       authors: [article.author.name],
       images: [
         {
@@ -307,41 +307,52 @@ async function SubcategoryPage({
 async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof getArticleBySlug>> }) {
   if (!article) return null;
   
-  const relatedArticles = await getRelatedArticles(article, 6);
-  const allArticles = await getAllArticles();
   const shareUrl = `https://afriverse.africa/${article.category.slug}/${article.slug}`;
   
-  // Fetch any active spotlights for articles
+  // Fetch all data in parallel for better performance
+  const [allArticles, spotlightsResult] = await Promise.all([
+    getAllArticles(),
+    getSpotlights('article').catch(error => {
+      console.error('Error fetching spotlight:', error);
+      return [];
+    }),
+  ]);
+  
+  // Compute related articles from the already-fetched allArticles (avoid duplicate fetch)
+  const relatedArticles = allArticles
+    .filter(a => 
+      a.id !== article.id && 
+      (a.category.id === article.category.id || 
+       a.tags.some(tag => article.tags.includes(tag)))
+    )
+    .slice(0, 6);
+  
+  // Process spotlight data
   let spotlightData: SpotlightData | null = null;
-  try {
-    const spotlights = await getSpotlights('article');
-    if (spotlights && spotlights.length > 0) {
-      const spotlight = spotlights[0];
-      spotlightData = {
-        id: spotlight._id,
-        title: spotlight.title,
-        subtitle: spotlight.subtitle,
-        quote: spotlight.quote,
-        quoteHighlight: spotlight.quoteHighlight,
-        mediaType: spotlight.mediaType || 'image',
-        mediaUrl: spotlight.mediaUrl,
-        thumbnailUrl: spotlight.thumbnailUrl,
-        linkUrl: spotlight.linkUrl,
-        linkText: spotlight.linkText,
-        overlayPosition: spotlight.overlayPosition || 'left',
-        textColor: spotlight.textColor,
-        highlightColor: spotlight.highlightColor,
-        relatedArticles: spotlight.relatedArticles?.map((a: any) => ({
-          id: a._id,
-          title: a.title,
-          image: a.image,
-          slug: a.slug,
-          category: a.category,
-        })),
-      };
-    }
-  } catch (error) {
-    console.error('Error fetching spotlight:', error);
+  if (spotlightsResult && spotlightsResult.length > 0) {
+    const spotlight = spotlightsResult[0];
+    spotlightData = {
+      id: spotlight._id,
+      title: spotlight.title,
+      subtitle: spotlight.subtitle,
+      quote: spotlight.quote,
+      quoteHighlight: spotlight.quoteHighlight,
+      mediaType: spotlight.mediaType || 'image',
+      mediaUrl: spotlight.mediaUrl,
+      thumbnailUrl: spotlight.thumbnailUrl,
+      linkUrl: spotlight.linkUrl,
+      linkText: spotlight.linkText,
+      overlayPosition: spotlight.overlayPosition || 'left',
+      textColor: spotlight.textColor,
+      highlightColor: spotlight.highlightColor,
+      relatedArticles: spotlight.relatedArticles?.map((a: any) => ({
+        id: a._id,
+        title: a.title,
+        image: a.image,
+        slug: a.slug,
+        category: a.category,
+      })),
+    };
   }
 
   return (
@@ -569,6 +580,12 @@ async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof get
               />
             </div>
 
+            {/* Adsterra Native Banner - Recommended Content */}
+            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">You May Also Like</p>
+              <AdsterraNativeBanner />
+            </div>
+
             {/* Comments Section */}
             <Comments articleSlug={article.slug} articleTitle={article.title} />
           </div>
@@ -581,6 +598,12 @@ async function ArticlePage({ article }: { article: Awaited<ReturnType<typeof get
                 <Bookmark className="w-5 h-5" />
                 Save for Later
               </button>
+
+              {/* Adsterra 300x250 Banner */}
+              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2">
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider text-center mb-2">Advertisement</p>
+                <AdsterraBanner />
+              </div>
 
               {/* Sidebar Ads - Billboard Style */}
               <SidebarAds />

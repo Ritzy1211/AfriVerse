@@ -242,15 +242,15 @@ async function _getAllArticles(): Promise<Article[]> {
   });
 }
 
-// Cached version - revalidates every 60 seconds
+// Cached version - revalidates every 10 seconds for faster updates
 export const getAllArticles = unstable_cache(
   _getAllArticles,
   ['all-articles'],
-  { revalidate: 60, tags: ['articles'] }
+  { revalidate: 10, tags: ['articles'] }
 );
 
-// Get a single article by slug (checks database first, then markdown files)
-export async function getArticleBySlug(slug: string, categorySlug?: string): Promise<Article | null> {
+// Internal function to get article by slug
+async function _getArticleBySlug(slug: string, categorySlug?: string): Promise<Article | null> {
   // First, try to fetch from database
   try {
     const post = await prisma.post.findFirst({
@@ -334,6 +334,17 @@ export async function getArticleBySlug(slug: string, categorySlug?: string): Pro
     console.error(`Error reading article ${slug}:`, error);
     return null;
   }
+}
+
+// Cached version of getArticleBySlug - revalidates every 10 seconds for faster updates
+export async function getArticleBySlug(slug: string, categorySlug?: string): Promise<Article | null> {
+  // Use unstable_cache for caching with a unique key per article
+  const cachedFn = unstable_cache(
+    () => _getArticleBySlug(slug, categorySlug),
+    [`article-${slug}-${categorySlug || 'any'}`],
+    { revalidate: 10, tags: ['articles', `article-${slug}`] }
+  );
+  return cachedFn();
 }
 
 // Get trending articles

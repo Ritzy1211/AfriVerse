@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -27,8 +28,9 @@ interface Article {
   category: string;
 }
 
-export default function EditSpotlightPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function EditSpotlightPage() {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);

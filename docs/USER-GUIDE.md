@@ -324,7 +324,7 @@ A: Coming soon! For now, our website is fully responsive and works great on mobi
 ### Social Media
 
 - **X (Twitter)**: [@afriverseHQ](https://x.com/afriverseHQ)
-- **Instagram**: [@AfriverseHQ](https://instagram.com/AfriverseHQ)
+- **Instagram**: [@afriverse_hq](https://www.instagram.com/afriverse_hq)
 - **Facebook**: [Officialafriverse](https://facebook.com/Officialafriverse)
 
 ### Community

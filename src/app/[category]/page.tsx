@@ -7,8 +7,8 @@ import type { Metadata } from 'next';
 import { BillboardAd, SidebarAds, InArticleAd } from '@/components/ads';
 import Link from 'next/link';
 
-// Revalidate category pages every 60 seconds
-export const revalidate = 60;
+// Revalidate category pages every 10 seconds for faster updates
+export const revalidate = 10;
 
 const ARTICLES_PER_PAGE = 9;
 

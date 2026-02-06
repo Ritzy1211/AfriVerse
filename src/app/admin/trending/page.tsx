@@ -12,6 +12,10 @@ import {
   X,
   Flame,
   ExternalLink,
+  Download,
+  FileText,
+  Check,
+  RefreshCw,
 } from 'lucide-react';
 
 interface TrendingTopic {
@@ -26,6 +30,17 @@ interface TrendingTopic {
   expiresAt: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+interface AvailableArticle {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  featured: boolean;
+  publishedAt: string;
+  url: string;
+  alreadyTrending: boolean;
 }
 
 const categories = [
@@ -44,6 +59,10 @@ export default function TrendingPage() {
   const [topics, setTopics] = useState<TrendingTopic[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [availableArticles, setAvailableArticles] = useState<AvailableArticle[]>([]);
+  const [isLoadingArticles, setIsLoadingArticles] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const [editingTopic, setEditingTopic] = useState<TrendingTopic | null>(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -73,6 +92,52 @@ export default function TrendingPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function fetchAvailableArticles() {
+    setIsLoadingArticles(true);
+    try {
+      const response = await fetch('/api/admin/trending/import');
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableArticles(data);
+      }
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    } finally {
+      setIsLoadingArticles(false);
+    }
+  }
+
+  async function handleImportArticles() {
+    setIsImporting(true);
+    try {
+      const response = await fetch('/api/admin/trending/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ limit: 5 }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert(`Successfully imported ${result.imported} articles! (${result.skipped} already existed)`);
+        await fetchTopics();
+        setShowImportModal(false);
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to import articles');
+      }
+    } catch (error) {
+      console.error('Error importing articles:', error);
+      alert('Failed to import articles');
+    } finally {
+      setIsImporting(false);
+    }
+  }
+
+  function openImportModal() {
+    setShowImportModal(true);
+    fetchAvailableArticles();
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -200,17 +265,127 @@ export default function TrendingPage() {
             Trending Topics
           </h1>
           <p className="text-gray-600 mt-1">
-            Manage the topics displayed in the &quot;Trending Now&quot; ticker
+            Manage the topics displayed in the &quot;Trending Now&quot; ticker (max 5)
           </p>
         </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Add Topic
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={openImportModal}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-brand-primary text-brand-primary rounded-lg hover:bg-brand-primary/10 transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            Import from Articles
+          </button>
+          <button
+            onClick={() => setShowForm(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Topic
+          </button>
+        </div>
       </div>
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-brand-primary" />
+                  Import Articles to Trending
+                </h2>
+                <button
+                  onClick={() => setShowImportModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                Automatically add your latest published articles to the trending ticker.
+              </p>
+            </div>
+
+            <div className="p-6">
+              {isLoadingArticles ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-primary"></div>
+                </div>
+              ) : availableArticles.length === 0 ? (
+                <div className="text-center py-8">
+                  <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-600">No published articles found</p>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-600 mb-4">
+                    The following articles will be imported (up to 5):
+                  </p>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {availableArticles.slice(0, 5).map((article) => (
+                      <div
+                        key={article.id}
+                        className={`flex items-center justify-between p-3 rounded-lg border ${
+                          article.alreadyTrending
+                            ? 'bg-gray-50 border-gray-200'
+                            : 'bg-green-50 border-green-200'
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-gray-900 truncate">
+                            {article.title}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {article.category} • {new Date(article.publishedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        {article.alreadyTrending ? (
+                          <span className="flex items-center gap-1 text-xs text-gray-500 ml-2">
+                            <Check className="w-4 h-4" />
+                            Already added
+                          </span>
+                        ) : article.featured ? (
+                          <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded ml-2">
+                            Featured
+                          </span>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="p-6 border-t border-gray-200 flex gap-3">
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleImportArticles}
+                disabled={isImporting || availableArticles.length === 0}
+                className="flex-1 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary/90 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              >
+                {isImporting ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    Importing...
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4" />
+                    Import Articles
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Form Modal */}
       {showForm && (
@@ -532,10 +707,12 @@ export default function TrendingPage() {
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
         <h3 className="font-medium text-blue-900 mb-2">How Trending Topics Work</h3>
         <ul className="text-sm text-blue-700 space-y-1">
+          <li>• <strong>Auto-fetch:</strong> If no manual topics exist, the ticker automatically shows your latest 5 articles</li>
+          <li>• <strong>Import:</strong> Use &quot;Import from Articles&quot; to add your published articles to trending</li>
           <li>• Topics with lower order numbers appear first in the ticker</li>
           <li>• Inactive topics are hidden from the public ticker</li>
           <li>• Topics with expiration dates automatically hide after that date</li>
-          <li>• UPI Score can be used for future automated trending features</li>
+          <li>• Maximum of 5 topics are shown in the ticker at any time</li>
         </ul>
       </div>
     </div>

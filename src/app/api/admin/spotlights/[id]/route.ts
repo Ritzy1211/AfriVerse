@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // Roles that can manage spotlights
 const CAN_MANAGE_SPOTLIGHTS = ['EDITOR', 'ADMIN', 'SUPER_ADMIN'];
@@ -113,6 +114,10 @@ export async function PUT(
       },
     });
 
+    // Revalidate so spotlight changes appear immediately
+    revalidateTag('spotlights');
+    revalidatePath('/', 'layout');
+
     return NextResponse.json(spotlight);
   } catch (error) {
     console.error('Error updating spotlight:', error);
@@ -154,6 +159,10 @@ export async function DELETE(
     await prisma.spotlight.delete({
       where: { id },
     });
+
+    // Revalidate so deletion reflects immediately
+    revalidateTag('spotlights');
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ message: 'Spotlight deleted successfully' });
   } catch (error) {

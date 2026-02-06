@@ -341,7 +341,7 @@ export function getWelcomeEmailHtml(name?: string): string {
               </p>
               <p style="margin: 0 0 20px 0;">
                 <a href="https://x.com/afriaborgin" style="color: ${COLORS.secondary}; text-decoration: none; margin: 0 12px; font-size: 14px;">𝕏 Twitter</a>
-                <a href="https://instagram.com/afaborgin" style="color: ${COLORS.secondary}; text-decoration: none; margin: 0 12px; font-size: 14px;">📸 Instagram</a>
+                <a href="https://www.instagram.com/afriverse_hq" style="color: ${COLORS.secondary}; text-decoration: none; margin: 0 12px; font-size: 14px;">📸 Instagram</a>
                 <a href="https://facebook.com/afriverse" style="color: ${COLORS.secondary}; text-decoration: none; margin: 0 12px; font-size: 14px;">👥 Facebook</a>
               </p>
               <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 10px;">

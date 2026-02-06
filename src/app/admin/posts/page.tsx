@@ -16,6 +16,12 @@ import {
   Calendar,
   User,
   RefreshCw,
+  CheckCircle,
+  XCircle,
+  Archive,
+  Star,
+  Lock,
+  FolderOpen,
 } from 'lucide-react';
 import { AfriPulseSpinner } from '@/components/BrandedSpinner';
 
@@ -53,6 +59,50 @@ export default function PostsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalPosts, setTotalPosts] = useState(0);
   const [error, setError] = useState('');
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
+  const [showBulkCategoryModal, setShowBulkCategoryModal] = useState(false);
+  const [bulkCategory, setBulkCategory] = useState('');
+
+  // Bulk action handler
+  const handleBulkAction = async (action: string, data?: Record<string, unknown>) => {
+    if (selectedPosts.length === 0) return;
+    
+    setBulkActionLoading(true);
+    try {
+      const response = await fetch('/api/admin/posts/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action,
+          postIds: selectedPosts,
+          data,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        setSelectedPosts([]);
+        fetchPosts();
+        // Show success message (you could add a toast here)
+        alert(result.message);
+      } else {
+        throw new Error(result.error || 'Failed to perform action');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to perform bulk action');
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  const handleBulkCategoryChange = () => {
+    if (bulkCategory) {
+      handleBulkAction('changeCategory', { category: bulkCategory });
+      setShowBulkCategoryModal(false);
+      setBulkCategory('');
+    }
+  };
 
   // Fetch posts from API
   const fetchPosts = async () => {
@@ -266,23 +316,142 @@ export default function PostsPage() {
 
       {/* Bulk Actions */}
       {selectedPosts.length > 0 && (
-        <div className="bg-secondary/10 rounded-lg p-4 flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-900 dark:text-white">
-            {selectedPosts.length} post(s) selected
-          </span>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleBulkDelete}
-              className="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors"
+        <div className="bg-secondary/10 rounded-lg p-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <span className="text-sm font-medium text-gray-900 dark:text-white">
+              {selectedPosts.length} post(s) selected
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Publish */}
+              <button
+                onClick={() => handleBulkAction('publish')}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
+              >
+                <CheckCircle className="w-4 h-4" />
+                Publish
+              </button>
+              
+              {/* Unpublish */}
+              <button
+                onClick={() => handleBulkAction('unpublish')}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600 transition-colors disabled:opacity-50"
+              >
+                <XCircle className="w-4 h-4" />
+                Unpublish
+              </button>
+
+              {/* Archive */}
+              <button
+                onClick={() => handleBulkAction('archive')}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
+              >
+                <Archive className="w-4 h-4" />
+                Archive
+              </button>
+
+              {/* Feature */}
+              <button
+                onClick={() => handleBulkAction('setFeatured', { featured: true })}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white text-sm rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50"
+              >
+                <Star className="w-4 h-4" />
+                Feature
+              </button>
+
+              {/* Set Premium */}
+              <button
+                onClick={() => handleBulkAction('setPremium', { isPremium: true })}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-500 text-white text-sm rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50"
+              >
+                <Lock className="w-4 h-4" />
+                Premium
+              </button>
+
+              {/* Change Category */}
+              <button
+                onClick={() => setShowBulkCategoryModal(true)}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+              >
+                <FolderOpen className="w-4 h-4" />
+                Category
+              </button>
+
+              {/* Delete */}
+              <button
+                onClick={() => {
+                  if (confirm(`Are you sure you want to delete ${selectedPosts.length} post(s)? This cannot be undone.`)) {
+                    handleBulkAction('delete');
+                  }
+                }}
+                disabled={bulkActionLoading}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </button>
+
+              {/* Clear Selection */}
+              <button
+                onClick={() => setSelectedPosts([])}
+                className="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          {bulkActionLoading && (
+            <div className="mt-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <AfriPulseSpinner size="sm" />
+              Processing...
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bulk Category Change Modal */}
+      {showBulkCategoryModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Change Category
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Move {selectedPosts.length} post(s) to a new category:
+            </p>
+            <select
+              value={bulkCategory}
+              onChange={(e) => setBulkCategory(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-secondary mb-4"
             >
-              Delete Selected
-            </button>
-            <button
-              onClick={() => setSelectedPosts([])}
-              className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
-              Clear
-            </button>
+              <option value="">Select category...</option>
+              <option value="business">Business</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="lifestyle">Lifestyle</option>
+              <option value="sports">Sports</option>
+              <option value="technology">Technology</option>
+              <option value="politics">Politics</option>
+            </select>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowBulkCategoryModal(false)}
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBulkCategoryChange}
+                disabled={!bulkCategory}
+                className="px-4 py-2 bg-secondary text-primary font-medium rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
+              >
+                Move Posts
+              </button>
+            </div>
           </div>
         </div>
       )}
