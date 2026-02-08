@@ -237,7 +237,7 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
     }
   };
 
-  const wordCount = content.split(/\s+/).filter(Boolean).length;
+  const wordCount = (content || '').split(/\s+/).filter(Boolean).length;
 
   if (loading) {
     return (

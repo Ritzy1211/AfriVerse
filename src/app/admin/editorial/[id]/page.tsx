@@ -204,7 +204,7 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
   const getValidationStatus = () => {
     if (!post || !rules) return [];
 
-    const wordCount = post.content.split(/\s+/).length;
+    const wordCount = (post.content || '').split(/\s+/).filter(Boolean).length;
     const checks = [
       {
         label: `Minimum word count (${rules.minWordCount})`,
@@ -382,7 +382,7 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  {post.readingTime || Math.ceil(post.content.split(/\s+/).length / 200)} min read
+                  {post.readingTime || Math.ceil((post.content || '').split(/\s+/).filter(Boolean).length / 200)} min read
                 </div>
               </div>
 

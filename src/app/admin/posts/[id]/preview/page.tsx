@@ -276,7 +276,7 @@ export default function AdminPostPreviewPage() {
           </span>
           <span className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-sm">
             <Clock className="w-3.5 h-3.5" />
-            {Math.ceil(post.content.split(/\s+/).length / 200)} min read
+            {Math.ceil((post.content || '').split(/\s+/).filter(Boolean).length / 200)} min read
           </span>
         </div>
 
