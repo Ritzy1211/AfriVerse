@@ -106,7 +106,7 @@ const testimonials = [
   {
     quote: "AfriVerse has become my go-to source for understanding Africa beyond the headlines. The depth of analysis is unmatched.",
     author: "Dr. Amina Osei",
-    role: "Professor of African Studies, Harvard University",
+    role: "Professor of African Studies",
   },
   {
     quote: "Finally, a platform that tells African stories from an African perspective. This is the future of continental media.",
@@ -116,7 +116,7 @@ const testimonials = [
   {
     quote: "The quality of journalism here rivals any major global publication. AfriVerse proves African media can compete on the world stage.",
     author: "Fatima Al-Hassan",
-    role: "Media Analyst, Reuters",
+    role: "Media Analyst",
   },
 ];
 

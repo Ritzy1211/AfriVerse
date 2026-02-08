@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useRouter, useParams } from 'next/navigation';
 import {
   Save,
   Send,
@@ -12,9 +11,9 @@ import {
   Loader2,
   Image as ImageIcon,
   X,
-  FileText,
   StickyNote,
   ChevronDown,
+  MessageSquare,
 } from 'lucide-react';
 
 interface Category {
@@ -23,15 +22,33 @@ interface Category {
   slug: string;
 }
 
-export default function ComposePage() {
+interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  status: string;
+  category: string;
+  tags: string[];
+  editorialReview?: {
+    feedback: string;
+    reviewer?: { name: string };
+  };
+}
+
+export default function EditArticlePage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const params = useParams();
+  const id = params.id as string;
+
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showEditorNotes, setShowEditorNotes] = useState(false);
+  const [originalArticle, setOriginalArticle] = useState<Article | null>(null);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -43,6 +60,54 @@ export default function ComposePage() {
     editorNotes: '',
     tags: '',
   });
+
+  useEffect(() => {
+    fetchCategories();
+    if (id) {
+      fetchArticle();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('/api/categories');
+      if (res.ok) {
+        const data = await res.json();
+        setCategories(data);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchArticle = async () => {
+    try {
+      const res = await fetch(`/api/writer/articles/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        const article = data.article;
+        setOriginalArticle(article);
+        setFormData({
+          title: article.title || '',
+          slug: article.slug || '',
+          excerpt: article.excerpt || '',
+          content: article.content || '',
+          categoryId: article.category?.slug || article.category || '',
+          suggestedImages: '',
+          editorNotes: '',
+          tags: article.tags?.join(', ') || '',
+        });
+      } else {
+        setMessage({ type: 'error', text: 'Article not found' });
+      }
+    } catch (error) {
+      console.error('Error fetching article:', error);
+      setMessage({ type: 'error', text: 'Failed to load article' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Auto-generate slug from title
   const generateSlug = (title: string) => {
@@ -67,33 +132,6 @@ export default function ComposePage() {
     setMessage(null);
   };
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  // Auto-save draft every 60 seconds if there's content
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (formData.title && formData.content) {
-        handleAutoSave();
-      }
-    }, 60000);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  const fetchCategories = async () => {
-    try {
-      const res = await fetch('/api/categories');
-      if (res.ok) {
-        const data = await res.json();
-        setCategories(data);
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({
       ...prev,
@@ -102,26 +140,9 @@ export default function ComposePage() {
     setMessage(null);
   };
 
-  const handleAutoSave = async () => {
-    // Silent auto-save
-    try {
-      await fetch('/api/writer/drafts/autosave', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-        }),
-      });
-      setLastSaved(new Date());
-    } catch (error) {
-      console.error('Auto-save failed:', error);
-    }
-  };
-
-  const saveDraft = async () => {
+  const saveChanges = async () => {
     if (!formData.title.trim()) {
-      setMessage({ type: 'error', text: 'Please add a headline before saving' });
+      setMessage({ type: 'error', text: 'Please add a headline' });
       return;
     }
 
@@ -129,24 +150,24 @@ export default function ComposePage() {
     setMessage(null);
     
     try {
-      const res = await fetch('/api/writer/drafts', {
-        method: 'POST',
+      const res = await fetch(`/api/writer/articles/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
+          slug: formData.slug,
+          excerpt: formData.excerpt,
+          content: formData.content,
+          categoryId: formData.categoryId,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
         }),
       });
 
       if (res.ok) {
-        const data = await res.json();
-        setMessage({ type: 'success', text: 'Draft saved successfully!' });
-        setLastSaved(new Date());
-        // Redirect to edit page with the draft ID
-        router.push(`/writer/articles/${data.draft.id}`);
+        setMessage({ type: 'success', text: 'Changes saved successfully!' });
       } else {
         const error = await res.json();
-        setMessage({ type: 'error', text: error.error || 'Failed to save draft' });
+        setMessage({ type: 'error', text: error.error || 'Failed to save changes' });
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'An error occurred while saving' });
@@ -155,7 +176,7 @@ export default function ComposePage() {
     }
   };
 
-  const submitForReview = async () => {
+  const resubmitForReview = async () => {
     // Validation
     if (!formData.title.trim()) {
       setMessage({ type: 'error', text: 'Headline is required' });
@@ -178,35 +199,37 @@ export default function ComposePage() {
     setMessage(null);
 
     try {
-      // First save as draft
-      const saveRes = await fetch('/api/writer/drafts', {
-        method: 'POST',
+      // First save changes
+      const saveRes = await fetch(`/api/writer/articles/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
+          slug: formData.slug,
+          excerpt: formData.excerpt,
+          content: formData.content,
+          categoryId: formData.categoryId,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
         }),
       });
 
       if (!saveRes.ok) {
-        throw new Error('Failed to save draft');
+        throw new Error('Failed to save changes');
       }
 
-      const { draft } = await saveRes.json();
-
-      // Then submit for editorial review
-      const submitRes = await fetch('/api/writer/submit', {
+      // Then resubmit for review
+      const submitRes = await fetch('/api/writer/resubmit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ draftId: draft.id }),
+        body: JSON.stringify({ articleId: id }),
       });
 
       if (submitRes.ok) {
-        setMessage({ type: 'success', text: 'Article submitted for editorial review!' });
+        setMessage({ type: 'success', text: 'Article resubmitted for review!' });
         setTimeout(() => router.push('/writer/submitted'), 1500);
       } else {
         const error = await submitRes.json();
-        setMessage({ type: 'error', text: error.error || 'Failed to submit for review' });
+        setMessage({ type: 'error', text: error.error || 'Failed to resubmit' });
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'An error occurred' });
@@ -216,7 +239,37 @@ export default function ComposePage() {
   };
 
   const wordCount = formData.content.split(/\s+/).filter(Boolean).length;
-  const characterCount = formData.content.length;
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Check if article can be edited
+  const canEdit = originalArticle?.status === 'DRAFT' || originalArticle?.status === 'CHANGES_REQUESTED';
+
+  if (!canEdit && originalArticle) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-amber-600" />
+          <h2 className="text-lg font-semibold text-amber-900 mb-2">Cannot Edit Article</h2>
+          <p className="text-amber-700 mb-4">
+            This article is currently {originalArticle.status.toLowerCase().replace('_', ' ')} and cannot be edited.
+          </p>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -230,33 +283,53 @@ export default function ComposePage() {
             <ArrowLeft className="w-5 h-5 text-slate-700 dark:text-slate-200" />
           </button>
           <div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Create Draft</h1>
-            {lastSaved && (
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Last saved {lastSaved.toLocaleTimeString()}
-              </p>
-            )}
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Edit Article</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Make your revisions and resubmit
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={saveDraft}
+            onClick={saveChanges}
             disabled={saving || !formData.title}
             className="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 text-sm font-medium"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Save Draft
+            Save Changes
           </button>
           <button
-            onClick={submitForReview}
+            onClick={resubmitForReview}
             disabled={submitting || !formData.title || !formData.content || !formData.categoryId}
             className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-white font-medium rounded-lg hover:bg-brand-accent/90 transition-colors disabled:opacity-50 text-sm"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-            Submit for Review
+            Resubmit for Review
           </button>
         </div>
       </div>
+
+      {/* Editorial Feedback Banner */}
+      {originalArticle?.editorialReview?.feedback && (
+        <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <MessageSquare className="w-5 h-5 text-amber-600 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                Editorial Feedback
+              </h3>
+              <p className="text-amber-800 dark:text-amber-300 text-sm whitespace-pre-wrap">
+                {originalArticle.editorialReview.feedback}
+              </p>
+              {originalArticle.editorialReview.reviewer && (
+                <p className="text-amber-600 dark:text-amber-400 text-xs mt-2">
+                  — {originalArticle.editorialReview.reviewer.name}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Message */}
       {message && (
@@ -308,7 +381,6 @@ export default function ComposePage() {
               Auto-generate
             </button>
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">This will be the URL of your article. Use lowercase letters, numbers, and hyphens only.</p>
         </div>
 
         {/* Excerpt */}
@@ -322,7 +394,6 @@ export default function ComposePage() {
             rows={3}
             className="w-full px-4 py-3 text-sm focus:outline-none bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none focus:ring-2 focus:ring-brand-accent/30"
           />
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">This summary appears in article cards, social media shares, and search results.</p>
         </div>
 
         {/* Metadata Row */}
@@ -360,15 +431,7 @@ export default function ComposePage() {
             name="content"
             value={formData.content}
             onChange={handleChange}
-            placeholder="Write your article here...
-
-You can use Markdown for formatting:
-- **bold** for emphasis
-- *italic* for style
-- ## Heading 2
-- ### Heading 3
-- > for quotes
-- [text](url) for links"
+            placeholder="Write your article here..."
             rows={20}
             className="w-full px-6 py-6 focus:outline-none bg-transparent text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none text-base leading-relaxed"
           />
@@ -380,109 +443,46 @@ You can use Markdown for formatting:
         </div>
       </div>
 
-      {/* Additional Fields */}
-      <div className="mt-6 space-y-4">
-        {/* Suggested Images */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
-              <ImageIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+      {/* Notes for Editors */}
+      <div className="mt-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+        <button
+          onClick={() => setShowEditorNotes(!showEditorNotes)}
+          className="w-full flex items-center justify-between p-6 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
+              <StickyNote className="w-4 h-4 text-amber-600 dark:text-amber-400" />
             </div>
-            <div>
-              <h3 className="font-semibold text-slate-900 dark:text-white">Suggested Images</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Add image URLs or descriptions for editors (optional)</p>
+            <div className="text-left">
+              <h3 className="font-semibold text-slate-900 dark:text-white">Response to Editor</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Explain your revisions (optional)</p>
             </div>
           </div>
-          <textarea
-            name="suggestedImages"
-            value={formData.suggestedImages}
-            onChange={handleChange}
-            placeholder="Paste image URLs or describe the images you'd like to use...
-
-Example:
-- Hero image: https://example.com/image.jpg
-- Suggested: Photo of Lagos skyline at sunset
-- Source: Reuters/AFP"
-            rows={4}
-            className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none"
-          />
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-            Note: Final images will be selected and licensed by the editorial team
-          </p>
-        </div>
-
-        {/* Notes for Editors */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-          <button
-            onClick={() => setShowEditorNotes(!showEditorNotes)}
-            className="w-full flex items-center justify-between p-6 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
-                <StickyNote className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-semibold text-slate-900 dark:text-white">Notes for Editors</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Add context or special requests (optional)</p>
-              </div>
-            </div>
-            <ChevronDown className={`w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform ${showEditorNotes ? 'rotate-180' : ''}`} />
-          </button>
-          {showEditorNotes && (
-            <div className="px-6 pb-6">
-              <textarea
-                name="editorNotes"
-                value={formData.editorNotes}
-                onChange={handleChange}
-                placeholder="Any notes for the editorial team...
-
-Example:
-- This is time-sensitive, hoping for quick turnaround
-- Please verify the quote from Minister X
-- Sources are confidential"
-                rows={4}
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none"
-              />
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Submission Checklist */}
-      <div className="mt-6 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
-        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Before Submitting</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
-            <span className="text-slate-700 dark:text-slate-300">Proofread for spelling/grammar</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
-            <span className="text-slate-700 dark:text-slate-300">Facts and quotes are accurate</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
-            <span className="text-slate-700 dark:text-slate-300">Selected appropriate category</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors">
-            <input type="checkbox" className="w-4 h-4 rounded border-slate-400 dark:border-slate-500 text-brand-accent focus:ring-brand-accent/30" />
-            <span className="text-slate-700 dark:text-slate-300">Added compelling headline</span>
-          </label>
-        </div>
+          <ChevronDown className={`w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform ${showEditorNotes ? 'rotate-180' : ''}`} />
+        </button>
+        {showEditorNotes && (
+          <div className="px-6 pb-6">
+            <textarea
+              name="editorNotes"
+              value={formData.editorNotes}
+              onChange={handleChange}
+              placeholder="Explain what changes you made in response to the feedback..."
+              rows={4}
+              className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none"
+            />
+          </div>
+        )}
       </div>
 
       {/* Important Notice */}
       <div className="mt-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
-        <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">ℹ️ What happens next?</h4>
-        <ol className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
-          <li>1. Your article enters the editorial queue</li>
-          <li>2. An editor will review your submission</li>
-          <li>3. You&apos;ll receive feedback or approval notification</li>
-          <li>4. If approved, the editorial team handles publication</li>
-        </ol>
-        <p className="text-xs text-blue-600 dark:text-blue-400 mt-3">
-          Note: Once submitted, you cannot edit the article until the review is complete or revisions are requested.
-        </p>
+        <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">ℹ️ Revision Tips</h4>
+        <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
+          <li>• Review the editorial feedback carefully</li>
+          <li>• Make all requested changes before resubmitting</li>
+          <li>• You can save changes without resubmitting</li>
+          <li>• Once resubmitted, you cannot edit until review is complete</li>
+        </ul>
       </div>
     </div>
   );

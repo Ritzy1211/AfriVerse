@@ -12,17 +12,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, excerpt, content, categoryId, suggestedImages, editorNotes, tags } = body;
+    const { title, slug: providedSlug, excerpt, content, categoryId, suggestedImages, editorNotes, tags } = body;
 
     if (!title || !title.trim()) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
-    // Generate slug from title
-    const baseSlug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+    // Use provided slug or generate from title
+    const baseSlug = (providedSlug && providedSlug.trim()) 
+      ? providedSlug.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '')
+      : title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     
     // Check for existing slugs and make unique
     const existingSlugs = await prisma.post.findMany({
