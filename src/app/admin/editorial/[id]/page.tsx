@@ -423,10 +423,31 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Content Preview
               </h3>
-              <div
-                className="prose dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
+              <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4">
+                {post.content.split('\n\n').map((paragraph, idx) => {
+                  const trimmed = paragraph.trim();
+                  if (!trimmed) return null;
+                  
+                  // Handle markdown-style headers
+                  if (trimmed.startsWith('# ')) {
+                    return <h1 key={idx} className="text-2xl font-bold mb-4 mt-8">{trimmed.slice(2)}</h1>;
+                  }
+                  if (trimmed.startsWith('## ')) {
+                    return <h2 key={idx} className="text-xl font-semibold mb-3 mt-6">{trimmed.slice(3)}</h2>;
+                  }
+                  if (trimmed.startsWith('### ')) {
+                    return <h3 key={idx} className="text-lg font-medium mb-2 mt-4">{trimmed.slice(4)}</h3>;
+                  }
+                  if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+                    return <p key={idx} className="font-semibold mb-4">{trimmed.slice(2, -2)}</p>;
+                  }
+                  if (trimmed.startsWith('*') && trimmed.endsWith('*')) {
+                    return <p key={idx} className="italic mb-4">{trimmed.slice(1, -1)}</p>;
+                  }
+                  
+                  return <p key={idx} className="mb-4 leading-relaxed">{trimmed}</p>;
+                })}
+              </div>
             </div>
           )}
 

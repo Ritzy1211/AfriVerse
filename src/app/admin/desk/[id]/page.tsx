@@ -89,7 +89,7 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'edit' | 'feedback' | 'activity'>('edit');
+  const [activeTab, setActiveTab] = useState<'edit' | 'preview' | 'feedback' | 'activity'>('edit');
   const [showPublishPanel, setShowPublishPanel] = useState(false);
   
   // Editable fields
@@ -442,6 +442,16 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
                 Edit Article
               </button>
               <button
+                onClick={() => setActiveTab('preview')}
+                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'preview'
+                    ? 'bg-slate-50 text-primary border-b-2 border-primary'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Preview
+              </button>
+              <button
                 onClick={() => setActiveTab('feedback')}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === 'feedback'
@@ -503,9 +513,94 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     rows={20}
-                    className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none font-mono text-sm"
+                    className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none font-sans text-base leading-relaxed whitespace-pre-wrap"
+                    style={{ lineHeight: '1.8' }}
                   />
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'preview' && (
+              <div className="p-6">
+                {/* Article Preview */}
+                <article className="prose prose-lg max-w-none">
+                  {/* Title */}
+                  <h1 className="text-3xl font-bold text-slate-900 mb-4 font-display">
+                    {title || 'Untitled Article'}
+                  </h1>
+                  
+                  {/* Excerpt */}
+                  {excerpt && (
+                    <p className="text-lg text-slate-600 italic border-l-4 border-primary pl-4 mb-6">
+                      {excerpt}
+                    </p>
+                  )}
+                  
+                  {/* Content */}
+                  <div className="space-y-4 text-slate-700">
+                    {content.split('\n\n').map((paragraph, idx) => {
+                      const trimmed = paragraph.trim();
+                      if (!trimmed) return null;
+                      
+                      // Handle markdown-style headers
+                      if (trimmed.startsWith('# ')) {
+                        return (
+                          <h2 key={idx} className="text-2xl font-bold text-slate-900 mt-8 mb-4 font-display">
+                            {trimmed.slice(2)}
+                          </h2>
+                        );
+                      }
+                      if (trimmed.startsWith('## ')) {
+                        return (
+                          <h3 key={idx} className="text-xl font-semibold text-slate-800 mt-6 mb-3">
+                            {trimmed.slice(3)}
+                          </h3>
+                        );
+                      }
+                      if (trimmed.startsWith('### ')) {
+                        return (
+                          <h4 key={idx} className="text-lg font-medium text-slate-800 mt-4 mb-2">
+                            {trimmed.slice(4)}
+                          </h4>
+                        );
+                      }
+                      
+                      // Handle byline/attribution (starts with *)
+                      if (trimmed.startsWith('*') && trimmed.endsWith('*')) {
+                        return (
+                          <p key={idx} className="text-sm text-slate-500 italic mb-6">
+                            {trimmed.slice(1, -1)}
+                          </p>
+                        );
+                      }
+                      
+                      // Handle bold text
+                      if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+                        return (
+                          <p key={idx} className="font-semibold text-slate-800 mb-4">
+                            {trimmed.slice(2, -2)}
+                          </p>
+                        );
+                      }
+                      
+                      // Handle quoted text
+                      if (trimmed.startsWith('"') && trimmed.includes('"')) {
+                        return (
+                          <blockquote key={idx} className="border-l-4 border-primary bg-slate-50 pl-4 pr-4 py-3 italic text-slate-700 my-6 rounded-r-lg">
+                            {trimmed}
+                          </blockquote>
+                        );
+                      }
+                      
+                      // Regular paragraph
+                      return (
+                        <p key={idx} className="text-base leading-relaxed mb-4" style={{ lineHeight: '1.8' }}>
+                          {trimmed}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </article>
               </div>
             )}
 
