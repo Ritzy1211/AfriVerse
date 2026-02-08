@@ -538,7 +538,7 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
                   
                   {/* Content */}
                   <div className="space-y-4 text-slate-700">
-                    {content.split('\n\n').map((paragraph, idx) => {
+                    {(content || '').split('\n\n').map((paragraph, idx) => {
                       const trimmed = paragraph.trim();
                       if (!trimmed) return null;
                       

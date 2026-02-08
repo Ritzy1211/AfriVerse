@@ -424,7 +424,7 @@ export default function EditorialReviewPage({ params }: { params: Promise<{ id: 
                 Content Preview
               </h3>
               <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4">
-                {post.content.split('\n\n').map((paragraph, idx) => {
+                {(post.content || '').split('\n\n').map((paragraph, idx) => {
                   const trimmed = paragraph.trim();
                   if (!trimmed) return null;
                   
