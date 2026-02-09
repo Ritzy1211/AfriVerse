@@ -176,8 +176,15 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
                 </div>
               </div>
               <button
-                onClick={closePopup}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  // Immediately hide the popup
+                  setIsVisible(false);
+                  setIsExiting(false);
+                }}
                 className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all hover:scale-110"
+                aria-label="Close popup"
               >
                 <X className="w-4 h-4" />
               </button>

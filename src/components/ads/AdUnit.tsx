@@ -145,7 +145,7 @@ const HOUSE_ADS = [
     title: '👑 Go Premium',
     subtitle: 'Ad-free reading + exclusive content',
     cta: 'Upgrade Now',
-    link: '/subscribe',
+    link: '/subscribe/premium',
     bgClass: 'bg-gradient-to-r from-purple-600 to-pink-600',
   },
 ];

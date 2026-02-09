@@ -4,7 +4,6 @@ import Script from 'next/script';
 import './globals.css';
 import ConditionalLayout from '@/components/ConditionalLayout';
 import AppearanceProvider from '@/components/providers/AppearanceProvider';
-import { AdsterraSocialBar, PropellerAdsPush } from '@/components/ads';
 import AfricanSlangPopup from '@/components/AfricanSlangPopup';
 
 const inter = Inter({ 
@@ -81,12 +80,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
       <head>
-        {/* Monetag Push Notifications - must be first after head */}
-        <script 
-          src="https://3nbf4.com/act/files/tag.min.js?z=10565743" 
-          data-cfasync="false" 
-          async
-        ></script>
         <link rel="icon" href="/assets/logos/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/assets/logos/Afriverse-logo.png" />
         <meta name="theme-color" content="#1A1A2E" />
@@ -108,10 +101,6 @@ export default function RootLayout({
           </ConditionalLayout>
           {/* African Slang Daily Popup - Shows once per session after 5s */}
           <AfricanSlangPopup delay={5000} showOnce={true} />
-          {/* Adsterra Social Bar - Floating bar on all pages */}
-          <AdsterraSocialBar />
-          {/* PropellerAds Push Notifications */}
-          <PropellerAdsPush />
         </AppearanceProvider>
       </body>
     </html>
