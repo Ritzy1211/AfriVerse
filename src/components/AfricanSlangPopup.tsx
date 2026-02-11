@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Volume2, Globe, Sparkles, BookOpen } from 'lucide-react';
 
 interface Slang {
@@ -25,6 +25,10 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [hasShown, setHasShown] = useState(false);
+  
+  // Refs to track timers for proper cleanup
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const showTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const calculateDisplayTime = useCallback((slangData: Slang) => {
     // Base time of 8 seconds
@@ -37,6 +41,18 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
     // Add ~50ms per character, max 15 seconds total
     const extraTime = Math.min(totalLength * 30, 7000);
     return baseTime + extraTime;
+  }, []);
+
+  // Immediately close popup and cancel any pending timers
+  const closePopupImmediately = useCallback(() => {
+    // Cancel auto-close timer
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    // Hide popup immediately
+    setIsVisible(false);
+    setIsExiting(false);
   }, []);
 
   const closePopup = useCallback(() => {
@@ -70,7 +86,7 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
       }
     }
 
-    const showTimer = setTimeout(async () => {
+    showTimerRef.current = setTimeout(async () => {
       try {
         const response = await fetch('/api/slang?daily=true');
         const data = await response.json();
@@ -85,18 +101,19 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
 
           // Auto-close after calculated time
           const displayTime = calculateDisplayTime(data.slang);
-          const closeTimer = setTimeout(() => {
+          closeTimerRef.current = setTimeout(() => {
             closePopup();
           }, displayTime);
-
-          return () => clearTimeout(closeTimer);
         }
       } catch (error) {
         console.error('Failed to fetch slang:', error);
       }
     }, delay);
 
-    return () => clearTimeout(showTimer);
+    return () => {
+      if (showTimerRef.current) clearTimeout(showTimerRef.current);
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
   }, [delay, showOnce, calculateDisplayTime, closePopup]);
 
   if (!isVisible || !slang || hasShown) return null;
@@ -179,9 +196,8 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  // Immediately hide the popup
-                  setIsVisible(false);
-                  setIsExiting(false);
+                  // Immediately hide the popup and cancel any pending timers
+                  closePopupImmediately();
                 }}
                 className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all hover:scale-110"
                 aria-label="Close popup"

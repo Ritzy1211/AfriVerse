@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -279,8 +279,18 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   const isResetPasswordPage = pathname === '/admin/reset-password';
   const isPublicAuthPage = isLoginPage || isForgotPasswordPage || isResetPasswordPage;
 
+  // Track if sign out is in progress to prevent conflicting redirects
+  const isSigningOut = useRef(false);
+
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/admin/login' });
+    // Set flag to prevent the unauthenticated redirect from firing
+    isSigningOut.current = true;
+    try {
+      await signOut({ callbackUrl: '/admin/login' });
+    } catch (error) {
+      console.error('Sign out error:', error);
+      isSigningOut.current = false;
+    }
   };
 
   // For login, forgot-password, and reset-password pages, render without the admin layout
@@ -298,7 +308,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   }
 
   // CRITICAL: Redirect to login if not authenticated
-  if (status === 'unauthenticated' || !session) {
+  // But skip this if sign out is in progress (let NextAuth handle the redirect)
+  if ((status === 'unauthenticated' || !session) && !isSigningOut.current) {
     // Use useEffect to handle redirect on client side
     if (typeof window !== 'undefined') {
       window.location.href = `/admin/login?callbackUrl=${encodeURIComponent(pathname)}`;
@@ -308,6 +319,18 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show signing out state
+  if (isSigningOut.current) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Signing out...</p>
         </div>
       </div>
     );
