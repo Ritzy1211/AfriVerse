@@ -281,15 +281,24 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
 
   // Track if sign out is in progress to prevent conflicting redirects
   const isSigningOut = useRef(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   const handleSignOut = async () => {
     // Set flag to prevent the unauthenticated redirect from firing
     isSigningOut.current = true;
+    setSigningOut(true);
+    
     try {
-      await signOut({ callbackUrl: '/admin/login' });
+      // Use redirect: false to prevent NextAuth's automatic redirect
+      // Then manually redirect to ensure it works
+      await signOut({ redirect: false });
+      
+      // Manually redirect after sign out completes
+      window.location.href = '/admin/login';
     } catch (error) {
       console.error('Sign out error:', error);
       isSigningOut.current = false;
+      setSigningOut(false);
     }
   };
 
@@ -308,8 +317,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   }
 
   // CRITICAL: Redirect to login if not authenticated
-  // But skip this if sign out is in progress (let NextAuth handle the redirect)
-  if ((status === 'unauthenticated' || !session) && !isSigningOut.current) {
+  // But skip this if sign out is in progress (let us handle the redirect)
+  if ((status === 'unauthenticated' || !session) && !isSigningOut.current && !signingOut) {
     // Use useEffect to handle redirect on client side
     if (typeof window !== 'undefined') {
       window.location.href = `/admin/login?callbackUrl=${encodeURIComponent(pathname)}`;
@@ -325,7 +334,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   }
 
   // Show signing out state
-  if (isSigningOut.current) {
+  if (signingOut) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
