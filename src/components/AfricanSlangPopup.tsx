@@ -158,18 +158,18 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
         >
           {/* Animated gradient border */}
           <div 
-            className="absolute inset-0 rounded-3xl p-[2px] overflow-hidden"
+            className="absolute inset-0 rounded-3xl p-[2px] overflow-hidden pointer-events-none"
             style={{
               background: 'linear-gradient(135deg, #f97316, #ec4899, #8b5cf6, #06b6d4, #f97316)',
               backgroundSize: '400% 400%',
               animation: 'gradientShift 4s ease infinite'
             }}
           >
-            <div className="absolute inset-[2px] bg-white dark:bg-gray-800 rounded-3xl" />
+            <div className="absolute inset-[2px] bg-white dark:bg-gray-800 rounded-3xl pointer-events-none" />
           </div>
 
           {/* Content */}
-          <div className="relative p-6 z-10">
+          <div className="relative p-6 z-10" style={{ pointerEvents: 'auto' }}>
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -199,10 +199,21 @@ export default function AfricanSlangPopup({ delay = 5000, showOnce = true }: Sla
                   // Immediately hide the popup and cancel any pending timers
                   closePopupImmediately();
                 }}
-                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all hover:scale-110"
+                onMouseDown={(e) => {
+                  // Also handle mouseDown to ensure click is captured
+                  e.stopPropagation();
+                }}
+                onTouchStart={(e) => {
+                  // Handle touch for mobile
+                  e.stopPropagation();
+                  closePopupImmediately();
+                }}
+                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all hover:scale-110 cursor-pointer relative z-[200]"
+                style={{ pointerEvents: 'auto' }}
                 aria-label="Close popup"
+                type="button"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4 pointer-events-none" />
               </button>
             </div>
 
