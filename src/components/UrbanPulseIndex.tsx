@@ -56,8 +56,8 @@ export default function UrbanPulseIndex() {
 
   useEffect(() => {
     fetchTopics();
-    // Refresh every 5 minutes
-    const interval = setInterval(fetchTopics, 5 * 60 * 1000);
+    // Refresh every 30 minutes as indicated in the UI
+    const interval = setInterval(fetchTopics, 30 * 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchTopics]);
 

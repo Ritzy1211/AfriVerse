@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// Cache the response for 5 minutes
-export const revalidate = 300;
+// Dynamic route - no caching to ensure fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET /api/afripulse - Public endpoint to get AfriPulse data
 export async function GET(request: NextRequest) {
@@ -16,8 +17,8 @@ export async function GET(request: NextRequest) {
       where.country = country;
     }
 
-    // Get pulse data
-    const pulseData = await prisma.afriPulseIndex.findMany({
+    // Get pulse data (countries)
+    const countries = await prisma.afriPulseIndex.findMany({
       where,
       orderBy: { overallScore: 'desc' },
       take: limit,
@@ -25,6 +26,7 @@ export async function GET(request: NextRequest) {
 
     // Get trending topics
     const topics = await prisma.afriPulseTopic.findMany({
+      where: { isActive: true },
       orderBy: { mentions: 'desc' },
       take: 10,
     });
@@ -48,7 +50,9 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      pulseData,
+      // Return as both 'countries' and 'pulseData' for compatibility
+      countries,
+      pulseData: countries,
       topics,
       stats: {
         continentalAverage,
@@ -63,8 +67,8 @@ export async function GET(request: NextRequest) {
           flag: mostPessimistic.flagEmoji,
           score: mostPessimistic.overallScore,
         } : null,
-        risingCount: pulseData.filter(c => c.overallTrend === 'RISING').length,
-        fallingCount: pulseData.filter(c => c.overallTrend === 'FALLING').length,
+        risingCount: countries.filter(c => c.overallTrend === 'RISING').length,
+        fallingCount: countries.filter(c => c.overallTrend === 'FALLING').length,
       },
     });
   } catch (error) {
